@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <main>
       <p>HOME PAGE</p>
-      <Link href="/blog">blog</Link>
+      <Link href="/blogs/1">BLOGS</Link>
     </main>
   );
 }

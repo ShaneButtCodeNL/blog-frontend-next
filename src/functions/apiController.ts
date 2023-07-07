@@ -15,6 +15,7 @@ const GET = "GET";
 const POST = "POST";
 const PUT = "PUT";
 
+const tenSeconds = 10;
 const thirtySeconds = 30;
 
 const getJSONHeader = () => ({
@@ -61,6 +62,7 @@ export function logoff() {}
 export async function getAllBlogPosts(): Promise<BlogPostReturn[]> {
   const res = await fetch(getBlogsPath, {
     method: GET,
+    next: { revalidate: tenSeconds },
   });
   const data = await res.json();
   console.log(data);

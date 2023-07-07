@@ -6,7 +6,6 @@ export default async function Page({ params }: { params: { blogId: string } }) {
 
   return (
     <>
-      <h1>BLOG PAGE:</h1>
       <BlogPostDisplay blogPost={data} />
     </>
   );

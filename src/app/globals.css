@@ -10,19 +10,133 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --foreground-1: #5c469c;
+    --foreground-2: #d4adfc;
+    --background-1: #0c134f;
+    --background-2: #1d267d;
+    --font-color: #fff;
   }
 }
-
+body {
+  color: var(--font-color);
+  min-width: 100%;
+  min-height: 100vh;
+  background-image: linear-gradient(
+    to bottom right,
+    var(--background-1),
+    var(--background-2),
+    var(--background-1)
+  );
+}
 #page {
   width: 70%;
   margin: auto;
+  min-height: 100vh;
 }
 
 header {
   display: flex;
   justify-content: space-between;
   margin: auto;
+}
+
+#blog-list-slice-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+#blog-list-slice {
+  padding: 1em;
+  margin: 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.blog-display-item {
+  width: 50%;
+  margin: auto;
+  border: var(--background-2) 3px outset;
+  padding: 1em 5em;
+}
+
+.blog-to-display-social-interactions {
+  display: flex;
+  justify-content: space-around;
+  border: var(--foreground-2) 1px outset;
+}
+
+.blog-display-title-bar {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.25em 0.5em;
+}
+
+.blog-display-body-preview {
+  padding: 0.5em 0.5em;
+  margin: 0.5em 0em;
+  border: var(--font-color-2) 1px outset;
+}
+
+.blog-display-title {
+  text-decoration: underline;
+  font-weight: 400;
+}
+
+#pagination-controls {
+  display: flex;
+  justify-content: center;
+  background-color: --f;
+  gap: 1em;
+  margin-bottom: 1em;
+  font-size: 1.5em;
+  line-height: 2em;
+  border: var(--foreground-2) 3px outset;
+  background-color: var(--foreground-1);
+}
+
+#blog-post-display-container {
+  margin: 1em;
+}
+
+#blog-post-title {
+  margin: auto;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.5em;
+  text-decoration: underline;
+}
+
+#blog-creation-details {
+  display: flex;
+  justify-content: space-around;
+  margin: 0.5em 0;
+}
+
+#blog-body {
+  margin: 1em;
+  line-height: 1.5em;
+}
+
+#blog-comments {
+  border: #1d267d 3px solid;
+}
+
+.blog-post-comment-display-details {
+  display: flex;
+  gap: 1em;
+}
+
+.blog-post-comment-container {
+  margin-left: 0.5em;
+  margin-top: 0.5em;
+  border-left: #5c469c solid 3px;
+  padding-left: 0.5em;
+}
+
+.comment-actions {
+  display: flex;
+  gap: 1em;
+  margin-bottom: 0.5em;
 }

@@ -4,9 +4,15 @@ import { BlogPostCommentReturn } from "@/models/blogPostReturn";
 export default function BlogPostCommentDisplay(params: any) {
   const mainComment: BlogPostCommentReturn = params.comment;
   return (
-    <div key={`key-${mainComment.commentId}`}>
+    <div
+      className="blog-post-comment-container"
+      key={`key-${mainComment.commentId}`}
+    >
       <div id={`${mainComment.commentId}-title`}>{mainComment.title}</div>
-      <div id={`${mainComment.commentId}-details`}>
+      <div
+        id={`${mainComment.commentId}-details`}
+        className="blog-post-comment-display-details"
+      >
         <div className="comment-author">{mainComment.author}</div>
         <div className="comment-created-on">
           {getDateString(mainComment.createdOn)}
@@ -24,16 +30,16 @@ export default function BlogPostCommentDisplay(params: any) {
         <div className="comment-count-replies">
           Replies : {mainComment.topLevelCommentCount}
         </div>
-        <div className="comment-actions">
-          <button type="button">Hide</button>
-          <div className="comment-likes-container">
-            <div className="comment-like-count">{mainComment.likes.length}</div>
-            <button type="button" className="comment-like-btn">
-              LK
-            </button>
-          </div>
-          <button type="button">Reply</button>
+      </div>
+      <div className="comment-actions">
+        <button type="button">Hide</button>
+        <div className="comment-likes-container" style={{ display: "flex" }}>
+          <div className="comment-like-count">{mainComment.likes.length}</div>
+          <button type="button" className="comment-like-btn">
+            LK
+          </button>
         </div>
+        <button type="button">Reply</button>
       </div>
       <div id={`${mainComment.commentId}-body`}>{mainComment.body}</div>
       <div className="comment-replies">
