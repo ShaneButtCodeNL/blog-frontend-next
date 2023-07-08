@@ -1,19 +1,21 @@
 "use client";
 import { loginFunction } from "./actions";
-import { redirect, useRouter } from "next/navigation";
-import React, { FormEvent, useRef } from "react";
+import { useRouter } from "next/navigation";
+import React, { FormEvent, useRef, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 
-export default async function Page() {
-  const usernameRef = useRef(null);
-  const passwordRef = useRef(null);
+export default function Page() {
+  //const usernameRef = useRef(null);
+  //const passwordRef = useRef(null);
+  const [hidden, setHidden] = useState(true);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const router = useRouter();
 
   async function loginSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    console.log("HERE", usernameRef);
-    const username = usernameRef.current?.value as string;
-    const password = passwordRef.current?.value as string;
-    console.log(username, password);
+
     const res = await loginFunction(username, password);
     console.log("res", res);
     if (!res) {
@@ -26,25 +28,61 @@ export default async function Page() {
   }
 
   return (
-    <>
-      <h1>LOGIN PAGE</h1>
-      <form onSubmit={async (e) => await loginSubmit(e)}>
-        <label htmlFor="username">Username : </label>
+    <form onSubmit={(e) => loginSubmit(e)} id="login-form">
+      <label htmlFor="username" id="username-label" className="form-label">
+        Username :{" "}
+      </label>
+      <input
+        type="text"
+        name="username"
+        defaultValue={""}
+        onChange={(e) => setUsername(e.target.value)}
+        id="username-input"
+        className="form-input"
+      />
+      <label htmlFor="password" id="password-label" className="form-label">
+        Password :{" "}
+      </label>
+      <div id="form-input-container">
         <input
-          type="text"
-          name="username"
-          defaultValue={"test-user1-name"}
-          ref={usernameRef}
+          type="password"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          id="password-input"
+          className="form-input"
+          style={!hidden ? { display: "none" } : {}}
+          required
         />
-        <label htmlFor="password">Password : </label>
         <input
           type="text"
           name="password"
-          defaultValue={"test-user1-pass"}
-          ref={passwordRef}
+          value={password}
+          id="password-input"
+          className="form-input"
+          style={hidden ? { display: "none" } : {}}
+          onChange={(e) => setPassword(e.target.value)}
+          required
         />
-        <button type="submit">Submit</button>
-      </form>
-    </>
+        <div id="form-input-container-eye" onClick={() => setHidden((v) => !v)}>
+          {hidden ? (
+            <FontAwesomeIcon icon={faEyeSlash} />
+          ) : (
+            <FontAwesomeIcon icon={faEye} />
+          )}
+        </div>
+      </div>
+      <button type="submit" id="login-confirm" className="form-button">
+        Submit
+      </button>
+      <button
+        type="button"
+        id="login-cancel"
+        className="form-button"
+        onClick={() => router.back()}
+      >
+        Cancel
+      </button>
+    </form>
   );
 }

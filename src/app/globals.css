@@ -140,3 +140,65 @@ header {
   gap: 1em;
   margin-bottom: 0.5em;
 }
+
+#login-form {
+  display: grid;
+  grid-template-areas:
+    "username-label username-input"
+    "password-label password-input"
+    "login-confirm login-cancel";
+  gap: 1em;
+  grid-template-rows: 3em 3em 3em;
+  margin: 2em auto;
+  width: 50%;
+}
+#username-label {
+  grid-area: "username-label";
+}
+#username-input {
+  grid-area: "username-input";
+}
+#password-label {
+  grid-area: "password-label";
+}
+#form-input-container {
+  position: relative;
+}
+#form-input-container-eye {
+  position: absolute;
+  right: 0em;
+  padding: 0 1em;
+  line-height: 3em;
+  top: 0;
+  cursor: pointer;
+}
+#password-input {
+  width: 100%;
+  padding-right: 3em;
+}
+#login-confirm {
+  grid-area: "login-confirm";
+}
+#login-cancel {
+  grid-area: "login-cancel";
+}
+.form-button {
+  width: 10em;
+  padding: 1em;
+  background-color: var(--foreground-1);
+  margin: auto;
+  border: var(--foreground-2) outset 2px;
+  border-radius: 1em;
+}
+.form-label {
+  text-align: center;
+  line-height: 3em;
+}
+.form-input {
+  line-height: 3em;
+  text-align: left;
+  padding-left: 1.5em;
+  background: none;
+  border: var(--background-2) 2px outset;
+  border-radius: 1em;
+}
