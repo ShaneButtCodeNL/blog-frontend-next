@@ -1,13 +1,13 @@
 "use client";
 import { loginFunction } from "./actions";
 import { useRouter } from "next/navigation";
-import React, { FormEvent, useRef, useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { store } from "@/store";
+import { setLoggedIn, setUserDetails } from "@/store/login";
 
 export default function Page() {
-  //const usernameRef = useRef(null);
-  //const passwordRef = useRef(null);
   const [hidden, setHidden] = useState(true);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -24,6 +24,8 @@ export default function Page() {
     }
     localStorage.setItem("token", res?.token as string);
     localStorage.setItem("userDetails", JSON.stringify(res?.details));
+    store.dispatch(setLoggedIn(true));
+    store.dispatch(setUserDetails(res.details));
     router.push("/login/success");
   }
 

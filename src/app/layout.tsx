@@ -1,9 +1,9 @@
-"use client";
 import Search from "../components/Search";
 import Nav from "../components/Nav";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Providers from "@/components/Provider";
+import { store } from "@/store";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,16 +19,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Providers>
-          <div id="page">
-            <header>
-              <div className="title">Shane's Blog</div>
-              <Search title="Hello" />
-              <Nav />
-            </header>
-            {children}
-          </div>
-        </Providers>
+        <div id="page">
+          <header>
+            <div className="title">Shane's Blog</div>
+            <Search title="Hello" />
+            <Providers>
+              <Nav loggedIn={store.getState().login.loggedIn} />
+            </Providers>
+          </header>
+          {children}
+        </div>
       </body>
     </html>
   );

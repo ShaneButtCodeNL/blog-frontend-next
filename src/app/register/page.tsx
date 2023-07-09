@@ -1,3 +1,10 @@
+import RegisterForm from "@/app/register/RegisterForm";
+import Providers from "@/components/Provider";
+
 export default function Page() {
-  return <h1>REGISTER PAGE</h1>;
+  return (
+    <Providers>
+      <RegisterForm />
+    </Providers>
+  );
 }

@@ -40,16 +40,25 @@ export async function login(
   return data;
 }
 
+export async function isUsernameAvailable(username: string): Promise<boolean> {
+  const res = await fetch(`${loginPath}exists/${username}`);
+  if (res.ok) {
+    return true;
+  }
+  return false;
+}
+
 export async function register(
   username: String,
   password: String
 ): Promise<LoginReturnDetails> {
+  console.log("\nIN REGISTER\n", username, password, registerPath);
   const res = await fetch(registerPath, {
     method: POST,
     body: JSON.stringify({ username, password }),
     headers: getJSONHeader(),
   });
-
+  console.log("RES\n", res);
   const data = await res.json();
   console.log(data);
   if (!data) throw new Error("Register failed");
