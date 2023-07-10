@@ -224,7 +224,7 @@ header {
     "password-label-second password-input-second-container"
     "register-confirm register-cancel";
   gap: 1.5em;
-  grid-template-rows: 3em 3em 3em 3em 3em;
+  grid-template-rows: 3em 3em auto auto 3em;
   margin: 2em auto;
   width: 50%;
 }
@@ -240,4 +240,21 @@ header {
 }
 .boxshadow-alert {
   box-shadow: 0em 0em 0em 0.5em red;
+}
+.password-error-box {
+  transition: max-height 1s ease-out;
+  overflow: hidden;
+  max-height: 0px;
+}
+.show-password-error-box {
+  max-height: 100vh;
+}
+
+.text-accept {
+  color: greenyellow;
+  text-shadow: 0px 0px 1px darkgreen;
+}
+.text-reject {
+  color: red;
+  text-shadow: 0px 0px 1px darkred;
 }

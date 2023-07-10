@@ -3,10 +3,15 @@ import { useRouter } from "next/navigation";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "@/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEyeSlash,
+  faXmark,
+  faCheck,
+} from "@fortawesome/free-solid-svg-icons";
 import { store } from "@/store";
 import { setLoggedIn, setUserDetails } from "@/store/login";
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useRef, useState } from "react";
 import { register } from "@/functions/apiController";
 import { registerFunction } from "./actions";
 
@@ -17,37 +22,96 @@ export default function RegisterForm(props: any) {
   const [hidden, setHidden] = useState(true);
   const [username, setUsername] = useState("");
   const [passwordMain, setPasswordMain] = useState("");
+  const [
+    passwordMatchesPatternLettersAndNumbers,
+    setPasswordMatchesPatternLettersAndNumbers,
+  ] = useState(false);
+  const [passwordMatchesPatternNumber, setPasswordMatchesPatternNumber] =
+    useState(false);
+  const [
+    passwordMatchesPatternLowerCaseLetters,
+    setPasswordMatchesPatternLowerCaseLetters,
+  ] = useState(false);
+  const [
+    passwordMatchesPatternUpperCaseLetters,
+    setPasswordMatchesPatternUpperCaseLetters,
+  ] = useState(false);
+  const [
+    passwordMatchesPatternIsEightCharactersLong,
+    setPasswordMatchesPatternIsEightCharactersLong,
+  ] = useState(false);
+  const [
+    passwordMatchesPatternNoWhiteSpace,
+    setPasswordMatchesPatternNoWhiteSpace,
+  ] = useState(false);
+
+  const setPasswordMatchesPatternHook = (s: string) => {
+    setPasswordMatchesPatternIsEightCharactersLong(
+      regExpIsEightCharactersLong.test(s)
+    );
+    setPasswordMatchesPatternLettersAndNumbers(
+      regExpContainsLettersAndNumbers.test(s)
+    );
+    setPasswordMatchesPatternLowerCaseLetters(
+      regExpContainsLowerCaseLetters.test(s)
+    );
+    setPasswordMatchesPatternUpperCaseLetters(
+      regExpContainsUpperCaseLetters.test(s)
+    );
+    setPasswordMatchesPatternNoWhiteSpace(!regExpContainsWhiteSpace.test(s));
+    setPasswordMatchesPatternNumber(regExpContainsANumber.test(s));
+  };
+  const getPasswordMatchesPatternHook = () => {
+    return (
+      passwordMatchesPatternNoWhiteSpace &&
+      passwordMatchesPatternIsEightCharactersLong &&
+      passwordMatchesPatternLettersAndNumbers &&
+      passwordMatchesPatternLowerCaseLetters &&
+      passwordMatchesPatternNumber &&
+      passwordMatchesPatternUpperCaseLetters
+    );
+  };
+
   const [passwordSecond, setPasswordSecond] = useState("");
+  //TODO Impliment
   const [usernameAvailable, setUsernameAvailable] = useState(false);
   const [matchingPasswords, setMatchingPasswords] = useState(true);
   const dispatch = useAppDispatch();
   const loggedIn = useAppSelector((state) => state.login.loggedIn);
   const router = useRouter();
 
-  if (loggedIn) router.push("/");
+  const regExpContainsLettersAndNumbers = new RegExp(
+    "(?=.*[0-9])(?=.*[a-z,A-Z])"
+  );
+  const regExpContainsLowerCaseLetters = new RegExp("(?=.*[a-z])");
+  const regExpContainsUpperCaseLetters = new RegExp("(?=.*[A-Z])");
+  const regExpContainsANumber = new RegExp("(?=.*[0-9])");
+  const regExpIsEightCharactersLong = new RegExp("(.{8,})");
+  const regExpContainsWhiteSpace = new RegExp("(?=.*\\s.*)");
 
-  // Half a second
+  if (loggedIn) router.push("/");
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("HERE 1");
 
-    if (!passwordMain || passwordMain === "" || passwordMain !== passwordSecond)
+    if (
+      !passwordMain ||
+      passwordMain === "" ||
+      !matchingPasswords ||
+      !getPasswordMatchesPatternHook()
+    )
       return;
-    console.log("HERE 2");
 
     const res = await registerFunction(username, passwordMain);
     if (!res) {
       router.push("/register/fail");
       return;
     }
-    console.log("HERE 3");
 
     localStorage.setItem("token", res.token as string);
     localStorage.setItem("userDetails", JSON.stringify(res.details));
-    store.dispatch(setLoggedIn(true));
-    store.dispatch(setUserDetails(res.details));
-    console.log("HERE 4");
+    dispatch(setLoggedIn(true));
+    dispatch(setUserDetails(res.details));
 
     router.push("/register/success");
   };
@@ -78,33 +142,138 @@ export default function RegisterForm(props: any) {
         </div>
       )}
       <label htmlFor="password-main">Password : </label>
-      <div className="form-password-container">
+      <div className={`form-password-container `}>
         <input
           required
           id="register-form-password-main-hidden-input"
-          className="form-input form-input-password"
+          className={`form-input form-input-password ${
+            getPasswordMatchesPatternHook() || passwordMain === ""
+              ? ""
+              : " boxshadow-alert"
+          }`}
           value={passwordMain}
           onChange={(e) => {
             setMatchingPasswords(e.target.value === passwordSecond);
+            setPasswordMatchesPatternHook(e.target.value);
+
             setPasswordMain(e.target.value);
           }}
           name="password-main"
           type="password"
-          style={hidden ? { display: "none" } : {}}
+          style={hidden ? {} : { display: "none" }}
         />
         <input
           required
           id="register-form-password-main-not-hidden-input"
-          className="form-input form-input-password"
+          className={`form-input form-input-password ${
+            getPasswordMatchesPatternHook() || passwordMain === ""
+              ? ""
+              : " boxshadow-alert"
+          }`}
           value={passwordMain}
           onChange={(e) => {
             setMatchingPasswords(e.target.value === passwordSecond);
+            setPasswordMatchesPatternHook(e.target.value);
             setPasswordMain(e.target.value);
           }}
           name="password-main"
           type="text"
-          style={hidden ? {} : { display: "none" }}
+          style={hidden ? { display: "none" } : {}}
         />
+        <div
+          className={`${
+            getPasswordMatchesPatternHook() || passwordMain === ""
+              ? "hide"
+              : "show"
+          }-password-error-box password-error-box`}
+        >
+          <div
+            id="password-help-white-space"
+            className={`password-help-container ${
+              passwordMatchesPatternNoWhiteSpace ? "text-accept" : "text-reject"
+            }`}
+          >
+            {passwordMatchesPatternNoWhiteSpace ? (
+              <FontAwesomeIcon icon={faCheck} />
+            ) : (
+              <FontAwesomeIcon icon={faXmark} />
+            )}
+            Password Must Have No White Spaces
+          </div>
+          <div
+            id="password-help-uppercase-letters"
+            className={`password-help-container ${
+              passwordMatchesPatternUpperCaseLetters
+                ? "text-accept"
+                : "text-reject"
+            }`}
+          >
+            {passwordMatchesPatternUpperCaseLetters ? (
+              <FontAwesomeIcon icon={faCheck} />
+            ) : (
+              <FontAwesomeIcon icon={faXmark} />
+            )}
+            Password Must Have Uppercase Letters
+          </div>
+          <div
+            id="password-help-eight-char-length"
+            className={`password-help-container ${
+              passwordMatchesPatternIsEightCharactersLong
+                ? "text-accept"
+                : "text-reject"
+            }`}
+          >
+            {passwordMatchesPatternIsEightCharactersLong ? (
+              <FontAwesomeIcon icon={faCheck} />
+            ) : (
+              <FontAwesomeIcon icon={faXmark} />
+            )}
+            Password Must Have At least 8 Characters
+          </div>
+          <div
+            id="password-help-lowercase-letters"
+            className={`password-help-container ${
+              passwordMatchesPatternLowerCaseLetters
+                ? "text-accept"
+                : "text-reject"
+            }`}
+          >
+            {passwordMatchesPatternLowerCaseLetters ? (
+              <FontAwesomeIcon icon={faCheck} />
+            ) : (
+              <FontAwesomeIcon icon={faXmark} />
+            )}
+            Password Must Have Lowercase Letters
+          </div>
+          <div
+            id="password-help-number-char"
+            className={`password-help-container ${
+              passwordMatchesPatternNumber ? "text-accept" : "text-reject"
+            }`}
+          >
+            {passwordMatchesPatternNumber ? (
+              <FontAwesomeIcon icon={faCheck} />
+            ) : (
+              <FontAwesomeIcon icon={faXmark} />
+            )}
+            Password Must Have At Least One Number
+          </div>
+          <div
+            id="password-help-number-and-letters"
+            className={`password-help-container ${
+              passwordMatchesPatternLettersAndNumbers
+                ? "text-accept"
+                : "text-reject"
+            }`}
+          >
+            {passwordMatchesPatternLettersAndNumbers ? (
+              <FontAwesomeIcon icon={faCheck} />
+            ) : (
+              <FontAwesomeIcon icon={faXmark} />
+            )}
+            Password Must Have Letters And Numbers
+          </div>
+        </div>
         <div id="form-input-container-eye" onClick={() => setHidden((v) => !v)}>
           {hidden ? (
             <FontAwesomeIcon icon={faEyeSlash} />
@@ -159,7 +328,11 @@ export default function RegisterForm(props: any) {
           )}
         </div>
       </div>
-      <button type="submit" id="register-form-confirm">
+      <button
+        type="submit"
+        id="register-form-confirm"
+        disabled={!getPasswordMatchesPatternHook() || passwordMain === ""}
+      >
         Confirm
       </button>
       <button type="button" id="register-form-cancel" onClick={router.back}>
