@@ -224,13 +224,16 @@ header {
     "password-label-second password-input-second-container"
     "register-confirm register-cancel";
   gap: 1.5em;
-  grid-template-rows: 3em 3em auto auto 3em;
+  grid-template-rows: auto auto auto auto 3em;
   margin: 2em auto;
   width: 50%;
 }
 #register-form label {
   text-align: right;
   padding-right: 1em;
+}
+#register-form-username-input {
+  width: 100%;
 }
 .display-username-availability {
   grid-area: username-available-box;
@@ -245,6 +248,9 @@ header {
   transition: max-height 1s ease-out;
   overflow: hidden;
   max-height: 0px;
+}
+.password-error-box svg {
+  margin: 0 1em;
 }
 .show-password-error-box {
   max-height: 100vh;

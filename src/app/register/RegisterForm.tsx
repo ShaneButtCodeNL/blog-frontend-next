@@ -21,6 +21,7 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 export default function RegisterForm(props: any) {
   const [hidden, setHidden] = useState(true);
   const [username, setUsername] = useState("");
+  const [validUsername, setValidUsername] = useState(false);
   const [passwordMain, setPasswordMain] = useState("");
   const [
     passwordMatchesPatternLettersAndNumbers,
@@ -117,15 +118,41 @@ export default function RegisterForm(props: any) {
   };
 
   return (
-    <form id="register-form" onSubmit={onSubmit}>
+    <form id="register-form" onSubmit={onSubmit} autoComplete="off">
       <label htmlFor="username">Username : </label>
-      <input
-        type="text"
-        name="username"
-        id="register-form-username-input"
-        className="form-input"
-        onChange={(e) => setUsername(e.target.value)}
-      />
+      <div className={`form-password-container `}>
+        <input
+          type="text"
+          name="username"
+          id="register-form-username-input"
+          className="form-input"
+          autoComplete="off"
+          onChange={(e) => {
+            setUsername(e.target.value);
+            setValidUsername(!regExpContainsWhiteSpace.test(e.target.value));
+          }}
+        />
+        <div
+          className={`${
+            validUsername || username === "" ? "hide" : "show"
+          }-password-error-box password-error-box`}
+        >
+          <div
+            id="password-help-uppercase-letters"
+            className={`password-help-container ${
+              validUsername ? "text-accept" : "text-reject"
+            }`}
+          >
+            {validUsername ? (
+              <FontAwesomeIcon icon={faCheck} />
+            ) : (
+              <FontAwesomeIcon icon={faXmark} />
+            )}
+            Username Must Have No Whitespaces
+          </div>
+        </div>
+      </div>
+
       {usernameAvailable ? (
         <div
           id="register-form-username-available"
@@ -145,6 +172,7 @@ export default function RegisterForm(props: any) {
       <div className={`form-password-container `}>
         <input
           required
+          autoComplete="off"
           id="register-form-password-main-hidden-input"
           className={`form-input form-input-password ${
             getPasswordMatchesPatternHook() || passwordMain === ""
@@ -164,6 +192,7 @@ export default function RegisterForm(props: any) {
         />
         <input
           required
+          autoComplete="off"
           id="register-form-password-main-not-hidden-input"
           className={`form-input form-input-password ${
             getPasswordMatchesPatternHook() || passwordMain === ""
@@ -292,6 +321,7 @@ export default function RegisterForm(props: any) {
       <div className={`form-password-container `}>
         <input
           required
+          autoComplete="off"
           id="register-form-password-second-hidden-input"
           className={`form-input form-input-password ${
             matchingPasswords ? "" : "boxshadow-alert"
@@ -303,10 +333,11 @@ export default function RegisterForm(props: any) {
           }}
           name="password-second"
           type="password"
-          style={hidden ? { display: "none" } : {}}
+          style={hidden ? {} : { display: "none" }}
         />
         <input
           required
+          autoComplete="off"
           id="register-form-password-second-not-hidden-input"
           className={`form-input form-input-password ${
             matchingPasswords ? "" : "boxshadow-alert"
@@ -318,8 +349,27 @@ export default function RegisterForm(props: any) {
           }}
           name="password-second"
           type="text"
-          style={hidden ? {} : { display: "none" }}
+          style={hidden ? { display: "none" } : {}}
         />
+        <div
+          className={`${
+            matchingPasswords || passwordSecond === "" ? "hide" : "show"
+          }-password-error-box password-error-box`}
+        >
+          <div
+            id="password-help-matches-second"
+            className={`password-help-container ${
+              matchingPasswords ? "text-accept" : "text-reject"
+            }`}
+          >
+            {matchingPasswords ? (
+              <FontAwesomeIcon icon={faCheck} />
+            ) : (
+              <FontAwesomeIcon icon={faXmark} />
+            )}
+            Confirm Password Must be the same as Password
+          </div>
+        </div>
         <div id="form-input-container-eye" onClick={() => setHidden((v) => !v)}>
           {hidden ? (
             <FontAwesomeIcon icon={faEyeSlash} />
