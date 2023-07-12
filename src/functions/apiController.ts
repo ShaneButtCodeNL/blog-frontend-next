@@ -41,7 +41,8 @@ export async function login(
 }
 
 export async function isUsernameAvailable(username: string): Promise<boolean> {
-  const res = await fetch(`${loginPath}exists/${username}`);
+  const fetchStr = `${userPath}/exists/${username}`;
+  const res = await fetch(fetchStr);
   if (res.ok) {
     return true;
   }
@@ -57,6 +58,7 @@ export async function register(
     method: POST,
     body: JSON.stringify({ username, password }),
     headers: getJSONHeader(),
+    next: { revalidate: 10 },
   });
   console.log("RES\n", res);
   const data = await res.json();

@@ -9,14 +9,30 @@ import {
   faXmark,
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
-import { store } from "@/store";
 import { setLoggedIn, setUserDetails } from "@/store/login";
 import React, { FormEvent, useRef, useState } from "react";
-import { register } from "@/functions/apiController";
-import { registerFunction } from "./actions";
+import { checkUsernameIsAvailableFunction, registerFunction } from "./actions";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+var timeoutFunction: ReturnType<typeof setTimeout>;
+
+const debounceAsync = (fn: Function, username: string) => {
+  clearTimeout(timeoutFunction);
+
+  return function (this: any, ...args: any[]) {
+    clearTimeout(timeoutFunction);
+    if (username === "") {
+      fn(false);
+      return;
+    }
+    timeoutFunction = setTimeout(async () => {
+      const res = await checkUsernameIsAvailableFunction(username);
+      fn(res);
+    }, 1500);
+  };
+};
 
 export default function RegisterForm(props: any) {
   const [hidden, setHidden] = useState(true);
@@ -76,6 +92,13 @@ export default function RegisterForm(props: any) {
   const [passwordSecond, setPasswordSecond] = useState("");
   //TODO Impliment
   const [usernameAvailable, setUsernameAvailable] = useState(false);
+  const [checkingUsername, setCheckingUsername] = useState(false);
+
+  const setUsernameAvailableHook = (b: boolean) => {
+    setUsernameAvailable(b);
+    setCheckingUsername(false);
+  };
+
   const [matchingPasswords, setMatchingPasswords] = useState(true);
   const dispatch = useAppDispatch();
   const loggedIn = useAppSelector((state) => state.login.loggedIn);
@@ -117,6 +140,10 @@ export default function RegisterForm(props: any) {
     router.push("/register/success");
   };
 
+  const useDebouncedFunction = (username: string) => {
+    return debounceAsync(setUsernameAvailableHook, username);
+  };
+
   return (
     <form id="register-form" onSubmit={onSubmit} autoComplete="off">
       <label htmlFor="username">Username : </label>
@@ -130,6 +157,8 @@ export default function RegisterForm(props: any) {
           onChange={(e) => {
             setUsername(e.target.value);
             setValidUsername(!regExpContainsWhiteSpace.test(e.target.value));
+            setCheckingUsername(true);
+            useDebouncedFunction(e.target.value)();
           }}
         />
         <div
@@ -153,21 +182,35 @@ export default function RegisterForm(props: any) {
         </div>
       </div>
 
-      {usernameAvailable ? (
-        <div
-          id="register-form-username-available"
-          className="display-username-availability"
-        >
-          Available
-        </div>
-      ) : (
-        <div
-          id="register-form-username-unavailable"
-          className="display-username-availability"
-        >
-          Not Available
-        </div>
-      )}
+      <div
+        id="register-form-username-available"
+        className={`display-username-availability display-username${
+          usernameAvailable ? "" : "-not"
+        }-availabile ${
+          checkingUsername ? "checking-display-username-availability" : ""
+        }`}
+        style={username === "" ? { display: "none" } : {}}
+      >
+        {checkingUsername ? (
+          <>Checking Availability Of Username" {username} "</>
+        ) : (
+          <>
+            Username " {username} "{" is "}
+            {usernameAvailable ? (
+              <>
+                <FontAwesomeIcon icon={faCheck} />{" "}
+              </>
+            ) : (
+              <>
+                <FontAwesomeIcon icon={faXmark} />
+                {" Not "}
+              </>
+            )}{" "}
+            Available
+          </>
+        )}
+      </div>
+
       <label htmlFor="password-main">Password : </label>
       <div className={`form-password-container `}>
         <input

@@ -1,11 +1,14 @@
 "use server";
-import { register } from "@/functions/apiController";
+import { register, isUsernameAvailable } from "@/functions/apiController";
 export async function registerFunction(username: string, password: string) {
   const res = await register(username, password);
   if (!res) {
-    console.log("fail");
     return;
   }
-  console.log("pass");
   return res;
+}
+export async function checkUsernameIsAvailableFunction(username: string) {
+  const res = await isUsernameAvailable(username);
+  console.log("is ", username as string, " available: ", res);
+  return res === true;
 }
