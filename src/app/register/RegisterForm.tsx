@@ -119,10 +119,13 @@ export default function RegisterForm(props: any) {
     e.preventDefault();
 
     if (
+      !username ||
+      username === "" ||
       !passwordMain ||
       passwordMain === "" ||
       !matchingPasswords ||
-      !getPasswordMatchesPatternHook()
+      !getPasswordMatchesPatternHook() ||
+      !usernameAvailable
     )
       return;
 

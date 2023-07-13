@@ -1,20 +1,35 @@
 "use client";
 import { useRouter } from "next/navigation";
-
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "@/store";
 import Link from "next/link";
-import { setLoggedIn } from "@/store/login";
+import { setLoggedIn, setUserDetails } from "@/store/login";
 
-import { faHouse } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHouse,
+  faPenNib,
+  faUser,
+  faToolbox,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { UserDetails } from "@/models/userReturn";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
+const hasRole = (userDetails: UserDetails, ...args: string[]) => {
+  for (const arg of args) {
+    if (userDetails.roles.indexOf(arg) > -1) return true;
+  }
+  return false;
+};
+
 export default function Nav(props: any) {
   const dispatch = useAppDispatch();
   const loggedIn = useAppSelector((state) => state.login.loggedIn);
+  const userDetails: UserDetails | null = useAppSelector(
+    (state) => state.login.userDetails
+  );
   const router = useRouter();
   return (
     <nav id="main-nav">
@@ -28,6 +43,7 @@ export default function Nav(props: any) {
           type="button"
           onClick={() => {
             dispatch(setLoggedIn(false));
+            dispatch(setUserDetails(null));
             localStorage.removeItem("token");
             localStorage.removeItem("userDetails");
             router.push("/logout");
@@ -44,6 +60,34 @@ export default function Nav(props: any) {
             <button type="button">Register</button>
           </Link>
         </>
+      )}
+      {userDetails &&
+      hasRole(userDetails, "ROLE_WRITER", "ROLE_ADMIN", "ROLE_OWNER") ? (
+        <Link href="/write-post">
+          <button>
+            <FontAwesomeIcon icon={faPenNib} />
+            {" New Post"}
+          </button>
+        </Link>
+      ) : (
+        <></>
+      )}
+      {userDetails && loggedIn ? (
+        <Link href={`/user/${userDetails?.username}`}>
+          <FontAwesomeIcon icon={faUser} />
+        </Link>
+      ) : (
+        <></>
+      )}
+      {loggedIn &&
+      userDetails &&
+      hasRole(userDetails, "ROLE_ADMIN", "ROLE_OWNER") ? (
+        <Link href="/admin">
+          <FontAwesomeIcon icon={faToolbox} />
+          {" Admin"}
+        </Link>
+      ) : (
+        <></>
       )}
     </nav>
   );
