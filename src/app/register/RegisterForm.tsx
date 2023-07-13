@@ -90,7 +90,6 @@ export default function RegisterForm(props: any) {
   };
 
   const [passwordSecond, setPasswordSecond] = useState("");
-  //TODO Impliment
   const [usernameAvailable, setUsernameAvailable] = useState(false);
   const [checkingUsername, setCheckingUsername] = useState(false);
 

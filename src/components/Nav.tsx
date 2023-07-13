@@ -4,6 +4,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "@/store";
 import Link from "next/link";
 import { setLoggedIn, setUserDetails } from "@/store/login";
+import { deleteCookie } from "cookies-next";
 
 import {
   faHouse,
@@ -46,6 +47,8 @@ export default function Nav(props: any) {
             dispatch(setUserDetails(null));
             localStorage.removeItem("token");
             localStorage.removeItem("userDetails");
+            deleteCookie("token", { path: "/" });
+            deleteCookie("userDetails", { path: "/" });
             router.push("/logout");
           }}
         >

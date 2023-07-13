@@ -1,8 +1,10 @@
+import { UserDetails } from "@/models/userReturn";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { getCookie, hasCookie } from "cookies-next";
 
 export interface LoginState {
   loggedIn: boolean;
-  userDetails: any;
+  userDetails: UserDetails | null;
   testCount: number;
 }
 

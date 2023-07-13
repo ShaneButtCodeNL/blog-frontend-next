@@ -79,7 +79,11 @@ export async function getAllBlogPosts(): Promise<BlogPostReturn[]> {
   return data;
 }
 
-export function createBlogPost() {}
+export async function createBlogPost(
+  title: string,
+  body: string,
+  token: string
+) {}
 
 export function createComment() {}
 

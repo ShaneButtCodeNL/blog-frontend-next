@@ -20,3 +20,8 @@ export const debounceFunctionAsync = async (fn: Function, timeout: number) => {
     timer = setTimeout(async () => await fn.apply(this.args), timeout);
   };
 };
+
+export const getDateInXHours = (hours: number) => {
+  const date = new Date();
+  return new Date(date.valueOf() + 1000 * 60 * 60 * hours);
+};
