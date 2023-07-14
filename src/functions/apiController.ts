@@ -1,5 +1,5 @@
 import { BlogPostReturn } from "@/models/blogPostReturn";
-import { LoginReturnDetails } from "@/models/userReturn";
+import { LoginReturnDetails, UserDetails } from "@/models/userReturn";
 import { headers } from "next/dist/client/components/headers";
 import next from "next/types";
 import { cache } from "react";
@@ -49,6 +49,15 @@ export async function isUsernameAvailable(username: string): Promise<boolean> {
     return true;
   }
   return false;
+}
+
+export async function getUserDetailsFromUsername(
+  username: string
+): Promise<UserDetails> {
+  const fetchStr = `${userPath}/details/${username}`;
+  const res = await fetch(fetchStr, { next: { revalidate: 12 * 60 * 60 } });
+  if (!res.ok) throw new Error("User Not Found");
+  return res.json();
 }
 
 export async function isTokenValid(token: string): Promise<boolean> {

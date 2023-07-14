@@ -3,6 +3,13 @@ import { getAllBlogPosts } from "@/functions/apiController";
 import { store } from "@/store";
 import { setCurrentPage, setList } from "@/store/blogPosts";
 
+//TODO FIX
+
+function setPage(num: number) {
+  "use client";
+  store.dispatch(setCurrentPage(num));
+}
+
 export default async function Page({
   params,
 }: {

@@ -47,3 +47,11 @@ export const setLogoutDetails = () => {
   store.dispatch(setLoggedIn(false));
   store.dispatch(setUserDetails(null));
 };
+
+export const getHighestRole = (userDetails: UserDetails) => {
+  if (userDetails.roles.includes("ROLE_OWNER")) return "Owner";
+  if (userDetails.roles.includes("ROLE_ADMIN")) return "Admin";
+  if (userDetails.roles.includes("ROLE_WRITER")) return "Writer";
+  if (userDetails.roles.includes("ROLE_USER")) return "User";
+  return "No Role";
+};
