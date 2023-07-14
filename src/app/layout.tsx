@@ -3,15 +3,22 @@ import Nav from "../components/Nav";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Providers from "@/components/Provider";
-import { store } from "@/store";
-
+import { AppDispatch, RootState, store } from "@/store";
+import { getCookie } from "cookies-next";
+import { cookies } from "next/headers";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { setLoggedIn, setUserDetails } from "@/store/login";
+import { UserDetails } from "@/models/userReturn";
+import { isTokenValid } from "@/functions/apiController";
+import validateTokenFunction from "./actions";
+import { revalidatePath } from "next/cache";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "Shane's Personal Blog",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -24,7 +31,7 @@ export default function RootLayout({
             <div className="title">Shane's Blog</div>
             <Search title="Hello" />
             <Providers>
-              <Nav loggedIn={store.getState().login.loggedIn} />
+              <Nav />
             </Providers>
           </header>
           {children}

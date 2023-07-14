@@ -1,6 +1,7 @@
+"use client";
+
 import { UserDetails } from "@/models/userReturn";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { getCookie, hasCookie } from "cookies-next";
 
 export interface LoginState {
   loggedIn: boolean;
@@ -9,8 +10,10 @@ export interface LoginState {
 }
 
 const initialState: LoginState = {
-  loggedIn: false,
-  userDetails: null,
+  loggedIn: localStorage.getItem("token") ? true : false,
+  userDetails: localStorage.getItem("userDetails")
+    ? JSON.parse(localStorage.getItem("userDetails") as string)
+    : null,
   testCount: 3,
 };
 

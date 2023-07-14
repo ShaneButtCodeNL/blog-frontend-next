@@ -5,10 +5,7 @@ import { useRouter } from "next/navigation";
 import React, { FormEvent, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import { store } from "@/store";
-import { setLoggedIn, setUserDetails } from "@/store/login";
-import { getCookie, setCookie } from "cookies-next";
-import { getDateInXHours } from "@/functions/helpers";
+import { getDateInXHours, setLoginDetails } from "@/functions/helpers";
 
 export default function LoginForm(params: any) {
   const [hidden, setHidden] = useState(true);
@@ -25,15 +22,8 @@ export default function LoginForm(params: any) {
       router.push("/login/failure");
       return;
     }
-    localStorage.setItem("token", res?.token as string);
-    setCookie("token", res.token, { expires: getDateInXHours(4), path: "/" });
-    localStorage.setItem("userDetails", JSON.stringify(res?.details));
-    setCookie("userDetails", JSON.stringify(res.details), {
-      expires: getDateInXHours(4),
-      path: "/",
-    });
-    store.dispatch(setLoggedIn(true));
-    store.dispatch(setUserDetails(res.details));
+
+    setLoginDetails(res.token as string, res.details);
     router.push("/login/success");
   }
 

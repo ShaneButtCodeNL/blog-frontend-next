@@ -1,6 +1,8 @@
 import { BlogPostReturn } from "@/models/blogPostReturn";
 import { LoginReturnDetails } from "@/models/userReturn";
 import { headers } from "next/dist/client/components/headers";
+import next from "next/types";
+import { cache } from "react";
 
 const userPath = `${process.env.API_HOST}${process.env.API_USER_BASE}`;
 const blogPath = `${process.env.API_HOST}${process.env.API_POST_BASE}`;
@@ -47,6 +49,18 @@ export async function isUsernameAvailable(username: string): Promise<boolean> {
     return true;
   }
   return false;
+}
+
+export async function isTokenValid(token: string): Promise<boolean> {
+  const fetchStr = `${userPath}/validate-token`;
+  const res = await fetch(fetchStr, {
+    method: POST,
+    headers: getJSONHeader(),
+    body: JSON.stringify({ token }),
+    cache: "no-store",
+  });
+  const data = await res.json();
+  return data;
 }
 
 export async function register(
