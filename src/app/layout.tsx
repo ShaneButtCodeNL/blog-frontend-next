@@ -12,6 +12,7 @@ import { UserDetails } from "@/models/userReturn";
 import { isTokenValid } from "@/functions/apiController";
 import validateTokenFunction from "./actions";
 import { revalidatePath } from "next/cache";
+import PreloadLogin from "@/components/PreloadLogin";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -25,6 +26,7 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
+      <PreloadLogin />
       <body className={inter.className}>
         <div id="page">
           <header>
@@ -34,6 +36,7 @@ export default async function RootLayout({
               <Nav />
             </Providers>
           </header>
+
           {children}
         </div>
       </body>

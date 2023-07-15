@@ -1,5 +1,3 @@
-"use client";
-
 import { UserDetails } from "@/models/userReturn";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
@@ -10,10 +8,8 @@ export interface LoginState {
 }
 
 const initialState: LoginState = {
-  loggedIn: localStorage.getItem("token") ? true : false,
-  userDetails: localStorage.getItem("userDetails")
-    ? JSON.parse(localStorage.getItem("userDetails") as string)
-    : null,
+  loggedIn: false,
+  userDetails: null,
   testCount: 3,
 };
 
