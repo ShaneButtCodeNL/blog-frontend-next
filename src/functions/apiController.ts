@@ -72,6 +72,18 @@ export async function isTokenValid(token: string): Promise<boolean> {
   return data;
 }
 
+export async function revalidateToken(token: string): Promise<string> {
+  const fetchStr = `${userPath}/revalidate-token`;
+  const res = await fetch(fetchStr, {
+    method: POST,
+    headers: getJSONHeader(),
+    body: JSON.stringify({ token }),
+    cache: "no-store",
+  });
+  const data: string = await res.text();
+  return data;
+}
+
 export async function register(
   username: String,
   password: String

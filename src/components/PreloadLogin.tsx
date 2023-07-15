@@ -2,19 +2,13 @@
 import { store } from "@/store";
 import { UserDetails } from "@/models/userReturn";
 import { setLoggedIn, setUserDetails } from "@/store/login";
-import { MutableRefObject, use, useEffect, useRef, useState } from "react";
-import { validateTokenFunction } from "@/functions/serverFunctions";
-import { isTokenValid } from "@/functions/apiController";
+import { useEffect, useRef } from "react";
+import {
+  revalidateTokenFunction,
+  validateTokenFunction,
+} from "@/functions/serverFunctions";
 
-const tokenMap = new Map<string, Promise<boolean>>();
-
-function queryToken(token: string, promise: () => Promise<boolean>) {
-  if (!tokenMap.has(token)) {
-    tokenMap.set(token, promise());
-  }
-  return tokenMap.get(token);
-}
-
+//TODO update token with a new valid token
 export default function PreloadLogin() {
   "use client";
   const loggedIn = useRef(false);
@@ -26,6 +20,10 @@ export default function PreloadLogin() {
         if (localStorage.getItem("userDetails")) {
           validateTokenFunction(token).then((v) => {
             if (v) {
+              console.log(token);
+              revalidateTokenFunction(token).then((t) =>
+                localStorage.setItem("token", t)
+              );
               store.dispatch(setLoggedIn(true));
               store.dispatch(
                 setUserDetails(
