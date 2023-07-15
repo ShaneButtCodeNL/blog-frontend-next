@@ -42,8 +42,10 @@ export const setLoginDetails = (token: string, userDetails: UserDetails) => {
 };
 
 export const setLogoutDetails = () => {
-  localStorage.removeItem(TOKEN);
-  localStorage.removeItem(USER_DETAILS);
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(TOKEN);
+    localStorage.removeItem(USER_DETAILS);
+  }
   store.dispatch(setLoggedIn(false));
   store.dispatch(setUserDetails(null));
 };
