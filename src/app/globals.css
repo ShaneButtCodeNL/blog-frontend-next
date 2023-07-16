@@ -289,3 +289,31 @@ header {
   color: red;
   text-shadow: 0px 0px 1px darkred;
 }
+
+#write-new-post-form {
+  display: grid;
+  grid-template-areas:
+    "title-label title-input title-input title-input"
+    "body-textarea body-textarea body-textarea body-textarea"
+    ". submit-button cancel-button .";
+  grid-template-rows: auto auto auto;
+  gap: 1em;
+  padding: 1em;
+  width: 75%;
+  margin: auto;
+}
+#new-post-label-title {
+  grid-area: title-label;
+}
+#new-post-input-title {
+  grid-area: title-input;
+}
+#new-post-input-body {
+  grid-area: body-textarea;
+}
+#new-post-submit-button {
+  grid-area: submit-button;
+}
+#new-post-cancel-button {
+  grid-area: cancel-button;
+}

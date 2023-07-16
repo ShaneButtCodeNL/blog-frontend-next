@@ -1,5 +1,5 @@
 "use server";
-import { isTokenValid, revalidateToken } from "./apiController";
+import { createBlogPost, isTokenValid, revalidateToken } from "./apiController";
 
 export async function validateTokenFunction(token: string) {
   "use server";
@@ -11,4 +11,14 @@ export async function revalidateTokenFunction(token: string) {
   "use server";
   const newToken = await revalidateToken(token);
   return newToken;
+}
+
+export async function makeNewPostFunction(
+  title: string,
+  body: string,
+  token: string
+) {
+  "use server";
+  const res = await createBlogPost(title, body, token);
+  return res;
 }

@@ -11,6 +11,7 @@ const loginPath = `${userPath}/login`;
 const registerPath = `${userPath}/register`;
 
 const getBlogsPath = `${blogPath}/`;
+const makeBlogPostPath = `${blogPath}/`;
 const searchBlogPath = `${getBlogsPath}search/title/`;
 
 const GET = "GET";
@@ -21,6 +22,11 @@ const tenSeconds = 10;
 const thirtySeconds = 30;
 
 const getJSONHeader = () => ({
+  "Content-Type": "application/json",
+});
+
+const getBearerTokenHeader = (token: string) => ({
+  Authorization: `Bearer ${token}`,
   "Content-Type": "application/json",
 });
 
@@ -118,7 +124,17 @@ export async function createBlogPost(
   title: string,
   body: string,
   token: string
-) {}
+): Promise<BlogPostReturn | null> {
+  const res = await fetch(makeBlogPostPath, {
+    method: POST,
+    headers: getBearerTokenHeader(token),
+    cache: "no-store",
+    body: JSON.stringify({ title, body }),
+  });
+  const data = await res.json();
+  if (data) return data;
+  return null;
+}
 
 export function createComment() {}
 
