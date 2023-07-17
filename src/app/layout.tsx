@@ -3,15 +3,6 @@ import Nav from "../components/Nav";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Providers from "@/components/Provider";
-import { AppDispatch, RootState, store } from "@/store";
-import { getCookie } from "cookies-next";
-import { cookies } from "next/headers";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { setLoggedIn, setUserDetails } from "@/store/login";
-import { UserDetails } from "@/models/userReturn";
-import { isTokenValid } from "@/functions/apiController";
-import validateTokenFunction from "./actions";
-import { revalidatePath } from "next/cache";
 import PreloadLogin from "@/components/PreloadLogin";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,15 +20,18 @@ export default async function RootLayout({
       <PreloadLogin />
       <body className={inter.className}>
         <div id="page">
-          <header>
-            <div className="title">Shane's Blog</div>
-            <Search title="Hello" />
-            <Providers>
-              <Nav />
-            </Providers>
+          <header style={{ paddingTop: "1em", paddingBottom: "1em" }}>
+            <div id="header-content">
+              <div className="title">Shane's Blog</div>
+              <Search title="Hello" />
+              <Providers>
+                <Nav />
+              </Providers>
+            </div>
           </header>
-
-          {children}
+          <main>
+            <div id="main-body-content">{children}</div>
+          </main>
         </div>
       </body>
     </html>

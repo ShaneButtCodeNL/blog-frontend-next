@@ -17,7 +17,10 @@ export default function WritePost(params: any) {
       body,
       localStorage.getItem("token") as string
     ).then((res) => {
-      if (!res) router.push("/write-post/error");
+      if (res === null) {
+        router.push("/write-post/error");
+        return;
+      }
       router.push(`/blog/${res?.blogId}`);
     });
   }

@@ -1,5 +1,6 @@
 import { BlogPostReturn } from "@/models/blogPostReturn";
 import { LoginReturnDetails, UserDetails } from "@/models/userReturn";
+import { Http2ServerResponse } from "http2";
 import { headers } from "next/dist/client/components/headers";
 import next from "next/types";
 import { cache } from "react";
@@ -131,8 +132,13 @@ export async function createBlogPost(
     cache: "no-store",
     body: JSON.stringify({ title, body }),
   });
+  console.log(res);
+  if (res.status === 401) {
+    return null;
+  }
   const data = await res.json();
   if (data) return data;
+
   return null;
 }
 
