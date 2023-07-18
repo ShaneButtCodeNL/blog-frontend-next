@@ -334,3 +334,25 @@ main {
 #new-post-cancel-button {
   grid-area: cancel-button;
 }
+.blog-post-controls-item {
+  border: solid 3px var(--background-fade);
+  width: fit-content;
+  padding: 0.5em;
+  border-radius: 1em 0;
+  margin: 0.5em 0.2em;
+}
+
+.like-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+.heart {
+  color: palevioletred;
+  font-size: 1.5em;
+  line-height: 2em;
+}
+.like-count {
+  line-height: 2em;
+  font-size: 1em;
+}

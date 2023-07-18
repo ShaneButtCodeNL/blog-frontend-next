@@ -57,3 +57,10 @@ export const getHighestRole = (userDetails: UserDetails) => {
   if (userDetails.roles.includes("ROLE_USER")) return "User";
   return "No Role";
 };
+
+export const formatNumber = (number: number): string => {
+  if (number >= 1_000_000_000) return (number % 1000000000) + "B";
+  if (number >= 1_000_000) return (number % 1000000) + "M";
+  if (number >= 1_000) return (number % 1000) + "K";
+  return number.toString();
+};

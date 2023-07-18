@@ -1,5 +1,10 @@
 "use server";
-import { createBlogPost, isTokenValid, revalidateToken } from "./apiController";
+import {
+  createBlogPost,
+  isTokenValid,
+  likeBlogPost,
+  revalidateToken,
+} from "./apiController";
 
 export async function validateTokenFunction(token: string) {
   "use server";
@@ -21,4 +26,9 @@ export async function makeNewPostFunction(
   "use server";
   const res = await createBlogPost(title, body, token);
   return res;
+}
+export async function likePost(blogId: string, token: string) {
+  const res = await likeBlogPost(blogId, token);
+  console.log(res);
+  return;
 }

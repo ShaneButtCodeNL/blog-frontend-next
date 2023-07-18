@@ -162,7 +162,7 @@ export async function getBlogPostByBlogPostId(
   blogId: String
 ): Promise<BlogPostReturn> {
   const res = await fetch(`${getBlogsPath}post/${blogId}`, {
-    next: { revalidate: thirtySeconds },
+    cache: "no-store",
   });
   const data = await res.json();
   console.log(data);
@@ -184,5 +184,18 @@ export async function likeBlogPostComment(
     },
   });
   const data: string = await res.json();
+  return data;
+}
+
+export async function likeBlogPost(blogId: string, token: string) {
+  const res = await fetch(`${getBlogsPath}post/like/${blogId}`, {
+    cache: "no-store",
+    method: PUT,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  const data: string = await res.text();
   return data;
 }
