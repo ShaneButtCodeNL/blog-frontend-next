@@ -17,7 +17,6 @@ export default function LoginForm(params: any) {
     e.preventDefault();
 
     const res = await loginFunction(username, password);
-    console.log("res", res);
     if (!res) {
       router.push("/login/failure");
       return;

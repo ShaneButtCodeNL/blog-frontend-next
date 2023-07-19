@@ -7,7 +7,7 @@ import { useState } from "react";
 import { likePost } from "@/functions/serverFunctions";
 import { store } from "@/store";
 import { useRouter } from "next/navigation";
-import { formatNumber } from "@/functions/helpers";
+import { formatNumber, openLoginModal } from "@/functions/helpers";
 
 export default function BlogPostDisplayControls({
   listOfLikes,
@@ -29,7 +29,7 @@ export default function BlogPostDisplayControls({
   function likeButtonClick() {
     if (!window) return;
     if (!store.getState().login.loggedIn) {
-      router.push("/login");
+      openLoginModal();
       return;
     }
     const token = localStorage.getItem("token") as string;

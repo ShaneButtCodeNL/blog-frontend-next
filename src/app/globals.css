@@ -36,6 +36,7 @@ html body {
   margin: 0;
 }
 body {
+  position: relative;
   color: var(--font-color);
   min-width: 100%;
   background-image: linear-gradient(
@@ -50,6 +51,10 @@ body {
   margin: auto;
   min-height: 100vh;
   position: relative;
+}
+
+.button {
+  color: var(--foreground-2);
 }
 
 header {
@@ -355,4 +360,62 @@ main {
 .like-count {
   line-height: 2em;
   font-size: 1em;
+}
+
+#login-modal {
+  background: var(--background-fade);
+  z-index: 10;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+#login-modal-form {
+  position: absolute;
+  display: grid;
+  width: max(800px, 50%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: var(--background-2);
+  grid-template-rows: 3em 3em 3em;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-areas:
+    "username-label username-input username-input username-input"
+    "password-label password-input password-input password-input"
+    ". confirm-button cancel-button ."
+    ". text text .";
+  gap: 1em;
+  padding: 1em;
+  height: fit-content;
+  height: max(400px, 30%);
+  color: var(--font-color);
+  place-content: center;
+  border-radius: 1em;
+  border: var(--foreground-1) solid 5px;
+}
+#login-modal-username-label {
+  grid-area: username-label;
+}
+#login-modal-username-input {
+  grid-area: username-input;
+}
+#login-modal-password-label {
+  grid-area: password-label;
+}
+#login-modal-password-input-hidden {
+  grid-area: password-input;
+}
+#login-modal-password-input-shown {
+  grid-area: password-input;
+}
+#login-modal-confirm {
+  grid-area: confirm-button;
+}
+#login-modal-cancel {
+  grid-area: cancel-button;
+}
+#login-modal-register {
+  grid-area: text;
+  padding: 1em;
 }

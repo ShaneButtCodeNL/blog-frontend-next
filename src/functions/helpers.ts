@@ -64,3 +64,16 @@ export const formatNumber = (number: number): string => {
   if (number >= 1_000) return (number % 1000) + "K";
   return number.toString();
 };
+
+export function closeLoginModal() {
+  "use client";
+  const modal = document.getElementById("login-modal");
+  if (!modal) return;
+  modal.close();
+}
+export function openLoginModal() {
+  "use client";
+  const modal = document.getElementById("login-modal");
+  if (!modal) return;
+  modal.show();
+}
