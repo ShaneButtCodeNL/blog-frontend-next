@@ -17,15 +17,14 @@ export default function BlogPostDisplayControls({
   blogId: string;
 }) {
   const [liked, setLiked] = useState(
-    localStorage.getItem("userDetails")
-      ? listOfLikes.indexOf(
-          (JSON.parse(localStorage.getItem("userDetails")!) as UserDetails)
-            .userId as string
-        ) > -1
+    store.getState().login.loggedIn
+      ? listOfLikes.includes(
+          store.getState().login.userDetails?.userId as string
+        )
       : false
   );
   const [likeCount, setLikeCount] = useState(listOfLikes.length);
-  const router = useRouter();
+
   function likeButtonClick() {
     if (!window) return;
     if (!store.getState().login.loggedIn) {
@@ -33,11 +32,16 @@ export default function BlogPostDisplayControls({
       return;
     }
     const token = localStorage.getItem("token") as string;
-    likePost(blogId, token).then((_) => {
+    likePost(blogId, token).then((res) => {
       setLikeCount((v) => v + (liked ? -1 : 1));
       setLiked((v) => !v);
     });
   }
+  store.subscribe(() => {
+    setLiked(
+      listOfLikes.includes(store.getState().login.userDetails?.userId as string)
+    );
+  });
   return (
     <div className="blog-post-controls">
       <div className="blog-post-controls-item like-controls">

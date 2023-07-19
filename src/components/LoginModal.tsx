@@ -1,9 +1,10 @@
 "use client";
 
-import { closeLoginModal, setLoginDetails } from "@/functions/helpers";
+import { closeLoginModal } from "@/functions/helpers";
 import { loginFunction } from "@/functions/serverFunctions";
+import { store } from "@/store";
+import { setLoggedIn, setUserDetails } from "@/store/login";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { FormEvent, useRef, useState } from "react";
 
 export default function LoginModal() {
@@ -11,7 +12,6 @@ export default function LoginModal() {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
   const dialogRef = useRef(null);
-  const router = useRouter();
 
   function submitFormFunction(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -20,15 +20,35 @@ export default function LoginModal() {
         setLoginError(true);
         return;
       }
-      setLoginDetails(res.token as string, res.details);
-      closeLoginModal();
-      //router.refresh();
+      store.dispatch(setUserDetails(res.details));
+      store.dispatch(setLoggedIn(true));
+      localStorage.setItem("token", res.token as string);
+      localStorage.setItem("userDetails", JSON.stringify(res.details));
+      closeModalFunction();
     });
   }
 
+  function closeModalFunction() {
+    closeLoginModal();
+    setPassword("");
+    setUsername("");
+    setLoginError(false);
+  }
+
   return (
-    <dialog id="login-modal" ref={dialogRef}>
-      <form id="login-modal-form" onSubmit={submitFormFunction}>
+    <dialog
+      id="login-modal"
+      ref={dialogRef}
+      onClick={(e) => {
+        e.stopPropagation();
+        closeModalFunction();
+      }}
+    >
+      <form
+        id="login-modal-form"
+        onSubmit={submitFormFunction}
+        onClick={(e) => e.stopPropagation()}
+      >
         <label
           htmlFor="login-modal-username"
           id="login-modal-username-label"
@@ -42,7 +62,10 @@ export default function LoginModal() {
           name="login-modal-username"
           id="login-modal-username-input"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => {
+            setUsername(e.target.value);
+            setLoginError(false);
+          }}
           className="form-input"
         />
         <label
@@ -57,7 +80,10 @@ export default function LoginModal() {
           type="password"
           value={password}
           placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
+          onChange={(e) => {
+            setPassword(e.target.value);
+            setLoginError(false);
+          }}
           className="form-input"
         />
         <button type="submit" id="login-modal-confirm" className="form-button">
@@ -67,7 +93,7 @@ export default function LoginModal() {
           type="button"
           id="login-modal-cancel"
           className="form-button"
-          onClick={closeLoginModal}
+          onClick={closeModalFunction}
         >
           Cancel
         </button>
@@ -75,11 +101,22 @@ export default function LoginModal() {
           Not a member.
           <br /> Why not{" "}
           <Link href="/register">
-            <button type="button" className="button" onClick={closeLoginModal}>
+            <button
+              type="button"
+              className="button"
+              onClick={closeModalFunction}
+            >
               Register
             </button>
           </Link>
-          ?
+        </div>
+        <div
+          id="login-modal-error"
+          style={loginError ? {} : { display: "none" }}
+        >
+          {" "}
+          Something went wrong. Ensure you inputed valid credentials, if it
+          still doesn't work please try again later.
         </div>
       </form>
     </dialog>

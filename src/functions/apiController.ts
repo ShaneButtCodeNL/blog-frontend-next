@@ -41,7 +41,9 @@ export async function login(
     headers: getJSONHeader(),
     cache: "no-store",
   });
-  if (res.status == 404) return null;
+  if (res.status >= 400) return null;
+  if (!res) return null;
+  console.log(res);
   const data = await res.json();
   console.log(data);
   if (!data) throw new Error("User not found");
