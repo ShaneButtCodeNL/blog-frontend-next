@@ -67,13 +67,13 @@ export const formatNumber = (number: number): string => {
 
 export function closeLoginModal() {
   "use client";
-  const modal = document.getElementById("login-modal");
+  const modal = document.getElementById("login-modal") as HTMLDialogElement;
   if (!modal) return;
   modal.close();
 }
 export function openLoginModal() {
   "use client";
-  const modal = document.getElementById("login-modal");
+  const modal = document.getElementById("login-modal") as HTMLDialogElement;
   if (!modal) return;
   modal.show();
 }

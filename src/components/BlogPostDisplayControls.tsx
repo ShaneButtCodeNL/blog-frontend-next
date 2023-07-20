@@ -1,13 +1,17 @@
 "use client";
-import { faHeart as heartSolid } from "@fortawesome/free-solid-svg-icons";
+import {
+  faHeart as heartSolid,
+  faPlus,
+} from "@fortawesome/free-solid-svg-icons";
 import { faHeart as heartOutline } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserDetails } from "@/models/userReturn";
 import { useState } from "react";
-import { likePost } from "@/functions/serverFunctions";
+import { createCommentFunction, likePost } from "@/functions/serverFunctions";
 import { store } from "@/store";
 import { useRouter } from "next/navigation";
 import { formatNumber, openLoginModal } from "@/functions/helpers";
+import MakeCommentModal from "./MakeCommentModal";
 
 export default function BlogPostDisplayControls({
   listOfLikes,
@@ -24,6 +28,18 @@ export default function BlogPostDisplayControls({
       : false
   );
   const [likeCount, setLikeCount] = useState(listOfLikes.length);
+
+  function makeCommentClick() {
+    if (!store.getState().login.loggedIn) {
+      openLoginModal();
+      return;
+    }
+    const dialog = document.getElementById(
+      "make-comment-modal"
+    ) as HTMLDialogElement;
+    if (!dialog) return;
+    dialog.show();
+  }
 
   function likeButtonClick() {
     if (!window) return;
@@ -61,6 +77,13 @@ export default function BlogPostDisplayControls({
         </button>
         <div className="like-count">{" " + formatNumber(likeCount)}</div>
       </div>
+      <div className="blog-post-controls-item make-comment-button">
+        <button type="button" onClick={makeCommentClick}>
+          <FontAwesomeIcon icon={faPlus} />
+          {" Comment"}
+        </button>
+      </div>
+      <MakeCommentModal />
     </div>
   );
 }

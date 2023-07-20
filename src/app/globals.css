@@ -230,6 +230,7 @@ main {
   margin: auto;
   border: var(--foreground-2) outset 2px;
   border-radius: 1em;
+  color: var(--font-color);
 }
 .form-label {
   text-align: center;
@@ -242,10 +243,12 @@ main {
   background: black;
   border: var(--background-2) 2px outset;
   border-radius: 1em;
+  color: var(--font-color);
 }
 .form-input-password {
   width: 100%;
   padding-right: 3em;
+  color: var(--font-color);
 }
 #register-form {
   line-height: 3em;
@@ -360,6 +363,44 @@ main {
 .like-count {
   line-height: 2em;
   font-size: 1em;
+}
+
+#make-comment-modal {
+  background: var(--background-fade);
+  z-index: 10;
+  height: 100%;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 0;
+}
+
+#make-comment-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 1em;
+  background-color: var(--background-2);
+  border-radius: 1em;
+  border: #5c469c solid 3px;
+  width: max(50%, 900px);
+  display: grid;
+  grid-template-areas:
+    "text text text text"
+    ". submit cancel .";
+  grid-template-rows: auto auto;
+  gap: 1em;
+}
+#make-comment-modal-textarea {
+  grid-area: text;
+}
+#make-comment-submit {
+  grid-area: submit;
+}
+#make-comment-cancel {
+  grid-area: cancel;
 }
 
 #login-modal {

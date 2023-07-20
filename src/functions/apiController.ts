@@ -13,6 +13,7 @@ const registerPath = `${userPath}/register`;
 
 const getBlogsPath = `${blogPath}/`;
 const makeBlogPostPath = `${blogPath}/`;
+const makeCommentPath = `${blogPath}/comment/`;
 const searchBlogPath = `${getBlogsPath}search/title/`;
 
 const GET = "GET";
@@ -144,7 +145,25 @@ export async function createBlogPost(
   return null;
 }
 
-export function createComment() {}
+export async function createComment(
+  blogId: string,
+  body: string,
+  token: string,
+  parentCommentId: string | null = null
+) {
+  const payload = parentCommentId
+    ? { blogId, body, parentCommentId }
+    : { blogId, body };
+  const res = await fetch(makeCommentPath, {
+    method: POST,
+    headers: getBearerTokenHeader(token),
+    cache: "no-store",
+    body: JSON.stringify(payload),
+  });
+  const data = await res.json();
+  console.log(data);
+  return data;
+}
 
 export async function searchBlogPostsWithTitleSnippit(
   titleSnippit: String

@@ -1,6 +1,7 @@
 "use server";
 import {
   createBlogPost,
+  createComment,
   isTokenValid,
   likeBlogPost,
   login,
@@ -41,5 +42,20 @@ export async function loginFunction(username: string, password: string) {
     return;
   }
   console.log("PASS");
+  return res;
+}
+
+export async function createCommentFunction(
+  blogId: string,
+  body: string,
+  token: string,
+  parentCommentId: string | null = null
+) {
+  const res = await createComment(blogId, body, token, parentCommentId);
+  if (!res) {
+    console.log("FAIL MAKE COMMENT");
+    return;
+  }
+  console.log("PASS MAKE COMMENT");
   return res;
 }
