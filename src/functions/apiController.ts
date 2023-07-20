@@ -13,7 +13,7 @@ const registerPath = `${userPath}/register`;
 
 const getBlogsPath = `${blogPath}/`;
 const makeBlogPostPath = `${blogPath}/`;
-const makeCommentPath = `${blogPath}/comment/`;
+const makeCommentPath = `${blogPath}/comment`;
 const searchBlogPath = `${getBlogsPath}search/title/`;
 
 const GET = "GET";
@@ -160,6 +160,8 @@ export async function createComment(
     cache: "no-store",
     body: JSON.stringify(payload),
   });
+  console.log("RES", makeCommentPath, res.ok, res.status, blogId, payload);
+  if (!res || !res.ok) return null;
   const data = await res.json();
   console.log(data);
   return data;

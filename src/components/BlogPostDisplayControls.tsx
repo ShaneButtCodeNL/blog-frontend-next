@@ -83,7 +83,7 @@ export default function BlogPostDisplayControls({
           {" Comment"}
         </button>
       </div>
-      <MakeCommentModal />
+      <MakeCommentModal blogId={blogId} />
     </div>
   );
 }
