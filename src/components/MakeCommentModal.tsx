@@ -1,13 +1,16 @@
 "use client";
 
 import { createCommentFunction } from "@/functions/serverFunctions";
-import { FormEvent, useState } from "react";
+import { Dispatch, FormEvent, useState } from "react";
 import BlogPostCommentDisplay from "./BlogPostCommentDisplay";
 import { createPortal } from "react-dom";
+import { BlogPostCommentReturn } from "@/models/blogPostReturn";
 
 export default function MakeCommentModal({ blogId }: { blogId: string }) {
   const [body, setBody] = useState("");
-  const addedComments: string[] = [];
+  const [addedComments, setAddedComments] = useState<BlogPostCommentReturn[]>(
+    []
+  );
   function closeModal() {
     const dialog = document.getElementById(
       "make-comment-modal"
@@ -21,7 +24,8 @@ export default function MakeCommentModal({ blogId }: { blogId: string }) {
     e.preventDefault();
     const token = localStorage.getItem("token") as string;
     createCommentFunction(blogId, body, token).then((res) => {
-      addedComments.push(body);
+      if (res)
+        setAddedComments((v) => [...v, res.comments[res.comments.length - 1]]);
       closeModal();
     });
   }
@@ -51,6 +55,24 @@ export default function MakeCommentModal({ blogId }: { blogId: string }) {
         >
           Cancel
         </button>
+        {document.getElementById("blog-comments") ? (
+          createPortal(
+            <>
+              {addedComments.map((v) => {
+                return (
+                  <BlogPostCommentDisplay
+                    comment={v}
+                    key={`key-BCD-${v.commentId}`}
+                    order={0}
+                  />
+                );
+              })}
+            </>,
+            document.getElementById("blog-comments")!
+          )
+        ) : (
+          <></>
+        )}
       </form>
     </dialog>
   );

@@ -31,10 +31,11 @@ export default function BlogPostDisplay(params: any) {
         blogId={blogPost.blogId}
       />
       <div id="blog-comments">
-        {blogPost.comments.map((comment) => (
+        {blogPost.comments.map((comment, i) => (
           <BlogPostCommentDisplay
             comment={comment}
             key={`key-BCD-${comment.commentId}`}
+            order={i + 1}
           />
         ))}
       </div>

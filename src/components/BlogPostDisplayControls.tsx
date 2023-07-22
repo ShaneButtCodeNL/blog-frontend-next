@@ -6,12 +6,17 @@ import {
 import { faHeart as heartOutline } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserDetails } from "@/models/userReturn";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { createCommentFunction, likePost } from "@/functions/serverFunctions";
 import { store } from "@/store";
 import { useRouter } from "next/navigation";
 import { formatNumber, openLoginModal } from "@/functions/helpers";
 import MakeCommentModal from "./MakeCommentModal";
+import React from "react";
+import ReactDOM from "react-dom";
+import Nav from "./Nav";
+import Search from "./Search";
+import { createRoot } from "react-dom/client";
 
 export default function BlogPostDisplayControls({
   listOfLikes,

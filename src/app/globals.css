@@ -161,6 +161,8 @@ main {
 
 #blog-comments {
   border: #1d267d 3px solid;
+  display: flex;
+  flex-direction: column;
 }
 
 .blog-post-comment-display-details {

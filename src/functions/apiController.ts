@@ -1,4 +1,4 @@
-import { BlogPostReturn } from "@/models/blogPostReturn";
+import { BlogPostCommentReturn, BlogPostReturn } from "@/models/blogPostReturn";
 import { LoginReturnDetails, UserDetails } from "@/models/userReturn";
 import { Http2ServerResponse } from "http2";
 import { headers } from "next/dist/client/components/headers";
@@ -150,7 +150,7 @@ export async function createComment(
   body: string,
   token: string,
   parentCommentId: string | null = null
-) {
+): Promise<BlogPostReturn | null> {
   const payload = parentCommentId
     ? { blogId, body, parentCommentId }
     : { blogId, body };

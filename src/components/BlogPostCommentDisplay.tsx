@@ -7,6 +7,7 @@ export default function BlogPostCommentDisplay(params: any) {
     <div
       className="blog-post-comment-container"
       key={`key-${mainComment.commentId}`}
+      style={{ order: params.order }}
     >
       <div id={`${mainComment.commentId}-title`}>{mainComment.title}</div>
       <div
