@@ -40,9 +40,9 @@ export default function BlogPostDisplay(params: any) {
       <div id="blog-comments">
         {blogPost.comments.map((comment, i) => (
           <BlogPostCommentDisplay
-            comment={comment}
+            mainComment={comment}
             key={`key-BCD-${comment.commentId}`}
-            order={i + 1}
+            order={blogPost.comments.length - i + 1}
           />
         ))}
       </div>

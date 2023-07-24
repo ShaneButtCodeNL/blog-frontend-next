@@ -475,3 +475,8 @@ main {
 #delete-post-modal-cancel {
   grid-area: cancel;
 }
+
+.blog-post-controls {
+  display: flex;
+  gap: 1em;
+}

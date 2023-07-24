@@ -1,7 +1,7 @@
 "use client";
 
 import { createCommentFunction } from "@/functions/serverFunctions";
-import { Dispatch, FormEvent, useState } from "react";
+import { FormEvent, useState } from "react";
 import BlogPostCommentDisplay from "../BlogPostCommentDisplay";
 import { createPortal } from "react-dom";
 import { BlogPostCommentReturn } from "@/models/blogPostReturn";
@@ -62,7 +62,7 @@ export default function MakeCommentModal({ blogId }: { blogId: string }) {
               {addedComments.map((v) => {
                 return (
                   <BlogPostCommentDisplay
-                    comment={v}
+                    mainComment={v}
                     key={`key-BCD-${v.commentId}`}
                     order={0}
                   />

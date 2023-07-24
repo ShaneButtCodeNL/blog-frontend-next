@@ -1,15 +1,17 @@
 "use client";
 import { deleteBlogPostFunction } from "@/functions/serverFunctions";
 import { useRouter } from "next/navigation";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
 
 export default function DeletePostModal({ blogId }: { blogId: string }) {
+  const [showError, setShowError] = useState(false);
   const router = useRouter();
   function closeModal() {
     const dialog = document.getElementById(
       "delete-post-modal"
     ) as HTMLDialogElement;
     if (!dialog) return;
+    setShowError(false);
     dialog.close();
   }
 
@@ -21,8 +23,12 @@ export default function DeletePostModal({ blogId }: { blogId: string }) {
     }
     const token = localStorage.getItem("token") as string;
     deleteBlogPostFunction(blogId, token).then((res) => {
+      if (!res) {
+        setShowError(true);
+        return;
+      }
       closeModal();
-      if (res) router.push(`/blog/${blogId}/deleted`);
+      router.push(`/blog/${blogId}/deleted`);
     });
   }
 
@@ -43,6 +49,12 @@ export default function DeletePostModal({ blogId }: { blogId: string }) {
         <div id="delete-post-modal-text">
           Are you sure you want to delete this post? Post will remain in
           database but will no longer be viewable by users.
+          <div
+            style={showError ? {} : { display: "none" }}
+            className="text-reject"
+          >
+            Something went wrong.
+          </div>
         </div>
         <button
           id="delete-post-modal-confirm"

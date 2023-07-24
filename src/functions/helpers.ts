@@ -1,5 +1,11 @@
 import { UserDetails } from "@/models/userReturn";
 import { store } from "@/store";
+import {
+  setBlogId,
+  setBody,
+  setParentCommentId,
+  setTitle,
+} from "@/store/commentReply";
 import login, { setLoggedIn, setUserDetails } from "@/store/login";
 
 const TOKEN = "token";
@@ -76,4 +82,29 @@ export function openLoginModal() {
   const modal = document.getElementById("login-modal") as HTMLDialogElement;
   if (!modal) return;
   modal.show();
+}
+
+export function openMakeCommentReplyModal(
+  blogId: string,
+  parentCommentId: string | null
+) {
+  "use client";
+  if (blogId === "") return;
+  store.dispatch(setBlogId(blogId));
+  store.dispatch(setParentCommentId(parentCommentId || ""));
+  const modal = document.getElementById(
+    "make-comment-reply-modal"
+  ) as HTMLDialogElement;
+  modal.showModal();
+}
+export function closeMakeCommentReplyModal() {
+  "use client";
+  store.dispatch(setBlogId(""));
+  store.dispatch(setParentCommentId(""));
+  store.dispatch(setBody(""));
+  store.dispatch(setParentCommentId(""));
+  const modal = document.getElementById(
+    "make-comment-reply-modal"
+  ) as HTMLDialogElement;
+  modal.close();
 }

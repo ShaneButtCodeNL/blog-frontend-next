@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import Providers from "@/components/Provider";
 import PreloadLogin from "@/components/PreloadLogin";
 import LoginModal from "@/components/modals/LoginModal";
+import MakeCommentReplyModal from "@/components/modals/MakeCommentReplyModal";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -21,7 +22,9 @@ export default async function RootLayout({
       <PreloadLogin />
       <body className={inter.className}>
         <LoginModal />
-
+        <Providers>
+          <MakeCommentReplyModal />
+        </Providers>
         <div id="page">
           <header style={{ paddingTop: "1em", paddingBottom: "1em" }}>
             <div id="header-content">

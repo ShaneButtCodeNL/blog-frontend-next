@@ -231,6 +231,7 @@ export async function deletePost(blogId: string, token: string) {
     headers: getBearerTokenHeader(token),
     body: JSON.stringify({ blogId }),
   });
+  if (!res.ok) return null;
   const data = await res.json();
   return data;
 }

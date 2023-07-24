@@ -9,6 +9,7 @@ import {
   faPenNib,
   faUser,
   faToolbox,
+  faBook,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserDetails } from "@/models/userReturn";
@@ -33,8 +34,13 @@ export default function Nav(props: any) {
   return (
     <nav id="main-nav">
       <Link href={"/"}>
-        <button type="button">
+        <button type="button" title="Home">
           <FontAwesomeIcon icon={faHouse} />
+        </button>
+      </Link>
+      <Link href={"/blogs/1"}>
+        <button type="button" title="Blogs">
+          <FontAwesomeIcon icon={faBook} />
         </button>
       </Link>
       {loggedIn ? (
@@ -59,7 +65,7 @@ export default function Nav(props: any) {
       {userDetails &&
       hasRole(userDetails, "ROLE_WRITER", "ROLE_ADMIN", "ROLE_OWNER") ? (
         <Link href="/write-post">
-          <button>
+          <button type="button" title="Write A Post">
             <FontAwesomeIcon icon={faPenNib} />
             {" New Post"}
           </button>
@@ -69,7 +75,9 @@ export default function Nav(props: any) {
       )}
       {userDetails && loggedIn ? (
         <Link href={`/user/${userDetails?.username}`}>
-          <FontAwesomeIcon icon={faUser} />
+          <button type="button" title="User Details">
+            <FontAwesomeIcon icon={faUser} />
+          </button>
         </Link>
       ) : (
         <></>
@@ -78,8 +86,10 @@ export default function Nav(props: any) {
       userDetails &&
       hasRole(userDetails, "ROLE_ADMIN", "ROLE_OWNER") ? (
         <Link href="/admin">
-          <FontAwesomeIcon icon={faToolbox} />
-          {" Admin"}
+          <button type="button" title="Admin Controls">
+            <FontAwesomeIcon icon={faToolbox} />
+            {" Admin"}
+          </button>
         </Link>
       ) : (
         <></>

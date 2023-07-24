@@ -1,13 +1,21 @@
-import { getDateString } from "@/functions/helpers";
+"use client";
+import { getDateString, openMakeCommentReplyModal } from "@/functions/helpers";
 import { BlogPostCommentReturn } from "@/models/blogPostReturn";
+import { useState } from "react";
 
-export default function BlogPostCommentDisplay(params: any) {
-  const mainComment: BlogPostCommentReturn = params.comment;
+export default function BlogPostCommentDisplay({
+  mainComment,
+  order,
+}: {
+  mainComment: BlogPostCommentReturn;
+  order: number;
+}) {
+  const [hide, setHide] = useState(false);
   return (
     <div
       className="blog-post-comment-container"
       key={`key-${mainComment.commentId}`}
-      style={{ order: params.order }}
+      style={{ order }}
     >
       <div id={`${mainComment.commentId}-title`}>{mainComment.title}</div>
       <div
@@ -33,19 +41,53 @@ export default function BlogPostCommentDisplay(params: any) {
         </div>
       </div>
       <div className="comment-actions">
-        <button type="button">Hide</button>
+        <button
+          type="button"
+          onClick={() => setHide(true)}
+          style={hide ? { display: "none" } : {}}
+        >
+          Hide
+        </button>
+        <button
+          type="button"
+          onClick={() => setHide(false)}
+          style={hide ? {} : { display: "none" }}
+        >
+          Show
+        </button>
+
         <div className="comment-likes-container" style={{ display: "flex" }}>
           <div className="comment-like-count">{mainComment.likes.length}</div>
           <button type="button" className="comment-like-btn">
             LK
           </button>
         </div>
-        <button type="button">Reply</button>
+        <button
+          type="button"
+          style={hide ? { display: "none" } : {}}
+          onClick={() =>
+            openMakeCommentReplyModal(
+              mainComment.blogId,
+              mainComment.parentCommentId
+            )
+          }
+        >
+          Reply
+        </button>
       </div>
-      <div id={`${mainComment.commentId}-body`}>{mainComment.body}</div>
-      <div className="comment-replies">
-        {mainComment.replies.map((reply) => (
-          <BlogPostCommentDisplay comment={reply} key={reply.commentId} />
+      <div
+        id={`${mainComment.commentId}-body`}
+        style={hide ? { display: "none" } : {}}
+      >
+        {mainComment.body}
+      </div>
+      <div className="comment-replies" style={hide ? { display: "none" } : {}}>
+        {mainComment.replies.map((reply, i) => (
+          <BlogPostCommentDisplay
+            mainComment={reply}
+            order={mainComment.replies.length - i + 1}
+            key={reply.commentId}
+          />
         ))}
       </div>
     </div>
