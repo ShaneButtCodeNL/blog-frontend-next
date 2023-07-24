@@ -4,7 +4,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import Providers from "@/components/Provider";
 import PreloadLogin from "@/components/PreloadLogin";
-import LoginModal from "@/components/LoginModal";
+import LoginModal from "@/components/modals/LoginModal";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {

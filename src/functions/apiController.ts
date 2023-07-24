@@ -15,6 +15,7 @@ const getBlogsPath = `${blogPath}/`;
 const makeBlogPostPath = `${blogPath}/`;
 const makeCommentPath = `${blogPath}/comment`;
 const searchBlogPath = `${getBlogsPath}search/title/`;
+const deleteBlogPostPath = `${blogPath}/delete/post`;
 
 const GET = "GET";
 const POST = "POST";
@@ -220,5 +221,16 @@ export async function likeBlogPost(blogId: string, token: string) {
     },
   });
   const data: string = await res.text();
+  return data;
+}
+
+export async function deletePost(blogId: string, token: string) {
+  const res = await fetch(deleteBlogPostPath, {
+    cache: "no-store",
+    method: PUT,
+    headers: getBearerTokenHeader(token),
+    body: JSON.stringify({ blogId }),
+  });
+  const data = await res.json();
   return data;
 }

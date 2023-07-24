@@ -2,7 +2,7 @@
 
 import { createCommentFunction } from "@/functions/serverFunctions";
 import { Dispatch, FormEvent, useState } from "react";
-import BlogPostCommentDisplay from "./BlogPostCommentDisplay";
+import BlogPostCommentDisplay from "../BlogPostCommentDisplay";
 import { createPortal } from "react-dom";
 import { BlogPostCommentReturn } from "@/models/blogPostReturn";
 
@@ -30,9 +30,10 @@ export default function MakeCommentModal({ blogId }: { blogId: string }) {
     });
   }
   return (
-    <dialog id="make-comment-modal" onClick={closeModal}>
+    <dialog id="make-comment-modal" className="modal" onClick={closeModal}>
       <form
         id="make-comment-form"
+        className="modal-form"
         onClick={(e) => e.stopPropagation()}
         onSubmit={submitFormFunction}
       >

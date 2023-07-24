@@ -2,28 +2,27 @@
 import {
   faHeart as heartSolid,
   faPlus,
+  faTrash,
+  faTrashRestore,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as heartOutline } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { UserDetails } from "@/models/userReturn";
-import { ReactElement, useState } from "react";
-import { createCommentFunction, likePost } from "@/functions/serverFunctions";
+import { useState } from "react";
+import { likePost } from "@/functions/serverFunctions";
 import { store } from "@/store";
-import { useRouter } from "next/navigation";
 import { formatNumber, openLoginModal } from "@/functions/helpers";
-import MakeCommentModal from "./MakeCommentModal";
+import MakeCommentModal from "./modals/MakeCommentModal";
 import React from "react";
-import ReactDOM from "react-dom";
-import Nav from "./Nav";
-import Search from "./Search";
-import { createRoot } from "react-dom/client";
+import DeletePostModal from "./modals/DeletePostModal";
 
 export default function BlogPostDisplayControls({
   listOfLikes,
   blogId,
+  deleted,
 }: {
   listOfLikes: string[];
   blogId: string;
+  deleted: boolean;
 }) {
   const [liked, setLiked] = useState(
     store.getState().login.loggedIn
@@ -46,6 +45,18 @@ export default function BlogPostDisplayControls({
     dialog.show();
   }
 
+  function deletePostClick() {
+    if (!store.getState().login.loggedIn) {
+      openLoginModal();
+      return;
+    }
+    const dialog = document.getElementById(
+      "delete-post-modal"
+    ) as HTMLDialogElement;
+    if (!dialog) return;
+    dialog.show();
+  }
+
   function likeButtonClick() {
     if (!window) return;
     if (!store.getState().login.loggedIn) {
@@ -53,7 +64,7 @@ export default function BlogPostDisplayControls({
       return;
     }
     const token = localStorage.getItem("token") as string;
-    likePost(blogId, token).then((res) => {
+    likePost(blogId, token).then((_) => {
       setLikeCount((v) => v + (liked ? -1 : 1));
       setLiked((v) => !v);
     });
@@ -88,7 +99,21 @@ export default function BlogPostDisplayControls({
           {" Comment"}
         </button>
       </div>
+      <div className="blog-post-controls-item make-comment-button">
+        {deleted ? (
+          <button type="button" onClick={deletePostClick}>
+            <FontAwesomeIcon icon={faTrashRestore} />
+            {" Restore"}
+          </button>
+        ) : (
+          <button type="button" onClick={deletePostClick}>
+            <FontAwesomeIcon icon={faTrash} />
+            {" Delete"}
+          </button>
+        )}
+      </div>
       <MakeCommentModal blogId={blogId} />
+      <DeletePostModal blogId={blogId} />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 import {
   createBlogPost,
   createComment,
+  deletePost,
   isTokenValid,
   likeBlogPost,
   login,
@@ -57,5 +58,15 @@ export async function createCommentFunction(
     return;
   }
   console.log("PASS MAKE COMMENT");
+  return res;
+}
+
+export async function deleteBlogPostFunction(blogId: string, token: string) {
+  const res = await deletePost(blogId, token);
+  if (!res) {
+    console.log("DELETE FAIL");
+    return null;
+  }
+  console.log("DELETE PASS");
   return res;
 }

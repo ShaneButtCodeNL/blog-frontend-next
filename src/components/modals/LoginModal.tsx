@@ -38,6 +38,7 @@ export default function LoginModal() {
   return (
     <dialog
       id="login-modal"
+      className="modal"
       ref={dialogRef}
       onClick={(e) => {
         e.stopPropagation();
@@ -46,6 +47,7 @@ export default function LoginModal() {
     >
       <form
         id="login-modal-form"
+        className="modal-form"
         onSubmit={submitFormFunction}
         onClick={(e) => e.stopPropagation()}
       >
