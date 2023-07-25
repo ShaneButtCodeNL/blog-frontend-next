@@ -4,6 +4,7 @@ import {
   faPlus,
   faTrash,
   faTrashRestore,
+  faSkullCrossbones,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as heartOutline } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,6 +15,8 @@ import { formatNumber, openLoginModal } from "@/functions/helpers";
 import MakeCommentModal from "./modals/MakeCommentModal";
 import React from "react";
 import DeletePostModal from "./modals/DeletePostModal";
+import RestorePostModal from "./modals/RestorePostModal";
+import KillPostModal from "./modals/KillPostModal";
 
 export default function BlogPostDisplayControls({
   listOfLikes,
@@ -52,6 +55,29 @@ export default function BlogPostDisplayControls({
     }
     const dialog = document.getElementById(
       "delete-post-modal"
+    ) as HTMLDialogElement;
+    if (!dialog) return;
+    dialog.show();
+  }
+
+  function restorePostClick() {
+    if (!store.getState().login.loggedIn) {
+      openLoginModal();
+      return;
+    }
+    const dialog = document.getElementById(
+      "restore-post-modal"
+    ) as HTMLDialogElement;
+    if (!dialog) return;
+    dialog.show();
+  }
+  function killPostClick() {
+    if (!store.getState().login.loggedIn) {
+      openLoginModal();
+      return;
+    }
+    const dialog = document.getElementById(
+      "kill-post-modal"
     ) as HTMLDialogElement;
     if (!dialog) return;
     dialog.show();
@@ -101,7 +127,7 @@ export default function BlogPostDisplayControls({
       </div>
       <div className="blog-post-controls-item make-comment-button">
         {deleted ? (
-          <button type="button" onClick={deletePostClick}>
+          <button type="button" onClick={restorePostClick}>
             <FontAwesomeIcon icon={faTrashRestore} />
             {" Restore"}
           </button>
@@ -112,8 +138,20 @@ export default function BlogPostDisplayControls({
           </button>
         )}
       </div>
+      <div
+        className="blog-post-controls-item make-comment-button"
+        style={deleted ? {} : { display: "none" }}
+      >
+        <button type="button" onClick={killPostClick}>
+          <FontAwesomeIcon icon={faSkullCrossbones} />
+          {" Remove"}
+        </button>
+      </div>
+
       <MakeCommentModal blogId={blogId} />
       <DeletePostModal blogId={blogId} />
+      <RestorePostModal blogId={blogId} />
+      <KillPostModal blogId={blogId} />
     </div>
   );
 }

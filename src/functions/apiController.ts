@@ -16,10 +16,13 @@ const makeBlogPostPath = `${blogPath}/`;
 const makeCommentPath = `${blogPath}/comment`;
 const searchBlogPath = `${getBlogsPath}search/title/`;
 const deleteBlogPostPath = `${blogPath}/delete/post`;
+const restorePostPath = `${blogPath}/restore/blog`;
+const killBlogPostPath = `${blogPath}/blog`;
 
 const GET = "GET";
 const POST = "POST";
 const PUT = "PUT";
+const DELETE = "DELETE";
 
 const tenSeconds = 10;
 const thirtySeconds = 30;
@@ -189,7 +192,6 @@ export async function getBlogPostByBlogPostId(
     cache: "no-store",
   });
   const data = await res.json();
-  console.log(data);
   if (!data) throw new Error("Something went wrong");
   return data;
 }
@@ -228,6 +230,30 @@ export async function deletePost(blogId: string, token: string) {
   const res = await fetch(deleteBlogPostPath, {
     cache: "no-store",
     method: PUT,
+    headers: getBearerTokenHeader(token),
+    body: JSON.stringify({ blogId }),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data;
+}
+
+export async function restorePost(blogId: string, token: string) {
+  const res = await fetch(restorePostPath, {
+    cache: "no-store",
+    method: PUT,
+    headers: getBearerTokenHeader(token),
+    body: JSON.stringify({ blogId }),
+  });
+  if (!res.ok) return null;
+  const data = res.json();
+  return data;
+}
+
+export async function killPost(blogId: string, token: string) {
+  const res = await fetch(killBlogPostPath, {
+    cache: "no-store",
+    method: DELETE,
     headers: getBearerTokenHeader(token),
     body: JSON.stringify({ blogId }),
   });

@@ -1,14 +1,14 @@
 "use client";
-import { deleteBlogPostFunction } from "@/functions/serverFunctions";
+import { restoreBlogPostFunction } from "@/functions/serverFunctions";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-export default function DeletePostModal({ blogId }: { blogId: string }) {
+export default function RestorePostModal({ blogId }: { blogId: string }) {
   const [showError, setShowError] = useState(false);
   const router = useRouter();
   function closeModal() {
     const dialog = document.getElementById(
-      "delete-post-modal"
+      "restore-post-modal"
     ) as HTMLDialogElement;
     if (!dialog) return;
     setShowError(false);
@@ -22,34 +22,33 @@ export default function DeletePostModal({ blogId }: { blogId: string }) {
       return;
     }
     const token = localStorage.getItem("token") as string;
-    deleteBlogPostFunction(blogId, token).then((res) => {
+    restoreBlogPostFunction(blogId, token).then((res) => {
       if (!res) {
         setShowError(true);
         return;
       }
       closeModal();
       router.refresh();
-      //router.push(`/blog/${blogId}/deleted`);
     });
   }
 
   return (
     <dialog
-      id="delete-post-modal"
+      id="restore-post-modal"
       role="dialog"
       className="modal"
       onClick={closeModal}
     >
       <form
-        id="delete-post-modal-form"
+        id="restore-post-modal-form"
         className="modal-form"
         onClick={(e) => e.stopPropagation()}
         onSubmit={submitFormFunction}
         method="dialog"
       >
-        <div id="delete-post-modal-text">
-          Are you sure you want to delete this post? Post will remain in
-          database but will no longer be viewable by users.
+        <div id="restore-post-modal-text">
+          Are you sure you want to restore this post? Post will again be
+          viewable by users.
           <div
             style={showError ? {} : { display: "none" }}
             className="text-reject"
@@ -58,15 +57,15 @@ export default function DeletePostModal({ blogId }: { blogId: string }) {
           </div>
         </div>
         <button
-          id="delete-post-modal-confirm"
+          id="restore-post-modal-confirm"
           type="submit"
           className="form-button"
           autoFocus
         >
-          Delete
+          Restore
         </button>
         <button
-          id="delete-post-modal-cancel"
+          id="restore-post-modal-cancel"
           type="button"
           className="form-button"
           onClick={closeModal}

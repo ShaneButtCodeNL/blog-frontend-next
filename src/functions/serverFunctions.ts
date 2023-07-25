@@ -1,11 +1,14 @@
 "use server";
+import { revalidatePath } from "next/cache";
 import {
   createBlogPost,
   createComment,
   deletePost,
   isTokenValid,
+  killPost,
   likeBlogPost,
   login,
+  restorePost,
   revalidateToken,
 } from "./apiController";
 
@@ -68,5 +71,24 @@ export async function deleteBlogPostFunction(blogId: string, token: string) {
     return null;
   }
   console.log("DELETE PASS");
+  revalidatePath(`/blog/${blogId}`);
+  return res;
+}
+export async function restoreBlogPostFunction(blogId: string, token: string) {
+  const res = await restorePost(blogId, token);
+  if (!res) {
+    console.log("Restore Failed");
+    return null;
+  }
+  console.log("Restore Pass");
+  return res;
+}
+export async function killBlogPostFunction(blogId: string, token: string) {
+  const res = await killPost(blogId, token);
+  if (!res) {
+    console.log("KILL fail");
+    return null;
+  }
+  console.log("KILL pass");
   return res;
 }

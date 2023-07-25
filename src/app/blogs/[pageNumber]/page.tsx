@@ -5,10 +5,10 @@ import { setCurrentPage, setList } from "@/store/blogPosts";
 
 //TODO FIX
 
-function setPage(num: number) {
-  "use client";
-  store.dispatch(setCurrentPage(num));
-}
+// function setPage(num: number) {
+//   "use client";
+//   store.dispatch(setCurrentPage(num));
+// }
 
 export default async function Page({
   params,

@@ -480,3 +480,23 @@ main {
   display: flex;
   gap: 1em;
 }
+#restore-post-modal-form {
+  grid-template-areas:
+    ". text text ."
+    ". confirm cancel .";
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 1fr auto;
+  place-content: center;
+}
+#restore-post-modal-text {
+  grid-area: text;
+  padding: 1em 3em;
+  border-bottom: var(--foreground-1) solid 2px;
+  border-top: var(--foreground-1) solid 2px;
+}
+#restore-post-modal-confirm {
+  grid-area: confirm;
+}
+#restore-post-modal-cancel {
+  grid-area: cancel;
+}
