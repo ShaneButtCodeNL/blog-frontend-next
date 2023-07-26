@@ -1,6 +1,11 @@
-import { BlogPostCommentReturn, BlogPostReturn } from "@/models/blogPostReturn";
+import {
+  BlogPostCommentReturn,
+  BlogPostEditDetails,
+  BlogPostReturn,
+} from "@/models/blogPostReturn";
 import { LoginReturnDetails, UserDetails } from "@/models/userReturn";
 import { Http2ServerResponse } from "http2";
+import { revalidateTag } from "next/cache";
 import { headers } from "next/dist/client/components/headers";
 import next from "next/types";
 import { cache } from "react";
@@ -120,7 +125,10 @@ export function logoff() {}
 export async function getAllBlogPosts(): Promise<BlogPostReturn[]> {
   const res = await fetch(getBlogsPath, {
     method: GET,
-    next: { revalidate: tenSeconds },
+    next: {
+      revalidate: tenSeconds,
+      tags: ["main-blog-list"],
+    },
   });
   const data = await res.json();
   console.log(data);
@@ -144,9 +152,9 @@ export async function createBlogPost(
     return null;
   }
   const data = await res.json();
-  if (data) return data;
-
-  return null;
+  if (!data) return null;
+  //revalidateTag("main-blog-list");
+  return data;
 }
 
 export async function createComment(
@@ -210,6 +218,7 @@ export async function likeBlogPostComment(
     },
   });
   const data: string = await res.json();
+
   return data;
 }
 
@@ -235,6 +244,7 @@ export async function deletePost(blogId: string, token: string) {
   });
   if (!res.ok) return null;
   const data = await res.json();
+
   return data;
 }
 
@@ -247,6 +257,7 @@ export async function restorePost(blogId: string, token: string) {
   });
   if (!res.ok) return null;
   const data = res.json();
+
   return data;
 }
 
@@ -256,6 +267,25 @@ export async function killPost(blogId: string, token: string) {
     method: DELETE,
     headers: getBearerTokenHeader(token),
     body: JSON.stringify({ blogId }),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+
+  return data;
+}
+
+export async function editPost(
+  blogId: string,
+  token: string,
+  { title, body }: BlogPostEditDetails
+) {
+  const res = await fetch(getBlogsPath, {
+    method: PUT,
+    cache: "no-store",
+    headers: getBearerTokenHeader(token),
+    body: JSON.stringify(
+      Object.assign({ blogId }, body ? { body } : {}, title ? { title } : {})
+    ),
   });
   if (!res.ok) return null;
   const data = await res.json();

@@ -1,9 +1,10 @@
 "use server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import {
   createBlogPost,
   createComment,
   deletePost,
+  editPost,
   isTokenValid,
   killPost,
   likeBlogPost,
@@ -11,6 +12,7 @@ import {
   restorePost,
   revalidateToken,
 } from "./apiController";
+import { BlogPostEditDetails } from "@/models/blogPostReturn";
 
 export async function validateTokenFunction(token: string) {
   "use server";
@@ -36,6 +38,7 @@ export async function makeNewPostFunction(
 export async function likePost(blogId: string, token: string) {
   const res = await likeBlogPost(blogId, token);
   console.log(res);
+  revalidatePath(`/blog/${blogId}`);
   return;
 }
 
@@ -61,34 +64,47 @@ export async function createCommentFunction(
     return;
   }
   console.log("PASS MAKE COMMENT");
+  revalidatePath(`/blog/${blogId}`);
+
   return res;
 }
 
 export async function deleteBlogPostFunction(blogId: string, token: string) {
   const res = await deletePost(blogId, token);
   if (!res) {
-    console.log("DELETE FAIL");
     return null;
   }
-  console.log("DELETE PASS");
   revalidatePath(`/blog/${blogId}`);
+  revalidateTag("main-blog-list");
+
   return res;
 }
 export async function restoreBlogPostFunction(blogId: string, token: string) {
   const res = await restorePost(blogId, token);
   if (!res) {
-    console.log("Restore Failed");
     return null;
   }
-  console.log("Restore Pass");
+  revalidatePath(`/blog/${blogId}`);
+  revalidateTag("main-blog-list");
   return res;
 }
 export async function killBlogPostFunction(blogId: string, token: string) {
   const res = await killPost(blogId, token);
   if (!res) {
-    console.log("KILL fail");
     return null;
   }
-  console.log("KILL pass");
+  revalidatePath(`/blog/${blogId}`);
+  revalidateTag("main-blog-list");
+  return res;
+}
+export async function editBlogPostFunction(
+  blogId: string,
+  token: string,
+  editDetails: BlogPostEditDetails
+) {
+  const res = await editPost(blogId, token, editDetails);
+  if (!res) return null;
+  revalidatePath(`/blog/${blogId}`);
+  revalidateTag("main-blog-list");
   return res;
 }

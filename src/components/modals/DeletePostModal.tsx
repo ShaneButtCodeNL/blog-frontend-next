@@ -1,5 +1,6 @@
 "use client";
 import { deleteBlogPostFunction } from "@/functions/serverFunctions";
+import { revalidateTag } from "next/cache";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 

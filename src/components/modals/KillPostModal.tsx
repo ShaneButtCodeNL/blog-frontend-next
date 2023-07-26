@@ -3,7 +3,7 @@ import { killBlogPostFunction } from "@/functions/serverFunctions";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-export default function RestorePostModal({ blogId }: { blogId: string }) {
+export default function KillPostModal({ blogId }: { blogId: string }) {
   const [showError, setShowError] = useState(false);
   const router = useRouter();
   function closeModal() {

@@ -1,3 +1,4 @@
+"use server";
 import PaginatedBlogPostList from "@/components/PaginatedBlogPostList";
 import { getAllBlogPosts } from "@/functions/apiController";
 import { store } from "@/store";

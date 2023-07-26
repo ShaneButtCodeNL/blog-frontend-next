@@ -5,6 +5,7 @@ import {
   faTrash,
   faTrashRestore,
   faSkullCrossbones,
+  faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as heartOutline } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -17,6 +18,7 @@ import React from "react";
 import DeletePostModal from "./modals/DeletePostModal";
 import RestorePostModal from "./modals/RestorePostModal";
 import KillPostModal from "./modals/KillPostModal";
+import EditPostModal from "./modals/EditPostModal";
 
 export default function BlogPostDisplayControls({
   listOfLikes,
@@ -78,6 +80,17 @@ export default function BlogPostDisplayControls({
     }
     const dialog = document.getElementById(
       "kill-post-modal"
+    ) as HTMLDialogElement;
+    if (!dialog) return;
+    dialog.show();
+  }
+  function editPostClick() {
+    if (!store.getState().login.loggedIn) {
+      openLoginModal();
+      return;
+    }
+    const dialog = document.getElementById(
+      "edit-post-modal"
     ) as HTMLDialogElement;
     if (!dialog) return;
     dialog.show();
@@ -147,11 +160,21 @@ export default function BlogPostDisplayControls({
           {" Remove"}
         </button>
       </div>
+      <div
+        className="blog-post-controls-item make-comment-button"
+        style={deleted ? { display: "none" } : {}}
+      >
+        <button type="button" onClick={editPostClick}>
+          <FontAwesomeIcon icon={faPenToSquare} />
+          {" Edit"}
+        </button>
+      </div>
 
       <MakeCommentModal blogId={blogId} />
       <DeletePostModal blogId={blogId} />
       <RestorePostModal blogId={blogId} />
       <KillPostModal blogId={blogId} />
+      <EditPostModal blogId={blogId} />
     </div>
   );
 }

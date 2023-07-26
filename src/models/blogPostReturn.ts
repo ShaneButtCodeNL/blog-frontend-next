@@ -27,3 +27,7 @@ export interface BlogPostReturn {
   topLevelCommentCount: number;
   totalCommentCount: number;
 }
+export interface BlogPostEditDetails {
+  title?: string;
+  body?: string;
+}
