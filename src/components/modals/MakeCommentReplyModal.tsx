@@ -1,7 +1,9 @@
 "use client";
 import { closeMakeCommentReplyModal } from "@/functions/helpers";
+import { createCommentFunction } from "@/functions/serverFunctions";
 import type { RootState, AppDispatch } from "@/store";
-import { setBody, setTitle } from "@/store/commentReply";
+import { setBody, setParentCommentId, setTitle } from "@/store/commentReply";
+import { FormEvent } from "react";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
@@ -15,9 +17,30 @@ export default function MakeCommentReplyModal() {
   );
   const title = useAppSelector((state) => state.commentReply.title);
 
+  function closeModal() {
+    const dialog = document.getElementById(
+      "make-comment-reply-modal"
+    ) as HTMLDialogElement;
+    if (!dialog) return;
+    dialog.close();
+  }
+
+  const submitFunction = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!window) return;
+    const token = localStorage.getItem("token") as string;
+    createCommentFunction(blogId, token, { body, title, parentCommentId }).then(
+      (res) => {
+        dispatch(setBody(""));
+        dispatch(setTitle(""));
+        dispatch(setParentCommentId(""));
+        closeModal();
+      }
+    );
+  };
   return (
     <dialog className="modal" id="make-comment-reply-modal">
-      <form className="modal-form">
+      <form className="modal-form" onSubmit={submitFunction}>
         <label>Title</label>
         <input
           type="text"

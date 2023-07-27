@@ -1,14 +1,14 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 export interface CommentReplyState {
-  parentCommentId: string | null;
+  parentCommentId: string;
   blogId: string;
   body: string;
   title: string;
 }
 
 const initialState: CommentReplyState = {
-  parentCommentId: null,
+  parentCommentId: "",
   blogId: "",
   body: "",
   title: "",
@@ -19,8 +19,8 @@ const commentReplySlice = createSlice({
   initialState,
   reducers: {
     setParentCommentId: (state, action: PayloadAction<string>) => {
-      if (action.payload === "") state.parentCommentId = null;
-      else state.parentCommentId = action.payload;
+      console.log("SETTING PARENT COMMENT ID");
+      state.parentCommentId = action.payload;
     },
     setBlogId: (state, action: PayloadAction<string>) => {
       state.blogId = action.payload;
@@ -30,12 +30,6 @@ const commentReplySlice = createSlice({
     },
     setTitle: (state, action: PayloadAction<string>) => {
       state.title = action.payload;
-    },
-    reset: (state) => {
-      state.blogId = "";
-      state.body = "";
-      state.parentCommentId = "";
-      state.title = "";
     },
   },
 });

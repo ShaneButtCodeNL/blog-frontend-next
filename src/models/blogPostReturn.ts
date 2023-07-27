@@ -31,3 +31,9 @@ export interface BlogPostEditDetails {
   title?: string;
   body?: string;
 }
+
+export interface CommentDetails {
+  title: string;
+  body: string;
+  parentCommentId?: string | null;
+}

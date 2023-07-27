@@ -84,14 +84,10 @@ export function openLoginModal() {
   modal.show();
 }
 
-export function openMakeCommentReplyModal(
-  blogId: string,
-  parentCommentId: string | null
-) {
+export function openMakeCommentReplyModal(blogId: string) {
   "use client";
   if (blogId === "") return;
   store.dispatch(setBlogId(blogId));
-  store.dispatch(setParentCommentId(parentCommentId || ""));
   const modal = document.getElementById(
     "make-comment-reply-modal"
   ) as HTMLDialogElement;

@@ -2,6 +2,7 @@ import {
   BlogPostCommentReturn,
   BlogPostEditDetails,
   BlogPostReturn,
+  CommentDetails,
 } from "@/models/blogPostReturn";
 import { LoginReturnDetails, UserDetails } from "@/models/userReturn";
 import { Http2ServerResponse } from "http2";
@@ -157,25 +158,46 @@ export async function createBlogPost(
   return data;
 }
 
+// export async function createComment(
+//   blogId: string,
+//   body: string,
+//   token: string,
+//   parentCommentId: string | null = null
+// ): Promise<BlogPostReturn | null> {
+//   const payload = parentCommentId
+//     ? { blogId, body, parentCommentId }
+//     : { blogId, body };
+//   const res = await fetch(makeCommentPath, {
+//     method: POST,
+//     headers: getBearerTokenHeader(token),
+//     cache: "no-store",
+//     body: JSON.stringify(payload),
+//   });
+//   console.log("RES", makeCommentPath, res.ok, res.status, blogId, payload);
+//   if (!res || !res.ok) return null;
+//   const data = await res.json();
+//   console.log(data);
+//   return data;
+// }
+
 export async function createComment(
   blogId: string,
-  body: string,
   token: string,
-  parentCommentId: string | null = null
-): Promise<BlogPostReturn | null> {
-  const payload = parentCommentId
-    ? { blogId, body, parentCommentId }
-    : { blogId, body };
+  { body, title, parentCommentId }: CommentDetails
+) {
+  const payload = Object.assign(
+    { blogId, body },
+    title === "" ? {} : { title },
+    parentCommentId && parentCommentId !== "" ? { parentCommentId } : {}
+  );
   const res = await fetch(makeCommentPath, {
     method: POST,
     headers: getBearerTokenHeader(token),
     cache: "no-store",
     body: JSON.stringify(payload),
   });
-  console.log("RES", makeCommentPath, res.ok, res.status, blogId, payload);
   if (!res || !res.ok) return null;
   const data = await res.json();
-  console.log(data);
   return data;
 }
 

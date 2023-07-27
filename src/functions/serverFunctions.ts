@@ -12,7 +12,7 @@ import {
   restorePost,
   revalidateToken,
 } from "./apiController";
-import { BlogPostEditDetails } from "@/models/blogPostReturn";
+import { BlogPostEditDetails, CommentDetails } from "@/models/blogPostReturn";
 
 export async function validateTokenFunction(token: string) {
   "use server";
@@ -54,11 +54,15 @@ export async function loginFunction(username: string, password: string) {
 
 export async function createCommentFunction(
   blogId: string,
-  body: string,
   token: string,
-  parentCommentId: string | null = null
+  { body, title, parentCommentId }: CommentDetails
 ) {
-  const res = await createComment(blogId, body, token, parentCommentId);
+  const res = await createComment(blogId, token, {
+    body,
+    title,
+    parentCommentId,
+  });
+  console.table({ body, title, parentCommentId });
   if (!res) {
     console.log("FAIL MAKE COMMENT");
     return;

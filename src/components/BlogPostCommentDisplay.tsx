@@ -1,6 +1,8 @@
 "use client";
 import { getDateString, openMakeCommentReplyModal } from "@/functions/helpers";
 import { BlogPostCommentReturn } from "@/models/blogPostReturn";
+import { store } from "@/store";
+import { setParentCommentId } from "@/store/commentReply";
 import { useState } from "react";
 
 export default function BlogPostCommentDisplay({
@@ -65,12 +67,11 @@ export default function BlogPostCommentDisplay({
         <button
           type="button"
           style={hide ? { display: "none" } : {}}
-          onClick={() =>
-            openMakeCommentReplyModal(
-              mainComment.blogId,
-              mainComment.parentCommentId
-            )
-          }
+          onClick={() => {
+            console.log(mainComment.commentId);
+            store.dispatch(setParentCommentId(mainComment.commentId));
+            openMakeCommentReplyModal(mainComment.blogId);
+          }}
         >
           Reply
         </button>

@@ -8,9 +8,6 @@ import { BlogPostCommentReturn } from "@/models/blogPostReturn";
 
 export default function MakeCommentModal({ blogId }: { blogId: string }) {
   const [body, setBody] = useState("");
-  const [addedComments, setAddedComments] = useState<BlogPostCommentReturn[]>(
-    []
-  );
   function closeModal() {
     const dialog = document.getElementById(
       "make-comment-modal"
@@ -23,9 +20,7 @@ export default function MakeCommentModal({ blogId }: { blogId: string }) {
   function submitFormFunction(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const token = localStorage.getItem("token") as string;
-    createCommentFunction(blogId, body, token).then((res) => {
-      if (res)
-        setAddedComments((v) => [...v, res.comments[res.comments.length - 1]]);
+    createCommentFunction(blogId, token, { body, title: "" }).then((res) => {
       closeModal();
     });
   }
@@ -56,24 +51,6 @@ export default function MakeCommentModal({ blogId }: { blogId: string }) {
         >
           Cancel
         </button>
-        {document.getElementById("blog-comments") ? (
-          createPortal(
-            <>
-              {addedComments.map((v) => {
-                return (
-                  <BlogPostCommentDisplay
-                    mainComment={v}
-                    key={`key-BCD-${v.commentId}`}
-                    order={0}
-                  />
-                );
-              })}
-            </>,
-            document.getElementById("blog-comments")!
-          )
-        ) : (
-          <></>
-        )}
       </form>
     </dialog>
   );
