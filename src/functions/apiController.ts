@@ -271,15 +271,15 @@ export async function restoreComment(
   commentId: string,
   token: string
 ) {
+  const payload = { blogId, commentId };
   const res = await fetch(restoreCommentPath, {
     cache: "no-store",
     method: PUT,
     headers: getBearerTokenHeader(token),
-    body: JSON.stringify({ blogId, commentId }),
+    body: JSON.stringify(payload),
   });
   if (!res.ok) return null;
   const data = res.json();
-
   return data;
 }
 

@@ -125,6 +125,7 @@ export async function restoreCommentFunction(
   commentId: string,
   token: string
 ) {
+  console.log("INSIDE SERVER FUNCTION");
   const res = await restoreComment(blogId, commentId, token);
   if (!res) {
     return null;

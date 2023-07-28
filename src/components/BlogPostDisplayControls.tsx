@@ -19,6 +19,9 @@ import DeletePostModal from "./modals/DeletePostModal";
 import RestorePostModal from "./modals/RestorePostModal";
 import KillPostModal from "./modals/KillPostModal";
 import EditPostModal from "./modals/EditPostModal";
+import RestoreCommentModal from "./modals/RestoreCommentModal";
+import DeleteCommentModal from "./modals/DeleteCommentModal";
+import KillCommentModal from "./modals/KillCommentModal";
 
 export default function BlogPostDisplayControls({
   listOfLikes,
@@ -175,6 +178,9 @@ export default function BlogPostDisplayControls({
       <RestorePostModal blogId={blogId} />
       <KillPostModal blogId={blogId} />
       <EditPostModal blogId={blogId} />
+      <RestoreCommentModal />
+      <DeleteCommentModal />
+      <KillCommentModal />
     </div>
   );
 }
