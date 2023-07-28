@@ -5,6 +5,7 @@ import {
   CommentDetails,
 } from "@/models/blogPostReturn";
 import { LoginReturnDetails, UserDetails } from "@/models/userReturn";
+import { data } from "autoprefixer";
 import { Http2ServerResponse } from "http2";
 import { revalidateTag } from "next/cache";
 import { headers } from "next/dist/client/components/headers";
@@ -22,8 +23,11 @@ const makeBlogPostPath = `${blogPath}/`;
 const makeCommentPath = `${blogPath}/comment`;
 const searchBlogPath = `${getBlogsPath}search/title/`;
 const deleteBlogPostPath = `${blogPath}/delete/post`;
+const deleteCommentPath = `${blogPath}/delete/comment`;
 const restorePostPath = `${blogPath}/restore/blog`;
+const restoreCommentPath = `${blogPath}/restore/comment`;
 const killBlogPostPath = `${blogPath}/blog`;
+const killCommentPath = `${blogPath}/comment`;
 
 const GET = "GET";
 const POST = "POST";
@@ -158,28 +162,6 @@ export async function createBlogPost(
   return data;
 }
 
-// export async function createComment(
-//   blogId: string,
-//   body: string,
-//   token: string,
-//   parentCommentId: string | null = null
-// ): Promise<BlogPostReturn | null> {
-//   const payload = parentCommentId
-//     ? { blogId, body, parentCommentId }
-//     : { blogId, body };
-//   const res = await fetch(makeCommentPath, {
-//     method: POST,
-//     headers: getBearerTokenHeader(token),
-//     cache: "no-store",
-//     body: JSON.stringify(payload),
-//   });
-//   console.log("RES", makeCommentPath, res.ok, res.status, blogId, payload);
-//   if (!res || !res.ok) return null;
-//   const data = await res.json();
-//   console.log(data);
-//   return data;
-// }
-
 export async function createComment(
   blogId: string,
   token: string,
@@ -234,12 +216,9 @@ export async function likeBlogPostComment(
   const res = await fetch(`${getBlogsPath}post/like/${blogId}/${commentId}`, {
     cache: "no-store",
     method: PUT,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
+    headers: getBearerTokenHeader(token),
   });
-  const data: string = await res.json();
+  const data: string = await res.text();
 
   return data;
 }
@@ -257,6 +236,23 @@ export async function likeBlogPost(blogId: string, token: string) {
   return data;
 }
 
+export async function deleteComment(
+  blogId: string,
+  commentId: string,
+  token: string
+) {
+  const res = await fetch(deleteCommentPath, {
+    method: PUT,
+    cache: "no-store",
+    headers: getBearerTokenHeader(token),
+    body: JSON.stringify({ blogId, commentId }),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+
+  return data;
+}
+
 export async function deletePost(blogId: string, token: string) {
   const res = await fetch(deleteBlogPostPath, {
     cache: "no-store",
@@ -270,6 +266,23 @@ export async function deletePost(blogId: string, token: string) {
   return data;
 }
 
+export async function restoreComment(
+  blogId: string,
+  commentId: string,
+  token: string
+) {
+  const res = await fetch(restoreCommentPath, {
+    cache: "no-store",
+    method: PUT,
+    headers: getBearerTokenHeader(token),
+    body: JSON.stringify({ blogId, commentId }),
+  });
+  if (!res.ok) return null;
+  const data = res.json();
+
+  return data;
+}
+
 export async function restorePost(blogId: string, token: string) {
   const res = await fetch(restorePostPath, {
     cache: "no-store",
@@ -279,6 +292,23 @@ export async function restorePost(blogId: string, token: string) {
   });
   if (!res.ok) return null;
   const data = res.json();
+
+  return data;
+}
+
+export async function killComment(
+  blogId: string,
+  commentId: string,
+  token: string
+) {
+  const res = await fetch(killCommentPath, {
+    cache: "no-store",
+    method: DELETE,
+    headers: getBearerTokenHeader(token),
+    body: JSON.stringify({ blogId, commentId }),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
 
   return data;
 }

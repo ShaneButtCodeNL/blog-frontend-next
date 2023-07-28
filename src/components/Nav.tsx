@@ -67,7 +67,6 @@ export default function Nav(props: any) {
         <Link href="/write-post">
           <button type="button" title="Write A Post">
             <FontAwesomeIcon icon={faPenNib} />
-            {" New Post"}
           </button>
         </Link>
       ) : (

@@ -3,12 +3,16 @@ import { revalidatePath, revalidateTag } from "next/cache";
 import {
   createBlogPost,
   createComment,
+  deleteComment,
   deletePost,
   editPost,
   isTokenValid,
+  killComment,
   killPost,
   likeBlogPost,
+  likeBlogPostComment,
   login,
+  restoreComment,
   restorePost,
   revalidateToken,
 } from "./apiController";
@@ -35,9 +39,20 @@ export async function makeNewPostFunction(
   const res = await createBlogPost(title, body, token);
   return res;
 }
+
 export async function likePost(blogId: string, token: string) {
   const res = await likeBlogPost(blogId, token);
   console.log(res);
+  revalidatePath(`/blog/${blogId}`);
+  return;
+}
+
+export async function likeCommentFunction(
+  blogId: string,
+  commentId: string,
+  token: string
+) {
+  const res = await likeBlogPostComment(blogId, commentId, token);
   revalidatePath(`/blog/${blogId}`);
   return;
 }
@@ -80,9 +95,21 @@ export async function deleteBlogPostFunction(blogId: string, token: string) {
   }
   revalidatePath(`/blog/${blogId}`);
   revalidateTag("main-blog-list");
-
   return res;
 }
+
+export async function deleteCommentFunction(
+  blogId: string,
+  commentId: string,
+  token: string
+) {
+  const res = await deleteComment(blogId, commentId, token);
+  if (!res) return null;
+  revalidatePath(`/blog/${blogId}`);
+  revalidateTag("main-blog-list");
+  return res;
+}
+
 export async function restoreBlogPostFunction(blogId: string, token: string) {
   const res = await restorePost(blogId, token);
   if (!res) {
@@ -92,6 +119,21 @@ export async function restoreBlogPostFunction(blogId: string, token: string) {
   revalidateTag("main-blog-list");
   return res;
 }
+
+export async function restoreCommentFunction(
+  blogId: string,
+  commentId: string,
+  token: string
+) {
+  const res = await restoreComment(blogId, commentId, token);
+  if (!res) {
+    return null;
+  }
+  revalidatePath(`/blog/${blogId}`);
+  revalidateTag("main-blog-list");
+  return res;
+}
+
 export async function killBlogPostFunction(blogId: string, token: string) {
   const res = await killPost(blogId, token);
   if (!res) {
@@ -101,6 +143,21 @@ export async function killBlogPostFunction(blogId: string, token: string) {
   revalidateTag("main-blog-list");
   return res;
 }
+
+export async function killCommentFunction(
+  blogId: string,
+  commentId: string,
+  token: string
+) {
+  const res = await killComment(blogId, commentId, token);
+  if (!res) {
+    return null;
+  }
+  revalidatePath(`/blog/${blogId}`);
+  revalidateTag("main-blog-list");
+  return res;
+}
+
 export async function editBlogPostFunction(
   blogId: string,
   token: string,
