@@ -5,6 +5,7 @@ import {
   createComment,
   deleteComment,
   deletePost,
+  editComment,
   editPost,
   isTokenValid,
   killComment,
@@ -165,6 +166,19 @@ export async function editBlogPostFunction(
   editDetails: BlogPostEditDetails
 ) {
   const res = await editPost(blogId, token, editDetails);
+  if (!res) return null;
+  revalidatePath(`/blog/${blogId}`);
+  revalidateTag("main-blog-list");
+  return res;
+}
+
+export async function editCommentFunction(
+  blogId: string,
+  commentId: string,
+  token: string,
+  editDetails: BlogPostEditDetails
+) {
+  const res = await editComment(blogId, commentId, token, editDetails);
   if (!res) return null;
   revalidatePath(`/blog/${blogId}`);
   revalidateTag("main-blog-list");

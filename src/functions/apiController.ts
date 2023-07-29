@@ -1,16 +1,9 @@
 import {
-  BlogPostCommentReturn,
   BlogPostEditDetails,
   BlogPostReturn,
   CommentDetails,
 } from "@/models/blogPostReturn";
 import { LoginReturnDetails, UserDetails } from "@/models/userReturn";
-import { data } from "autoprefixer";
-import { Http2ServerResponse } from "http2";
-import { revalidateTag } from "next/cache";
-import { headers } from "next/dist/client/components/headers";
-import next from "next/types";
-import { cache } from "react";
 
 const userPath = `${process.env.API_HOST}${process.env.API_USER_BASE}`;
 const blogPath = `${process.env.API_HOST}${process.env.API_POST_BASE}`;
@@ -20,14 +13,14 @@ const registerPath = `${userPath}/register`;
 
 const getBlogsPath = `${blogPath}/`;
 const makeBlogPostPath = `${blogPath}/`;
-const makeCommentPath = `${blogPath}/comment`;
+//const makeCommentPath = `${blogPath}/comment`;
 const searchBlogPath = `${getBlogsPath}search/title/`;
 const deleteBlogPostPath = `${blogPath}/delete/post`;
 const deleteCommentPath = `${blogPath}/delete/comment`;
 const restorePostPath = `${blogPath}/restore/blog`;
 const restoreCommentPath = `${blogPath}/restore/comment`;
 const killBlogPostPath = `${blogPath}/blog`;
-const killCommentPath = `${blogPath}/comment`;
+const makeKillEditCommentPath = `${blogPath}/comment`;
 
 const GET = "GET";
 const POST = "POST";
@@ -172,7 +165,7 @@ export async function createComment(
     title === "" ? {} : { title },
     parentCommentId && parentCommentId !== "" ? { parentCommentId } : {}
   );
-  const res = await fetch(makeCommentPath, {
+  const res = await fetch(makeKillEditCommentPath, {
     method: POST,
     headers: getBearerTokenHeader(token),
     cache: "no-store",
@@ -301,7 +294,7 @@ export async function killComment(
   commentId: string,
   token: string
 ) {
-  const res = await fetch(killCommentPath, {
+  const res = await fetch(makeKillEditCommentPath, {
     cache: "no-store",
     method: DELETE,
     headers: getBearerTokenHeader(token),
@@ -323,6 +316,29 @@ export async function killPost(blogId: string, token: string) {
   if (!res.ok) return null;
   const data = await res.json();
 
+  return data;
+}
+
+export async function editComment(
+  blogId: string,
+  commentId: string,
+  token: string,
+  { title, body }: BlogPostEditDetails
+) {
+  const res = await fetch(makeKillEditCommentPath, {
+    method: PUT,
+    headers: getBearerTokenHeader(token),
+    cache: "no-store",
+    body: JSON.stringify(
+      Object.assign(
+        { blogId, commentId },
+        body ? { body } : {},
+        title ? { title } : {}
+      )
+    ),
+  });
+  if (!res.ok) return null;
+  const data = res.json();
   return data;
 }
 

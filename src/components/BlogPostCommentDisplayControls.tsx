@@ -19,6 +19,7 @@ import {
 } from "@/store/commentReply";
 import { faHeart as isNotLiked } from "@fortawesome/free-regular-svg-icons";
 import {
+  faPenToSquare,
   faSkullCrossbones,
   faTrash,
   faTrashArrowUp,
@@ -103,6 +104,22 @@ export default function BlogPostCommentDisplayControls({
     store.dispatch(setBlogId(mainComment.blogId));
     dialog.show();
   }
+
+  function editButtonClick() {
+    if (!window) return;
+    if (!store.getState().login.loggedIn) {
+      openLoginModal();
+      return;
+    }
+    const dialog = document.getElementById(
+      "edit-comment-modal"
+    ) as HTMLDialogElement;
+    if (!dialog) return;
+    store.dispatch(setCommentId(mainComment.commentId));
+    store.dispatch(setBlogId(mainComment.blogId));
+    dialog.show();
+  }
+
   return (
     <div className="comment-actions">
       <div
@@ -187,6 +204,15 @@ export default function BlogPostCommentDisplayControls({
         <button type="button" onClick={killButtonClick} title="Remove Comment">
           <FontAwesomeIcon icon={faSkullCrossbones} />
           {" Remove"}
+        </button>
+      </div>
+      <div
+        className="blog-post-controls-item make-comment-button like-controls"
+        style={mainComment.deleted ? { display: "none" } : {}}
+      >
+        <button type="button" onClick={editButtonClick} title="Edit Comment">
+          <FontAwesomeIcon icon={faPenToSquare} />
+          {" Edit"}
         </button>
       </div>
     </div>
