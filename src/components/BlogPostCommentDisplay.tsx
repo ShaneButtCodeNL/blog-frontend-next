@@ -1,15 +1,12 @@
 "use client";
 
-/**
- * TODO Add modals for confirmation
- * TODO Add restore,remove,and edit functionality
- */
 import { getDateString } from "@/functions/helpers";
 
 import { BlogPostCommentReturn } from "@/models/blogPostReturn";
 
 import { useState } from "react";
 import BlogPostCommentDisplayControls from "./BlogPostCommentDisplayControls";
+import Providers from "./Provider";
 
 export default function BlogPostCommentDisplay({
   mainComment,
@@ -56,11 +53,14 @@ export default function BlogPostCommentDisplay({
         </>
       )}
 
-      <BlogPostCommentDisplayControls
-        mainComment={mainComment}
-        hide={hide}
-        setHide={setHide}
-      />
+      <Providers>
+        <BlogPostCommentDisplayControls
+          mainComment={mainComment}
+          hide={hide}
+          setHide={setHide}
+          key={`${mainComment.commentId}-controls`}
+        />
+      </Providers>
 
       {mainComment.deleted ? (
         <></>

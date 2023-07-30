@@ -2,6 +2,7 @@ import { BlogPostReturn } from "@/models/blogPostReturn";
 import { getDateString } from "@/functions/helpers";
 import BlogPostCommentDisplay from "./BlogPostCommentDisplay";
 import BlogPostDisplayControls from "./BlogPostDisplayControls";
+import Providers from "./Provider";
 
 export default function BlogPostDisplay(params: any) {
   const blogPost: BlogPostReturn = params.blogPost;
@@ -32,11 +33,14 @@ export default function BlogPostDisplay(params: any) {
           <div id="blog-body">{blogPost.body}</div>
         </>
       )}
-      <BlogPostDisplayControls
-        listOfLikes={blogPost.likes}
-        blogId={blogPost.blogId}
-        deleted={blogPost.deleted}
-      />
+      <Providers>
+        <BlogPostDisplayControls
+          listOfLikes={blogPost.likes}
+          blogId={blogPost.blogId}
+          author={blogPost.author}
+          deleted={blogPost.deleted}
+        />
+      </Providers>
       <div id="blog-comments">
         {blogPost.comments.map((comment, i) => (
           <BlogPostCommentDisplay

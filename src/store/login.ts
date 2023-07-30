@@ -24,7 +24,7 @@ const loginSlice = createSlice({
     logout: (state) => {
       state.loggedIn = false;
     },
-    setUserDetails: (state, action: PayloadAction<any>) => {
+    setUserDetails: (state, action: PayloadAction<UserDetails>) => {
       state.userDetails = action.payload;
     },
   },

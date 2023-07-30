@@ -23,16 +23,23 @@ import RestoreCommentModal from "./modals/RestoreCommentModal";
 import DeleteCommentModal from "./modals/DeleteCommentModal";
 import KillCommentModal from "./modals/KillCommentModal";
 import EditCommentModal from "./modals/EditCommentModal";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export default function BlogPostDisplayControls({
   listOfLikes,
   blogId,
   deleted,
+  author,
 }: {
   listOfLikes: string[];
   blogId: string;
   deleted: boolean;
+  author: string;
 }) {
+  const userDetails = useSelector(
+    (state: RootState) => state.login.userDetails
+  );
   const [liked, setLiked] = useState(
     store.getState().login.loggedIn
       ? listOfLikes.includes(
@@ -42,13 +49,56 @@ export default function BlogPostDisplayControls({
   );
   const [likeCount, setLikeCount] = useState(listOfLikes.length);
 
+  function hasValidRole(roles: string[]) {
+    //const userDetails = store.getState().login.userDetails;
+    if (!userDetails) return false;
+    if (userDetails.roles.includes("ROLE_OWNER")) return true;
+    for (let role of roles) {
+      if (userDetails.roles.includes(role)) return true;
+    }
+    return false;
+  }
+
+  interface Credentials {
+    roles: string[];
+    matchAuthor?: boolean;
+  }
+
+  const editCredentials: Credentials[] = [
+    { roles: ["ROLE_ADMIN"] },
+    { roles: ["ROLE_WRITER"], matchAuthor: true },
+  ];
+  const deleteCredentials: Credentials[] = [
+    { roles: ["ROLE_ADMIN"] },
+    { roles: ["ROLE_WRITER"], matchAuthor: true },
+  ];
+  const restoreCredentials: Credentials[] = [{ roles: ["ROLE_ADMIN"] }];
+  const killCredentials: Credentials[] = [{ roles: ["ROLE_ADMIN"] }];
+
+  function isAuthor() {
+    //const userDetails = store.getState().login.userDetails;
+    if (!userDetails) return false;
+    if (userDetails.roles.includes("ROLE_OWNER")) return true;
+    return author === userDetails?.username;
+  }
+
+  function hasAccess(credentials: Credentials[]) {
+    for (const { roles, matchAuthor } of credentials) {
+      const validRole = hasValidRole(roles);
+      if (validRole) {
+        return matchAuthor ? isAuthor() : true;
+      }
+    }
+    return false;
+  }
+
   function makeCommentClick() {
     if (!store.getState().login.loggedIn) {
       openLoginModal();
       return;
     }
     const dialog = document.getElementById(
-      "make-comment-modal"
+      "make-comment-reply-modal"
     ) as HTMLDialogElement;
     if (!dialog) return;
     dialog.show();
@@ -89,6 +139,8 @@ export default function BlogPostDisplayControls({
     dialog.show();
   }
   function editPostClick() {
+    if (deleted) return;
+
     if (!store.getState().login.loggedIn) {
       openLoginModal();
       return;
@@ -101,6 +153,7 @@ export default function BlogPostDisplayControls({
   }
 
   function likeButtonClick() {
+    if (deleted) return;
     if (!window) return;
     if (!store.getState().login.loggedIn) {
       openLoginModal();
@@ -124,49 +177,68 @@ export default function BlogPostDisplayControls({
           type="button"
           style={liked ? {} : { display: "none" }}
           onClick={likeButtonClick}
+          disabled={deleted}
         >
           <FontAwesomeIcon icon={heartSolid} className="heart" />
         </button>
+
         <button
           type="button"
           style={liked ? { display: "none" } : {}}
           onClick={likeButtonClick}
+          disabled={deleted}
         >
           <FontAwesomeIcon icon={heartOutline} className="heart" />
         </button>
         <div className="like-count">{" " + formatNumber(likeCount)}</div>
       </div>
+
       <div className="blog-post-controls-item make-comment-button">
         <button type="button" onClick={makeCommentClick}>
           <FontAwesomeIcon icon={faPlus} />
           {" Comment"}
         </button>
       </div>
-      <div className="blog-post-controls-item make-comment-button">
-        {deleted ? (
-          <button type="button" onClick={restorePostClick}>
-            <FontAwesomeIcon icon={faTrashRestore} />
-            {" Restore"}
-          </button>
-        ) : (
-          <button type="button" onClick={deletePostClick}>
-            <FontAwesomeIcon icon={faTrash} />
-            {" Delete"}
-          </button>
-        )}
-      </div>
+
       <div
         className="blog-post-controls-item make-comment-button"
-        style={deleted ? {} : { display: "none" }}
+        style={
+          deleted && hasAccess(restoreCredentials) ? {} : { display: "none" }
+        }
+      >
+        <button type="button" onClick={restorePostClick}>
+          <FontAwesomeIcon icon={faTrashRestore} />
+          {" Restore"}
+        </button>
+      </div>
+
+      <div
+        className="blog-post-controls-item make-comment-button"
+        style={
+          !deleted && hasAccess(deleteCredentials) ? {} : { display: "none" }
+        }
+      >
+        <button type="button" onClick={deletePostClick}>
+          <FontAwesomeIcon icon={faTrash} />
+          {" Delete"}
+        </button>
+      </div>
+
+      <div
+        className="blog-post-controls-item make-comment-button"
+        style={deleted && hasAccess(killCredentials) ? {} : { display: "none" }}
       >
         <button type="button" onClick={killPostClick}>
           <FontAwesomeIcon icon={faSkullCrossbones} />
           {" Remove"}
         </button>
       </div>
+
       <div
         className="blog-post-controls-item make-comment-button"
-        style={deleted ? { display: "none" } : {}}
+        style={
+          !deleted && hasAccess(editCredentials) ? {} : { display: "none" }
+        }
       >
         <button type="button" onClick={editPostClick}>
           <FontAwesomeIcon icon={faPenToSquare} />

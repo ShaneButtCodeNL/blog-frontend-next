@@ -5,10 +5,7 @@ import {
   openLoginModal,
   openMakeCommentReplyModal,
 } from "@/functions/helpers";
-import {
-  deleteCommentFunction,
-  likeCommentFunction,
-} from "@/functions/serverFunctions";
+import { likeCommentFunction } from "@/functions/serverFunctions";
 import { BlogPostCommentReturn } from "@/models/blogPostReturn";
 import { store } from "@/store";
 import { Dispatch, SetStateAction, useState } from "react";
@@ -26,6 +23,8 @@ import {
   faHeart as isLiked,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 export default function BlogPostCommentDisplayControls({
   mainComment,
@@ -36,6 +35,9 @@ export default function BlogPostCommentDisplayControls({
   setHide: Dispatch<SetStateAction<boolean>>;
   hide: boolean;
 }) {
+  const userDetails = useSelector(
+    (state: RootState) => state.login.userDetails
+  );
   const [likeCount, setLikeCount] = useState(mainComment.likes.length);
   const [liked, setLiked] = useState(
     store.getState().login.loggedIn
@@ -44,6 +46,49 @@ export default function BlogPostCommentDisplayControls({
         )
       : false
   );
+
+  interface Credentials {
+    roles: string[];
+    matchAuthor?: boolean;
+  }
+
+  const editCredentials: Credentials[] = [
+    { roles: ["ROLE_ADMIN"] },
+    { roles: ["ROLE_WRITER", "ROLE_USER"], matchAuthor: true },
+  ];
+  const deleteCredentials: Credentials[] = [
+    { roles: ["ROLE_ADMIN"] },
+    { roles: ["ROLE_WRITER", "ROLE_USER"], matchAuthor: true },
+  ];
+  const restoreCredentials: Credentials[] = [{ roles: ["ROLE_ADMIN"] }];
+  const killCredentials: Credentials[] = [{ roles: ["ROLE_ADMIN"] }];
+
+  function hasValidRole(roles: string[]) {
+    //const userDetails = store.getState().login.userDetails;
+    if (!userDetails) return false;
+    if (userDetails.roles.includes("ROLE_OWNER")) return true;
+    for (let role of roles) {
+      if (userDetails.roles.includes(role)) return true;
+    }
+    return false;
+  }
+
+  function isAuthor() {
+    //const userDetails = store.getState().login.userDetails;
+    if (!userDetails) return false;
+    if (userDetails.roles.includes("ROLE_OWNER")) return true;
+    return mainComment.author === userDetails?.username;
+  }
+
+  function hasAccess(credentials: Credentials[]) {
+    for (const { roles, matchAuthor } of credentials) {
+      const validRole = hasValidRole(roles);
+      if (validRole) {
+        return matchAuthor ? isAuthor() : true;
+      }
+    }
+    return false;
+  }
 
   function likeButtonClick() {
     if (!window) return;
@@ -68,6 +113,21 @@ export default function BlogPostCommentDisplayControls({
     }
     const dialog = document.getElementById(
       "delete-comment-modal"
+    ) as HTMLDialogElement;
+    if (!dialog) return;
+    store.dispatch(setCommentId(mainComment.commentId));
+    store.dispatch(setBlogId(mainComment.blogId));
+    dialog.show();
+  }
+
+  function replyButtonClick() {
+    if (!window) return;
+    if (!store.getState().login.loggedIn) {
+      openLoginModal();
+      return;
+    }
+    const dialog = document.getElementById(
+      "make-comment-reply-modal"
     ) as HTMLDialogElement;
     if (!dialog) return;
     store.dispatch(setCommentId(mainComment.commentId));
@@ -163,18 +223,18 @@ export default function BlogPostCommentDisplayControls({
         <button
           type="button"
           style={hide ? { display: "none" } : {}}
-          onClick={() => {
-            console.log(mainComment.commentId);
-            store.dispatch(setParentCommentId(mainComment.commentId));
-            openMakeCommentReplyModal(mainComment.blogId);
-          }}
+          onClick={replyButtonClick}
         >
           Reply
         </button>
       </div>
       <div
         className="blog-post-controls-item make-comment-button like-controls"
-        style={mainComment.deleted ? { display: "none" } : {}}
+        style={
+          !mainComment.deleted && hasAccess(deleteCredentials)
+            ? {}
+            : { display: "none" }
+        }
       >
         <button
           type="button"
@@ -186,7 +246,11 @@ export default function BlogPostCommentDisplayControls({
       </div>
       <div
         className="blog-post-controls-item make-comment-button like-controls"
-        style={mainComment.deleted ? {} : { display: "none" }}
+        style={
+          mainComment.deleted && hasAccess(restoreCredentials)
+            ? {}
+            : { display: "none" }
+        }
       >
         <button
           type="button"
@@ -199,7 +263,11 @@ export default function BlogPostCommentDisplayControls({
       </div>
       <div
         className="blog-post-controls-item make-comment-button like-controls"
-        style={mainComment.deleted ? {} : { display: "none" }}
+        style={
+          mainComment.deleted && hasAccess(killCredentials)
+            ? {}
+            : { display: "none" }
+        }
       >
         <button type="button" onClick={killButtonClick} title="Remove Comment">
           <FontAwesomeIcon icon={faSkullCrossbones} />
@@ -208,7 +276,11 @@ export default function BlogPostCommentDisplayControls({
       </div>
       <div
         className="blog-post-controls-item make-comment-button like-controls"
-        style={mainComment.deleted ? { display: "none" } : {}}
+        style={
+          !mainComment.deleted && hasAccess(editCredentials)
+            ? {}
+            : { display: "none" }
+        }
       >
         <button type="button" onClick={editButtonClick} title="Edit Comment">
           <FontAwesomeIcon icon={faPenToSquare} />
