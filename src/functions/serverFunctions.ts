@@ -38,6 +38,7 @@ export async function makeNewPostFunction(
 ) {
   "use server";
   const res = await createBlogPost(title, body, token);
+  revalidateTag("get-latest-post");
   return res;
 }
 
@@ -61,10 +62,8 @@ export async function likeCommentFunction(
 export async function loginFunction(username: string, password: string) {
   const res = await login(username, password);
   if (!res) {
-    console.log("fail");
     return;
   }
-  console.log("PASS");
   return res;
 }
 
@@ -80,10 +79,8 @@ export async function createCommentFunction(
   });
   console.table({ body, title, parentCommentId });
   if (!res) {
-    console.log("FAIL MAKE COMMENT");
     return;
   }
-  console.log("PASS MAKE COMMENT");
   revalidatePath(`/blog/${blogId}`);
 
   return res;

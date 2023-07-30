@@ -6,6 +6,10 @@ import Providers from "@/components/Provider";
 import PreloadLogin from "@/components/PreloadLogin";
 import LoginModal from "@/components/modals/LoginModal";
 import MakeCommentReplyModal from "@/components/modals/MakeCommentReplyModal";
+import Footer from "@/components/Footer";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { config } from "@fortawesome/fontawesome-svg-core";
+config.autoAddCss = false; /* eslint-disable import/first */
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -38,6 +42,7 @@ export default async function RootLayout({
           <main>
             <div id="main-body-content">{children}</div>
           </main>
+          <Footer />
         </div>
       </body>
     </html>

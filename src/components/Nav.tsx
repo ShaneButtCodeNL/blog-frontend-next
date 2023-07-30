@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import type { RootState, AppDispatch } from "@/store";
+import { type RootState, type AppDispatch, store } from "@/store";
 import Link from "next/link";
 
 import {
@@ -72,15 +72,7 @@ export default function Nav(props: any) {
       ) : (
         <></>
       )}
-      {userDetails && loggedIn ? (
-        <Link href={`/user/${userDetails?.username}`}>
-          <button type="button" title="User Details">
-            <FontAwesomeIcon icon={faUser} />
-          </button>
-        </Link>
-      ) : (
-        <></>
-      )}
+
       {loggedIn &&
       userDetails &&
       hasRole(userDetails, "ROLE_ADMIN", "ROLE_OWNER") ? (
@@ -88,6 +80,16 @@ export default function Nav(props: any) {
           <button type="button" title="Admin Controls">
             <FontAwesomeIcon icon={faToolbox} />
             {" Admin"}
+          </button>
+        </Link>
+      ) : (
+        <></>
+      )}
+      {userDetails && loggedIn ? (
+        <Link href={`/user/${userDetails?.username}`}>
+          <button type="button" title="User Details">
+            <FontAwesomeIcon icon={faUser} />{" "}
+            {store.getState().login.userDetails?.username}
           </button>
         </Link>
       ) : (

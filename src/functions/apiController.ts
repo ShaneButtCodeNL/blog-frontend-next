@@ -12,6 +12,7 @@ const loginPath = `${userPath}/login`;
 const registerPath = `${userPath}/register`;
 
 const getBlogsPath = `${blogPath}/`;
+const getLatestBlogPostPath = `${blogPath}/latest`;
 const makeBlogPostPath = `${blogPath}/`;
 //const makeCommentPath = `${blogPath}/comment`;
 const searchBlogPath = `${getBlogsPath}search/title/`;
@@ -354,6 +355,17 @@ export async function editPost(
     body: JSON.stringify(
       Object.assign({ blogId }, body ? { body } : {}, title ? { title } : {})
     ),
+  });
+  if (!res.ok) return null;
+  const data = await res.json();
+  return data;
+}
+
+export async function getLatestPost(): Promise<BlogPostReturn | null> {
+  const res = await fetch(getLatestBlogPostPath, {
+    method: GET,
+    headers: getJSONHeader(),
+    next: { revalidate: thirtySeconds, tags: ["get-latest-post"] },
   });
   if (!res.ok) return null;
   const data = await res.json();

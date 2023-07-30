@@ -98,7 +98,7 @@ export default function BlogPostDisplayControls({
       return;
     }
     const dialog = document.getElementById(
-      "make-comment-reply-modal"
+      "make-comment-modal"
     ) as HTMLDialogElement;
     if (!dialog) return;
     dialog.show();

@@ -14,6 +14,7 @@
   --valid-text-shadow: 0px 0px 1px green;
   --disable-text-opacity: 0.5;
   --background-fade: rgba(255, 255, 255, 0.2);
+  --backgroung-highlight: rgba(255, 255, 255, 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -51,6 +52,8 @@ body {
   margin: auto;
   min-height: 100vh;
   position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
 }
 
 .button {
@@ -67,6 +70,43 @@ header {
   margin: auto;
   display: flex;
   justify-content: space-between;
+}
+
+footer {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background-color: var(--background-fade);
+  height: 14em;
+}
+.footer-div {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  padding: 1em 0;
+  border: solid var(--foreground-1) 2px;
+  border-top: none;
+  border-bottom: none;
+  background-color: var(--background-fade);
+}
+
+.footer-item {
+  border-top: solid var(--foreground-1) 2px;
+  border-bottom: solid var(--foreground-1) 2px;
+  text-align: center;
+  transition: all 400ms ease-out;
+}
+.footer-item:hover,
+.footer-item:focus-within {
+  filter: brightness(2);
+  background-color: var(--backgroung-highlight);
+  padding-top: 1em;
+  padding-bottom: 1em;
+}
+.footer-title {
+  text-decoration: underline;
+  font-weight: 700;
+  margin: 0 4em;
 }
 main {
   width: 100%;
