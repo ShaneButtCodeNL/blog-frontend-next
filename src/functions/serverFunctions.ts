@@ -39,6 +39,7 @@ export async function makeNewPostFunction(
   "use server";
   const res = await createBlogPost(title, body, token);
   revalidateTag("get-latest-post");
+  revalidateTag("main-blog-list");
   return res;
 }
 
@@ -180,4 +181,7 @@ export async function editCommentFunction(
   revalidatePath(`/blog/${blogId}`);
   revalidateTag("main-blog-list");
   return res;
+}
+export async function revalidateTagServer(tag: string) {
+  revalidateTag(tag);
 }

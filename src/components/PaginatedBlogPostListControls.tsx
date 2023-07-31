@@ -1,7 +1,11 @@
 import { store } from "@/store";
 import Link from "next/link";
 
-export default function PaginatedBlogPostListControls(params: any) {
+export default function PaginatedBlogPostListControls({
+  sorted,
+}: {
+  sorted?: string;
+}) {
   const firstPage = 1;
   const lastPage = Math.ceil(
     store.getState().blogPostList.list.length /
@@ -18,7 +22,9 @@ export default function PaginatedBlogPostListControls(params: any) {
   );
   return (
     <div id="pagination-controls">
-      <Link href={`/blogs/${currentPage - 1}`}>
+      <Link
+        href={`/blogs/${sorted ? `sorted/${sorted}/` : ""}${currentPage - 1}`}
+      >
         <button
           type="button"
           id="prev-page"
@@ -27,14 +33,17 @@ export default function PaginatedBlogPostListControls(params: any) {
           {"<"}
         </button>
       </Link>
-      <Link href={`/blogs/${firstPage}`}>
+      <Link href={`/blogs/${sorted ? `sorted/${sorted}/` : ""}${firstPage}`}>
         <button type="button">{firstPage}</button>
       </Link>
       <div style={currentPage - siblings >= 3 ? {} : { display: "none" }}>
         {ellipses}
       </div>
       {range.map((v) => (
-        <Link href={`/blogs/${v}`} key={`link-key-page-${v}`}>
+        <Link
+          href={`/blogs/${sorted ? `sorted/${sorted}/` : ""}${v}`}
+          key={`link-key-page-${v}`}
+        >
           <button key={`page-key-${v}`}>{v}</button>
         </Link>
       ))}
@@ -43,10 +52,12 @@ export default function PaginatedBlogPostListControls(params: any) {
       >
         {ellipses}
       </div>
-      <Link href={`/blogs/${lastPage}`}>
+      <Link href={`/blogs/${sorted ? `sorted/${sorted}/` : ""}${lastPage}`}>
         <button type="button">{lastPage}</button>
       </Link>
-      <Link href={`/blogs/${currentPage + 1}`}>
+      <Link
+        href={`/blogs/${sorted ? `sorted/${sorted}/` : ""}${currentPage + 1}`}
+      >
         <button
           type="button"
           id="next-page"

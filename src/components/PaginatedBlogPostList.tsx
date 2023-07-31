@@ -3,7 +3,11 @@ import { store } from "@/store";
 import BlogListDisplayItem from "./BlogListDisplayItem";
 import PaginatedBlogPostListControls from "./PaginatedBlogPostListControls";
 
-export default async function PaginatedBlogPostList(params: any) {
+export default async function PaginatedBlogPostList({
+  sorted,
+}: {
+  sorted?: string;
+}) {
   const startPage: number =
     (store.getState().blogPostList.currentPage - 1) *
     store.getState().blogPostList.displayNumber;
@@ -19,7 +23,7 @@ export default async function PaginatedBlogPostList(params: any) {
           <BlogListDisplayItem blog={blog} key={`${blog.blogId}-#${index}`} />
         ))}
       </div>
-      <PaginatedBlogPostListControls />
+      <PaginatedBlogPostListControls sorted={sorted} />
     </div>
   );
 }

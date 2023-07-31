@@ -37,3 +37,12 @@ export interface CommentDetails {
   body: string;
   parentCommentId?: string | null;
 }
+
+export enum SortTypes {
+  DATE_ASC = 1,
+  DATE_DEC,
+  TITLE_ASC,
+  TITLE_DEC,
+  LIKES_ASC,
+  LIKES_DEC,
+}

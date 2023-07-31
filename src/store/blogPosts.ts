@@ -1,11 +1,12 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { BlogPostReturn } from "@/models/blogPostReturn";
+import { BlogPostReturn, SortTypes } from "@/models/blogPostReturn";
 
 export interface BlogPostList {
   list: BlogPostReturn[];
   currentPage: number;
   displayNumber: number;
   siblings: number;
+  sortType: SortTypes;
 }
 
 const initialState: BlogPostList = {
@@ -13,6 +14,7 @@ const initialState: BlogPostList = {
   currentPage: 1,
   displayNumber: 5,
   siblings: 2,
+  sortType: SortTypes.DATE_DEC,
 };
 
 const blogPostsSlice = createSlice({
@@ -35,9 +37,17 @@ const blogPostsSlice = createSlice({
       );
       state.currentPage = newPage;
     },
+    setSortType: (state, action: PayloadAction<SortTypes>) => {
+      state.sortType = action.payload;
+    },
   },
 });
 
-export const { setDisplayNumber, setSiblings, setList, setCurrentPage } =
-  blogPostsSlice.actions;
+export const {
+  setDisplayNumber,
+  setSiblings,
+  setList,
+  setCurrentPage,
+  setSortType,
+} = blogPostsSlice.actions;
 export default blogPostsSlice.reducer;

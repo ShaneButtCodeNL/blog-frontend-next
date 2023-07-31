@@ -1,3 +1,4 @@
+import { BlogPostReturn, SortTypes } from "@/models/blogPostReturn";
 import { UserDetails } from "@/models/userReturn";
 import { store } from "@/store";
 import {
@@ -103,4 +104,47 @@ export function closeMakeCommentReplyModal() {
     "make-comment-reply-modal"
   ) as HTMLDialogElement;
   modal.close();
+}
+
+export async function applySorting(
+  list: BlogPostReturn[],
+  sortType?: SortTypes | null | undefined
+) {
+  if (sortType) {
+    let sortFun;
+    switch (sortType) {
+      case SortTypes.DATE_ASC: {
+        sortFun = (a: BlogPostReturn, b: BlogPostReturn) =>
+          new Date(a.lastUpdated).getTime() - new Date(b.lastUpdated).getTime();
+        break;
+      }
+      case SortTypes.DATE_DEC: {
+        sortFun = (a: BlogPostReturn, b: BlogPostReturn) =>
+          new Date(b.lastUpdated).getTime() - new Date(a.lastUpdated).getTime();
+        break;
+      }
+      case SortTypes.LIKES_ASC: {
+        sortFun = (a: BlogPostReturn, b: BlogPostReturn) =>
+          a.likes.length - b.likes.length;
+        break;
+      }
+      case SortTypes.LIKES_DEC: {
+        sortFun = (a: BlogPostReturn, b: BlogPostReturn) =>
+          b.likes.length - a.likes.length;
+        break;
+      }
+      case SortTypes.TITLE_ASC: {
+        sortFun = (a: BlogPostReturn, b: BlogPostReturn) =>
+          a.title.localeCompare(b.title);
+        break;
+      }
+      case SortTypes.TITLE_ASC: {
+        sortFun = (a: BlogPostReturn, b: BlogPostReturn) =>
+          b.title.localeCompare(a.title);
+        break;
+      }
+    }
+    return [...list].sort(sortFun);
+  }
+  return list;
 }

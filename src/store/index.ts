@@ -12,9 +12,9 @@ export const store = configureStore({
   },
 });
 
-// store.subscribe(() =>
-//   console.log("Current state\n", store.getState().commentReply)
-// );
+store.subscribe(() =>
+  console.log("Current state\n", store.getState().blogPostList)
+);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

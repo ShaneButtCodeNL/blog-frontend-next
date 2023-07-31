@@ -122,6 +122,7 @@ export async function register(
 export function logoff() {}
 
 export async function getAllBlogPosts(): Promise<BlogPostReturn[]> {
+  console.log("\n\nGET ALL POSTS\n\n");
   const res = await fetch(getBlogsPath, {
     method: GET,
     next: {
@@ -130,7 +131,6 @@ export async function getAllBlogPosts(): Promise<BlogPostReturn[]> {
     },
   });
   const data = await res.json();
-  console.log(data);
   if (!data) throw new Error("Something went wrong");
   return data;
 }
