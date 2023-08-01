@@ -10,6 +10,7 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 export default function BlogPostSearch() {
   const dispatch = useAppDispatch();
   const search = useAppSelector((state) => state.search.search);
+
   return (
     <div>
       <input
@@ -19,7 +20,6 @@ export default function BlogPostSearch() {
         value={search}
         onChange={(e) => dispatch(setSearch(e.target.value))}
       />
-      {"SEARCH: " + store.getState().search.search}
     </div>
   );
 }

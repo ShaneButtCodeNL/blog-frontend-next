@@ -11,7 +11,7 @@ export default async function Page({
 }: {
   params: { pageNumber: number };
 }) {
-  const data = applySorting(await getAllBlogPosts(), SortTypes.DATE_DEC);
+  const data = await getAllBlogPosts();
   return (
     <>
       <PreloadBlogList list={data} />

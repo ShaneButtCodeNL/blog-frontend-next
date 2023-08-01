@@ -1,12 +1,7 @@
 import { BlogPostReturn, SortTypes } from "@/models/blogPostReturn";
 import { UserDetails } from "@/models/userReturn";
 import { store } from "@/store";
-import {
-  setBlogId,
-  setBody,
-  setParentCommentId,
-  setTitle,
-} from "@/store/commentReply";
+import { setBlogId, setBody, setParentCommentId } from "@/store/commentReply";
 import login, { setLoggedIn, setUserDetails } from "@/store/login";
 
 const TOKEN = "token";
@@ -54,6 +49,7 @@ export const setLogoutDetails = () => {
     localStorage.removeItem(USER_DETAILS);
   }
   store.dispatch(setLoggedIn(false));
+  //@ts-ignore
   store.dispatch(setUserDetails(null));
 };
 
@@ -147,4 +143,14 @@ export function applySorting(
     return [...list].sort(sortFun);
   }
   return list;
+}
+
+export function applyTitleFilter(list: BlogPostReturn[], titleSnipit: string) {
+  if (!titleSnipit || titleSnipit.length === 0) return list;
+  else
+    return list.filter(
+      (v) =>
+        v.title.toLocaleLowerCase().indexOf(titleSnipit.toLocaleLowerCase()) !==
+        -1
+    );
 }

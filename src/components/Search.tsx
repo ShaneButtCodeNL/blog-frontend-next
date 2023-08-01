@@ -1,7 +1,9 @@
 "use client";
 
 import { AppDispatch, RootState, store } from "@/store";
-import { setSearch } from "@/store/search";
+import { setSearch as setStoreSearch } from "@/store/search";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
@@ -9,17 +11,25 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export default function Search(props: any) {
   const dispatch = useAppDispatch();
-  const search = useAppSelector((state) => state.search.search);
+  const [search, setSearch] = useState(""); //useAppSelector((state) => state.search.search);
+  const router = useRouter();
   return (
-    <div>
+    <form
+      id="search-form-main"
+      onSubmit={(e) => {
+        e.preventDefault();
+        dispatch(setStoreSearch(search));
+        router.push("/blogs/1");
+      }}
+    >
       <input
         type="text"
         placeholder="search"
         className="form-input"
         value={search}
-        onChange={(e) => dispatch(setSearch(e.target.value))}
+        onChange={(e) => setSearch(e.target.value)}
       />
-      {"SEARCH: " + store.getState().search.search}
-    </div>
+      <button type="submit">GO</button>
+    </form>
   );
 }
