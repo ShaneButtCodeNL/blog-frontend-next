@@ -1,4 +1,5 @@
 import LatestBlogPost from "@/components/LatestBlogPost";
+import { store } from "@/store";
 import Link from "next/link";
 
 export default function Home() {
@@ -20,6 +21,7 @@ export default function Home() {
       <section>
         <h2>Latest Post</h2>
         <LatestBlogPost />
+        {"SEARCH: " + store.getState().search.search}
       </section>
     </div>
   );

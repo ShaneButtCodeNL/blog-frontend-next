@@ -7,7 +7,7 @@ import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
-export default function Search(props: any) {
+export default function BlogPostSearch() {
   const dispatch = useAppDispatch();
   const search = useAppSelector((state) => state.search.search);
   return (

@@ -1,4 +1,5 @@
 import BlogPostListSort from "@/components/BlogPostListSort";
+import BlogPostSearch from "@/components/BlogPostSearch";
 import Providers from "@/components/Provider";
 
 export default async function Layout({
@@ -10,6 +11,7 @@ export default async function Layout({
     <>
       <Providers>
         <BlogPostListSort />
+        <BlogPostSearch />
       </Providers>
 
       {children}

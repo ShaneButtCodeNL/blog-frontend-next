@@ -1,21 +1,26 @@
+"use client";
 import { BlogPostReturn } from "@/models/blogPostReturn";
-import { store } from "@/store";
+import { AppDispatch, RootState, store } from "@/store";
 import BlogListDisplayItem from "./BlogListDisplayItem";
 import PaginatedBlogPostListControls from "./PaginatedBlogPostListControls";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { applySorting } from "@/functions/helpers";
 
-export default async function PaginatedBlogPostList({
-  sorted,
-}: {
-  sorted?: string;
-}) {
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+export default function PaginatedBlogPostList() {
+  const sortType = useAppSelector((state) => state.blogPostList.sortType);
+  const blogList = useAppSelector((state) => state.blogPostList.list);
   const startPage: number =
     (store.getState().blogPostList.currentPage - 1) *
     store.getState().blogPostList.displayNumber;
   const endPage: number =
     startPage + store.getState().blogPostList.displayNumber;
-  const list: BlogPostReturn[] = store
-    .getState()
-    .blogPostList.list.slice(startPage, endPage);
+  const list: BlogPostReturn[] = applySorting(blogList, sortType).slice(
+    startPage,
+    endPage
+  );
   return (
     <div id="blog-list-slice-container">
       <div id="blog-list-slice">
@@ -23,7 +28,7 @@ export default async function PaginatedBlogPostList({
           <BlogListDisplayItem blog={blog} key={`${blog.blogId}-#${index}`} />
         ))}
       </div>
-      <PaginatedBlogPostListControls sorted={sorted} />
+      <PaginatedBlogPostListControls />
     </div>
   );
 }

@@ -33,8 +33,8 @@ export default async function RootLayout({
           <header style={{ paddingTop: "1em", paddingBottom: "1em" }}>
             <div id="header-content">
               <div className="title">Shane's Blog</div>
-              <Search title="Hello" />
               <Providers>
+                <Search title="Hello" />
                 <Nav />
               </Providers>
             </div>

@@ -106,7 +106,7 @@ export function closeMakeCommentReplyModal() {
   modal.close();
 }
 
-export async function applySorting(
+export function applySorting(
   list: BlogPostReturn[],
   sortType?: SortTypes | null | undefined
 ) {

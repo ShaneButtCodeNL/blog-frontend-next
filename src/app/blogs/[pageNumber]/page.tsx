@@ -1,17 +1,24 @@
 import PaginatedBlogPostList from "@/components/PaginatedBlogPostList";
+import Providers from "@/components/Provider";
+import PreloadBlogList from "@/components/preloaders/PreloadBlogList";
+import PreloadPageNumber from "@/components/preloaders/PreloadPageNumber";
 import { getAllBlogPosts } from "@/functions/apiController";
 import { applySorting } from "@/functions/helpers";
 import { SortTypes } from "@/models/blogPostReturn";
-import { store } from "@/store";
-import { setCurrentPage, setList } from "@/store/blogPosts";
 
 export default async function Page({
   params,
 }: {
   params: { pageNumber: number };
 }) {
-  const data = await applySorting(await getAllBlogPosts(), SortTypes.DATE_DEC);
-  store.dispatch(setList(data));
-  store.dispatch(setCurrentPage(params.pageNumber));
-  return <PaginatedBlogPostList />;
+  const data = applySorting(await getAllBlogPosts(), SortTypes.DATE_DEC);
+  return (
+    <>
+      <PreloadBlogList list={data} />
+      <PreloadPageNumber page={params.pageNumber} />
+      <Providers>
+        <PaginatedBlogPostList />
+      </Providers>
+    </>
+  );
 }
