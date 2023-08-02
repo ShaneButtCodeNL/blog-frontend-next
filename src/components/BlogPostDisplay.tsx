@@ -3,10 +3,11 @@ import { getDateString } from "@/functions/helpers";
 import BlogPostCommentDisplay from "./BlogPostCommentDisplay";
 import BlogPostDisplayControls from "./BlogPostDisplayControls";
 import Providers from "./Provider";
+import markdownParser from "@/functions/markdownParser";
+import BlogPostDisplayBody from "./BlogPostDisplayBody";
 
 export default function BlogPostDisplay(params: any) {
   const blogPost: BlogPostReturn = params.blogPost;
-
   return (
     <div id="blog-post-display-container">
       {blogPost.deleted ? (
@@ -30,7 +31,7 @@ export default function BlogPostDisplay(params: any) {
               Updated On: {getDateString(blogPost.lastUpdated)}
             </div>
           </div>
-          <div id="blog-body">{blogPost.body}</div>
+          <BlogPostDisplayBody htmlString={markdownParser(blogPost.body)} />
         </>
       )}
       <Providers>
