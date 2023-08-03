@@ -1,10 +1,13 @@
 const allUnorderdListPattern = /((?:[\+\*\-]\s+[^\n]*\n*)+)/gm;
 const allUnorderdListTemplate = "<ul>\n$1\n</ul>";
 const unorderdListItemPattern = /(?:[\+\*\-]\s+([^\n]*)\n*)/gm;
-const allOrderdListPattern = /((?:\d+[\.\)]\s+[^\n]*\n*)+)/gm;
-const allOrderdListTemplate = "<ol>\n$1\n</ol>";
-const orderdListItemPattern = /(?:\d+[\.\)]\s+([^\n]*)\n*)/gm;
+const allOrderedListPattern = /((?:\d+[\.\)]\s+[^\n]*\n*)+)/gm;
+const allOrderedListTemplate = "<ol>\n$1\n</ol>";
+const orderedListItemPattern = /(?:\d+[\.\)]\s+([^\n]*)\n*)/gm;
 const listItemTemplate = "<li>$1</li>";
+const allBlockQuotePattern = /((?:^\>+\s([^\n]*)\n*)+)/gim;
+const blockQuotePattern = /(?:^\>(\>*\s[^\n]*)\n*)/gim;
+const allBlockQuoteTemplate = "<blockquote>\n$1\n</blockquote>";
 const headerPatternsAndTemplates: [RegExp, string][] = [
   [/#{6}\s+(.*)/gm, "<h6>$1</h6>"],
   [/#{5}\s+(.*)/gm, "<h5>$1</h5>"],
@@ -17,11 +20,17 @@ const emphasisPatternsAndTemplates: [RegExp, string][] = [
   [/([\_\*]{2})([^\n]+)(?:\1)/gm, "<b>$2</b>"],
   [/([\_\*]{1})([^\n]+)(?:\1)/gm, "<i>$2</i>"],
 ];
-const imagePattern =
-  /[^\n\[]*!\[(.*)\]\s*\({1}([^"\)\(\s]*)\s?"(.*)"\){1}[^\]]*/gim;
+const imagePattern = /[^\n\[]*!\[(.*)\]\s*\({1}([^"\)\(\s]*)\s?"(.*)"\){1}/gim;
 const imageTemplate = '<image alt="$1" title="$3" src="$2"/>';
 const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/;
 const linkTemplate = '<a href="$2" target="_blank">$1</a>';
+
+function processBlockQuotes(input: string) {
+  input = input
+    .replace(allBlockQuotePattern, allBlockQuoteTemplate)
+    .replace(blockQuotePattern, "$1\n");
+  return input;
+}
 
 function processLinks(input: string) {
   return input.replace(linkPattern, linkTemplate);
@@ -50,8 +59,8 @@ function processUnorderedList(input: string) {
   return input;
 }
 function processOrderedList(input: string) {
-  input = input.replace(allOrderdListPattern, allOrderdListTemplate);
-  input = input.replace(orderdListItemPattern, listItemTemplate);
+  input = input.replace(allOrderedListPattern, allOrderedListTemplate);
+  input = input.replace(orderedListItemPattern, listItemTemplate);
   return input;
 }
 function processLists(input: string) {
@@ -61,6 +70,8 @@ export default function markdownParser(input: string) {
   input = processEmphasis(input);
   input = processImages(input);
   input = processLinks(input);
+  input = processBlockQuotes(input);
+
   input = processHeaders(input);
   return processLists(input);
 }
