@@ -1,148 +1,66 @@
-const parseingRules = [
-  // Header rules
-  [/#{6}\s?([^\n]+)/g, "<h6>$1<h6>"],
-  [/#{5}\s?([^\n]+)/g, "<h5>$1<h5>"],
-  [/#{4}\s?([^\n]+)/g, "<h4>$1<h4>"],
-  [/#{3}\s?([^\n]+)/g, "<h3>$1<h3>"],
-  [/#{2}\s?([^\n]+)/g, "<h2>$1<h2>"],
-  [/#{1}\s?([^\n]+)/g, "<h1>$1<h1>"],
-
-  // empasis text
-  [/\*\*\s?([^\n]+)\*\*/g, "<b>$1</b>"],
-  [/\*\s?([^\n]+)\*/g, "<i>$1</i>"],
-  [/__([^_]+)__/g, "<b>$1</b>"],
-  [/_([^_`]+)_/g, "<i>$1</i>"],
-  [/([^\n]+\n?)/g, "<p>$1</p>"],
-
-  // Links
-  [/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>'],
-
-  //Lists
-  [/([^\n]+)(\+)([^\n]+)/g, "<ul><li>$3</li></ul>"],
-  [/([^\n]+)(\*)([^\n]+)/g, "<ul><li>$3</li></ul>"],
-
-  //Image
-  [
-    /!\[([^\]]+)\]\(([^)]+)\s"([^")]+)"\)/g,
-    '<img src="$2" alt="$1" title="$3" />',
-  ],
+const allUnorderdListPattern = /((?:[\+\*\-]\s+[^\n]*\n*)+)/gm;
+const allUnorderdListTemplate = "<ul>\n$1\n</ul>";
+const unorderdListItemPattern = /(?:[\+\*\-]\s+([^\n]*)\n*)/gm;
+const allOrderdListPattern = /((?:\d+[\.\)]\s+[^\n]*\n*)+)/gm;
+const allOrderdListTemplate = "<ol>\n$1\n</ol>";
+const orderdListItemPattern = /(?:\d+[\.\)]\s+([^\n]*)\n*)/gm;
+const listItemTemplate = "<li>$1</li>";
+const headerPatternsAndTemplates: [RegExp, string][] = [
+  [/#{6}\s+(.*)/gm, "<h6>$1</h6>"],
+  [/#{5}\s+(.*)/gm, "<h5>$1</h5>"],
+  [/#{4}\s+(.*)/gm, "<h4>$1</h4>"],
+  [/#{3}\s+(.*)/gm, "<h3>$1</h3>"],
+  [/#{2}\s+(.*)/gm, "<h2>$1</h2>"],
+  [/#{1}\s+(.*)/gm, "<h1>$1</h1>"],
 ];
-let listType = 0;
-const listQueue: string[] = [];
-const indentedListQueue: string[] = [];
-//Pattern for images
-//[alt](url "title")
+const emphasisPatternsAndTemplates: [RegExp, string][] = [
+  [/([\_\*]{2})([^\n]+)(?:\1)/gm, "<b>$2</b>"],
+  [/([\_\*]{1})([^\n]+)(?:\1)/gm, "<i>$2</i>"],
+];
 const imagePattern =
-  /[^\n\[]*!\[(.*)\]\s*\({1}([^"\)\(\s]*)\s?"(.*)"\){1}[^\]]*/i;
-
-// Patterns for Lists
-const unorderdListPattern = /[\+\*]{1}\s*.*[\n]*/;
-const orderedListPattern = /\d+\s*[\.\)]{1}\s*(.*)[\n]*/i;
-
-// Patern for headers
-// # ## ### #### ##### ######
-const headerPattern = /#{1,6}\s?[^\n]+/;
-
-// Pattern for Links
-// [text](linkURL)
+  /[^\n\[]*!\[(.*)\]\s*\({1}([^"\)\(\s]*)\s?"(.*)"\){1}[^\]]*/gim;
+const imageTemplate = '<image alt="$1" title="$3" src="$2"/>';
 const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/;
+const linkTemplate = '<a href="$2" target="_blank">$1</a>';
 
-const processImage = (input: string) => {
-  const imagePatterns: [RegExp, string][] = [
-    [imagePattern, `<image alt="$1" title="$3" src="$2"/>`],
-  ];
-  for (const [pattern, template] of imagePatterns) {
+function processLinks(input: string) {
+  return input.replace(linkPattern, linkTemplate);
+}
+
+function processImages(input: string) {
+  return input.replace(imagePattern, imageTemplate);
+}
+
+function processEmphasis(input: string) {
+  for (const [pattern, template] of emphasisPatternsAndTemplates) {
     input = input.replace(pattern, template);
   }
   return input;
-};
-
-const processList = (input: string) => {
-  const listPatterns: [RegExp, string][] = [
-    [/[\+\*]{1}\s*(.*)[\n]*/, "<li>$1</li>"],
-    [orderedListPattern, "<li>$1</li>"],
-  ];
-  for (const [pattern, template] of listPatterns) {
+}
+function processHeaders(input: string) {
+  for (const [pattern, template] of headerPatternsAndTemplates) {
     input = input.replace(pattern, template);
   }
   return input;
-};
+}
 
-const processLink = (input: string) => {
-  return input.replace(linkPattern, '<a href="$2" target="_blank">$1</a>');
-};
-
-const processHeader = (input: string) => {
-  const headerPatterns: [RegExp, string][] = [
-    [/#{6}\s?([^\n]+)/g, "<h6>$1<h6>"],
-    [/#{5}\s?([^\n]+)/g, "<h5>$1<h5>"],
-    [/#{4}\s?([^\n]+)/g, "<h4>$1<h4>"],
-    [/#{3}\s?([^\n]+)/g, "<h3>$1<h3>"],
-    [/#{2}\s?([^\n]+)/g, "<h2>$1<h2>"],
-    [/#{1}\s?([^\n]+)/g, "<h1>$1<h1>"],
-  ];
-  for (const [pattern, template] of headerPatterns) {
-    if (pattern.test(input)) return input.replace(pattern, template);
-  }
+function processUnorderedList(input: string) {
+  input = input.replace(allUnorderdListPattern, allUnorderdListTemplate);
+  input = input.replace(unorderdListItemPattern, listItemTemplate);
   return input;
-};
-
-const processEmphasis = (input: string) => {
-  const emphasisPattens: [RegExp, string][] = [
-    [/\*\*\s?([^\n]+)\*\*/g, "<b>$1</b>"],
-    [/\*\s?([^\n]+)\*/g, "<i>$1</i>"],
-    [/__([^_]+)__/g, "<b>$1</b>"],
-    [/_([^_`]+)_/g, "<i>$1</i>"],
-  ];
-  for (const [pattern, template] of emphasisPattens) {
-    input = input.replace(pattern, template);
-  }
+}
+function processOrderedList(input: string) {
+  input = input.replace(allOrderdListPattern, allOrderdListTemplate);
+  input = input.replace(orderdListItemPattern, listItemTemplate);
   return input;
-};
-
-const listCleanupFunction = (list: string[]) => {
-  if (listType !== 0) {
-    list.push(listType === 1 ? "</ul>" : "</ol>");
-    listType = 0;
-  }
-};
-
+}
+function processLists(input: string) {
+  return processOrderedList(processUnorderedList(input));
+}
 export default function markdownParser(input: string) {
-  const inputSplit = input.split("\n");
-  const outputSplit: string[] = [];
-
-  for (let line of inputSplit) {
-    console.log("Start ", line);
-    //Check for emphasis
-    line = processImage(line);
-    console.log("after img ", line);
-
-    line = processEmphasis(line);
-    console.log("after emp ", line);
-
-    line = processLink(line);
-    console.log("after link ", line);
-
-    if (headerPattern.test(line)) {
-      listCleanupFunction(outputSplit);
-      line = processHeader(line);
-    } else if (unorderdListPattern.test(line)) {
-      listCleanupFunction(outputSplit);
-
-      line = processList(line);
-    } else if (orderedListPattern.test(line)) {
-      listCleanupFunction(outputSplit);
-
-      line = processList(line);
-    } else {
-      listCleanupFunction(outputSplit);
-
-      line = `<p>${line}</p>`;
-    }
-
-    outputSplit.push(line);
-  }
-  listCleanupFunction(outputSplit);
-
-  return outputSplit.join("\n");
+  input = processEmphasis(input);
+  input = processImages(input);
+  input = processLinks(input);
+  input = processHeaders(input);
+  return processLists(input);
 }
