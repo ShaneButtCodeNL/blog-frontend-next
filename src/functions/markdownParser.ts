@@ -9,6 +9,8 @@ const allBlockQuotePattern = /((?:^\>+\s([^\n]*)\n*)+)/gim;
 const blockQuotePattern = /(?:^\>(\>*\s[^\n]*)\n*)/gim;
 const allBlockQuoteTemplate = "<blockquote>\n$1\n</blockquote>";
 const headerPatternsAndTemplates: [RegExp, string][] = [
+  [/([^\n]*)\n(?=(={1,}))\2(?=\n)/gm, "<h1>$1</h1>"],
+  [/([^\n]*)\n(?=(-{1,}))\2(?=\n)/gm, "<h2>$1</h2>"],
   [/#{6}\s+(.*)/gm, "<h6>$1</h6>"],
   [/#{5}\s+(.*)/gm, "<h5>$1</h5>"],
   [/#{4}\s+(.*)/gm, "<h4>$1</h4>"],
@@ -20,10 +22,27 @@ const emphasisPatternsAndTemplates: [RegExp, string][] = [
   [/([\_\*]{2})([^\n]+)(?:\1)/gm, "<b>$2</b>"],
   [/([\_\*]{1})([^\n]+)(?:\1)/gm, "<i>$2</i>"],
 ];
-const imagePattern = /[^\n\[]*!\[(.*)\]\s*\({1}([^"\)\(\s]*)\s?"(.*)"\){1}/gim;
+const codeFencePattern = /(`{2,})([\s\S]*?)(?:\1)/gi;
+const codeFenceTemplate = "<div><code>$2</code></div>";
+const codeLinePattern =
+  /^(?!<div><code>)(.*)(`)(.+)(`)(.*\n?)(?!\n?<\/code><\/div>)/gm;
+const codeLineTemplate = "$1<code>$3</code>$5";
+const imagePattern = /[^\n\[]*!\[(.*)\]\s*\({1}([^"\)\(\s]*)\s?"(.*)"\){1}/gm;
 const imageTemplate = '<image alt="$1" title="$3" src="$2"/>';
-const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/;
+const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/gm;
 const linkTemplate = '<a href="$2" target="_blank">$1</a>';
+const horazontalRulePattern = /^(([-=*_])\2{2,})$/gm;
+const horazontalRuleTemplate = "<hr>";
+
+function processHorazontalRules(input: string) {
+  return input.replace(horazontalRulePattern, horazontalRuleTemplate);
+}
+
+function processCodeBlock(input: string) {
+  input = input.replace(codeFencePattern, codeFenceTemplate);
+  input = input.replace(codeLinePattern, codeLineTemplate);
+  return input;
+}
 
 function processBlockQuotes(input: string) {
   input = input
@@ -67,11 +86,14 @@ function processLists(input: string) {
   return processOrderedList(processUnorderedList(input));
 }
 export default function markdownParser(input: string) {
-  input = processEmphasis(input);
   input = processImages(input);
   input = processLinks(input);
+  input = processCodeBlock(input);
   input = processBlockQuotes(input);
-
   input = processHeaders(input);
-  return processLists(input);
+  input = processHorazontalRules(input);
+
+  input = processEmphasis(input);
+  input = processLists(input);
+  return input;
 }
