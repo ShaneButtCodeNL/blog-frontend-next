@@ -1,6 +1,6 @@
 "use client";
 
-import markdownParser from "@/functions/markdownParser";
+import markdownParserToHTMLString from "@/functions/markdownParser";
 import { makeNewPostFunction } from "@/functions/serverFunctions";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
@@ -52,7 +52,9 @@ export default function WritePost(params: any) {
             setBody(e.target.value);
             const previewBody = document.getElementById("preview-body");
             if (previewBody)
-              previewBody.innerHTML = markdownParser(e.target.value);
+              previewBody.innerHTML = markdownParserToHTMLString(
+                e.target.value
+              );
           }}
           spellCheck={true}
         ></textarea>

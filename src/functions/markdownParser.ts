@@ -1,99 +1,179 @@
 const allUnorderdListPattern = /((?:[\+\*\-]\s+[^\n]*\n*)+)/gm;
 const allUnorderdListTemplate = "<ul>\n$1\n</ul>";
+const allUnorderdListTemplateString = "\n$1\n";
+
 const unorderdListItemPattern = /(?:[\+\*\-]\s+([^\n]*)\n*)/gm;
 const allOrderedListPattern = /((?:\d+[\.\)]\s+[^\n]*\n*)+)/gm;
 const allOrderedListTemplate = "<ol>\n$1\n</ol>";
+const allOrderedListTemplateString = "\n$1\n";
+
 const orderedListItemPattern = /(?:\d+[\.\)]\s+([^\n]*)\n*)/gm;
 const listItemTemplate = "<li>$1</li>";
+const listItemTemplatestring = "\n\t$1\n";
+
 const allBlockQuotePattern = /((?:^\>+\s([^\n]*)\n*)+)/gim;
 const blockQuotePattern = /(?:^\>(\>*\s[^\n]*)\n*)/gim;
 const allBlockQuoteTemplate = "<blockquote>\n$1\n</blockquote>";
-const headerPatternsAndTemplates: [RegExp, string][] = [
-  [/([^\n]*)\n(?=(={1,}))\2(?=\n)/gm, "<h1>$1</h1>"],
-  [/([^\n]*)\n(?=(-{1,}))\2(?=\n)/gm, "<h2>$1</h2>"],
-  [/#{6}\s+(.*)/gm, "<h6>$1</h6>"],
-  [/#{5}\s+(.*)/gm, "<h5>$1</h5>"],
-  [/#{4}\s+(.*)/gm, "<h4>$1</h4>"],
-  [/#{3}\s+(.*)/gm, "<h3>$1</h3>"],
-  [/#{2}\s+(.*)/gm, "<h2>$1</h2>"],
-  [/#{1}\s+(.*)/gm, "<h1>$1</h1>"],
+const allBlockQuoteTemplateString = "\n$1\n";
+const headerPatternsAndTemplates: [RegExp, string, string][] = [
+  [/([^\n]+)\n(?=(={1}))\2{3,}\n/gm, "<h1>$1</h1>", "\n$1\n"],
+  [/([^\n]+)\n(?=(-{1}))\2{3,}\n/gm, "<h2>$1</h2>", "\n$1\n"],
+  [/#{6}\s+(.*)/gm, "<h6>$1</h6>", "\n$1\n"],
+  [/#{5}\s+(.*)/gm, "<h5>$1</h5>", "\n$1\n"],
+  [/#{4}\s+(.*)/gm, "<h4>$1</h4>", "\n$1\n"],
+  [/#{3}\s+(.*)/gm, "<h3>$1</h3>", "\n$1\n"],
+  [/#{2}\s+(.*)/gm, "<h2>$1</h2>", "\n$1\n"],
+  [/#{1}\s+(.*)/gm, "<h1>$1</h1>", "\n$1\n"],
 ];
-const emphasisPatternsAndTemplates: [RegExp, string][] = [
-  [/([\_\*]{2})([^\n]+)(?:\1)/gm, "<b>$2</b>"],
-  [/([\_\*]{1})([^\n]+)(?:\1)/gm, "<i>$2</i>"],
+const emphasisPatternsAndTemplates: [RegExp, string, string][] = [
+  [/([\_\*]{2})([^\n]+)(?:\1)/gm, "<b>$2</b>", "$2"],
+  [/([\_\*]{1})([^\n]+)(?:\1)/gm, "<i>$2</i>", "$2"],
 ];
 const codeFencePattern = /(`{2,})([\s\S]*?)(?:\1)/gi;
 const codeFenceTemplate = "<div><code>$2</code></div>";
+const codeFenceTemplateString = "``\n$2\n``";
+
 const codeLinePattern =
   /^(?!<div><code>)(.*)(`)(.+)(`)(.*\n?)(?!\n?<\/code><\/div>)/gm;
 const codeLineTemplate = "$1<code>$3</code>$5";
+const codeLineTemplateString = "$1$3$5";
+
 const imagePattern = /[^\n\[]*!\[(.*)\]\s*\({1}([^"\)\(\s]*)\s?"(.*)"\){1}/gm;
 const imageTemplate = '<image alt="$1" title="$3" src="$2"/>';
+const imageTemplateString = '"$1"';
+
 const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/gm;
 const linkTemplate = '<a href="$2" target="_blank">$1</a>';
-const horazontalRulePattern = /^(([-=*_])\2{2,})$/gm;
+const linkTemplateString = "[ $1 ]";
+const horazontalRulePattern = /\n?^(([-=*_])\2{2,})\n+/gm;
 const horazontalRuleTemplate = "<hr>";
+const horazontalRuleTemplateString = "\n";
 
-function processHorazontalRules(input: string) {
-  return input.replace(horazontalRulePattern, horazontalRuleTemplate);
+const lineBreakPattern = /(\n)/gi;
+const lineBreakTemplate = "</br>";
+const lineBreakTemplateString = "\n";
+
+function processLineBreaks(input: string, options?: MarkdownParserOptions) {
+  return input.replace(
+    lineBreakPattern,
+    options?.asString ? lineBreakTemplateString : lineBreakTemplate
+  );
 }
 
-function processCodeBlock(input: string) {
-  input = input.replace(codeFencePattern, codeFenceTemplate);
-  input = input.replace(codeLinePattern, codeLineTemplate);
+function processHorazontalRules(
+  input: string,
+  options?: MarkdownParserOptions
+) {
+  return input.replace(
+    horazontalRulePattern,
+    options?.asString ? horazontalRuleTemplateString : horazontalRuleTemplate
+  );
+}
+
+function processCodeBlock(input: string, options?: MarkdownParserOptions) {
+  input = input.replace(
+    codeFencePattern,
+    options?.asString ? codeFenceTemplateString : codeFenceTemplate
+  );
+  input = input.replace(
+    codeLinePattern,
+    options?.asString ? codeLineTemplateString : codeLineTemplate
+  );
   return input;
 }
 
-function processBlockQuotes(input: string) {
+function processBlockQuotes(input: string, options?: MarkdownParserOptions) {
   input = input
-    .replace(allBlockQuotePattern, allBlockQuoteTemplate)
+    .replace(
+      allBlockQuotePattern,
+      options?.asString ? allBlockQuoteTemplateString : allBlockQuoteTemplate
+    )
     .replace(blockQuotePattern, "$1\n");
   return input;
 }
 
-function processLinks(input: string) {
-  return input.replace(linkPattern, linkTemplate);
+function processLinks(input: string, options?: MarkdownParserOptions) {
+  return input.replace(
+    linkPattern,
+    options?.asString ? linkTemplateString : linkTemplate
+  );
 }
 
-function processImages(input: string) {
-  return input.replace(imagePattern, imageTemplate);
+function processImages(input: string, options?: MarkdownParserOptions) {
+  return input.replace(
+    imagePattern,
+    options?.asString ? imageTemplateString : imageTemplate
+  );
 }
 
-function processEmphasis(input: string) {
-  for (const [pattern, template] of emphasisPatternsAndTemplates) {
-    input = input.replace(pattern, template);
+function processEmphasis(input: string, options?: MarkdownParserOptions) {
+  for (const [
+    pattern,
+    template,
+    templateString,
+  ] of emphasisPatternsAndTemplates) {
+    input = input.replace(
+      pattern,
+      options?.asString ? templateString : template
+    );
   }
   return input;
 }
-function processHeaders(input: string) {
-  for (const [pattern, template] of headerPatternsAndTemplates) {
-    input = input.replace(pattern, template);
+function processHeaders(input: string, options?: MarkdownParserOptions) {
+  for (const [
+    pattern,
+    template,
+    templateString,
+  ] of headerPatternsAndTemplates) {
+    input = input.replace(
+      pattern,
+      options?.asString ? templateString : template
+    );
   }
   return input;
 }
 
-function processUnorderedList(input: string) {
-  input = input.replace(allUnorderdListPattern, allUnorderdListTemplate);
-  input = input.replace(unorderdListItemPattern, listItemTemplate);
+function processUnorderedList(input: string, options?: MarkdownParserOptions) {
+  input = input.replace(
+    allUnorderdListPattern,
+    options?.asString ? allUnorderdListTemplateString : allUnorderdListTemplate
+  );
+  input = input.replace(
+    unorderdListItemPattern,
+    options?.asString ? listItemTemplatestring : listItemTemplate
+  );
   return input;
 }
-function processOrderedList(input: string) {
-  input = input.replace(allOrderedListPattern, allOrderedListTemplate);
-  input = input.replace(orderedListItemPattern, listItemTemplate);
+function processOrderedList(input: string, options?: MarkdownParserOptions) {
+  input = input.replace(
+    allOrderedListPattern,
+    options?.asString ? allOrderedListTemplateString : allOrderedListTemplate
+  );
+  input = input.replace(
+    orderedListItemPattern,
+    options?.asString ? listItemTemplatestring : listItemTemplate
+  );
   return input;
 }
-function processLists(input: string) {
-  return processOrderedList(processUnorderedList(input));
+function processLists(input: string, options?: MarkdownParserOptions) {
+  return processOrderedList(processUnorderedList(input, options));
 }
-export default function markdownParser(input: string) {
-  input = processImages(input);
-  input = processLinks(input);
-  input = processCodeBlock(input);
-  input = processBlockQuotes(input);
-  input = processHeaders(input);
-  input = processHorazontalRules(input);
 
-  input = processEmphasis(input);
-  input = processLists(input);
-  return input;
+export interface MarkdownParserOptions {
+  asString?: boolean;
+}
+export default function markdownParserToHTMLString(
+  input: string,
+  options: MarkdownParserOptions = { asString: false }
+) {
+  input = processImages(input, options);
+  input = processLinks(input, options);
+  input = processCodeBlock(input, options);
+  input = processBlockQuotes(input, options);
+  input = processHeaders(input, options);
+  input = processHorazontalRules(input, options);
+
+  input = processEmphasis(input, options);
+  input = processLists(input, options);
+  return processLineBreaks(input, options);
 }

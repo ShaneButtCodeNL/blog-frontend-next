@@ -1,5 +1,6 @@
 import { BlogPostReturn } from "@/models/blogPostReturn";
 import Link from "next/link";
+import markdownParserToHTMLString from "@/functions/markdownParser";
 
 export default function BlogListDisplayItem({
   blog,
@@ -20,9 +21,12 @@ export default function BlogListDisplayItem({
               </div>
             </div>
             <div className="blog-display-body-preview">
-              {blog.body.length > 50
-                ? blog.body.substring(0, 47) + "..."
-                : blog.body}
+              {markdownParserToHTMLString(
+                blog.body.length > 50
+                  ? blog.body.substring(0, 47) + "..."
+                  : blog.body,
+                { asString: true }
+              )}
             </div>
             <div className="blog-to-display-social-interactions">
               <div className="blog-display-like-count">

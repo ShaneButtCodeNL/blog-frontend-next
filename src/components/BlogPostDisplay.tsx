@@ -3,7 +3,7 @@ import { getDateString } from "@/functions/helpers";
 import BlogPostCommentDisplay from "./BlogPostCommentDisplay";
 import BlogPostDisplayControls from "./BlogPostDisplayControls";
 import Providers from "./Provider";
-import markdownParser from "@/functions/markdownParser";
+import markdownParserToHTMLString from "@/functions/markdownParser";
 import BlogPostDisplayBody from "./BlogPostDisplayBody";
 
 export default function BlogPostDisplay(params: any) {
@@ -31,7 +31,9 @@ export default function BlogPostDisplay(params: any) {
               Updated On: {getDateString(blogPost.lastUpdated)}
             </div>
           </div>
-          <BlogPostDisplayBody htmlString={markdownParser(blogPost.body)} />
+          <BlogPostDisplayBody
+            htmlString={markdownParserToHTMLString(blogPost.body)}
+          />
         </>
       )}
       <Providers>
