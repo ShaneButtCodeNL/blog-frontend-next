@@ -2,6 +2,7 @@
 
 import { AppDispatch, RootState, store } from "@/store";
 import { setSearch } from "@/store/search";
+import { useRouter } from "next/navigation";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
@@ -10,6 +11,7 @@ export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 export default function BlogPostSearch() {
   const dispatch = useAppDispatch();
   const search = useAppSelector((state) => state.search.search);
+  const router = useRouter();
 
   return (
     <div>
@@ -18,7 +20,11 @@ export default function BlogPostSearch() {
         placeholder="search"
         className="form-input"
         value={search}
-        onChange={(e) => dispatch(setSearch(e.target.value))}
+        onChange={(e) => {
+          dispatch(setSearch(e.target.value));
+          //dispatch(set)
+          router.push("/blogs/1");
+        }}
       />
     </div>
   );

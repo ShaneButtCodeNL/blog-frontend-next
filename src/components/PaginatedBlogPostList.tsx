@@ -21,16 +21,17 @@ export default function PaginatedBlogPostList() {
   const list: BlogPostReturn[] = applyTitleFilter(
     applySorting(blogList, sortType),
     search
-  ).slice(startPage, endPage);
+  );
+  const listSlice = list.slice(startPage, endPage);
 
   return (
     <div id="blog-list-slice-container">
       <div id="blog-list-slice">
-        {list.map((blog, index) => (
+        {listSlice.map((blog, index) => (
           <BlogListDisplayItem blog={blog} key={`${blog.blogId}-#${index}`} />
         ))}
       </div>
-      <PaginatedBlogPostListControls />
+      <PaginatedBlogPostListControls listItemCount={list.length} />
     </div>
   );
 }

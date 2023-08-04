@@ -1,15 +1,18 @@
+"use client";
 import { store } from "@/store";
 import Link from "next/link";
 
 export default function PaginatedBlogPostListControls({
   sorted,
+  listItemCount,
 }: {
   sorted?: string;
+  listItemCount: number;
 }) {
+  console.log("count", listItemCount);
   const firstPage = 1;
   const lastPage = Math.ceil(
-    store.getState().blogPostList.list.length /
-      store.getState().blogPostList.displayNumber
+    listItemCount / store.getState().blogPostList.displayNumber
   );
   const currentPage: number = store.getState().blogPostList.currentPage;
   const siblings = store.getState().blogPostList.siblings;
@@ -21,7 +24,10 @@ export default function PaginatedBlogPostListControls({
     (_, i) => leftRange + i
   );
   return (
-    <div id="pagination-controls">
+    <div
+      id="pagination-controls"
+      style={firstPage === lastPage ? { display: "none" } : {}}
+    >
       <Link
         href={`/blogs/${sorted ? `sorted/${sorted}/` : ""}${currentPage - 1}`}
       >

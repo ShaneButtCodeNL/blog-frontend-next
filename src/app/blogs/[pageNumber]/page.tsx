@@ -3,8 +3,6 @@ import Providers from "@/components/Provider";
 import PreloadBlogList from "@/components/preloaders/PreloadBlogList";
 import PreloadPageNumber from "@/components/preloaders/PreloadPageNumber";
 import { getAllBlogPosts } from "@/functions/apiController";
-import { applySorting } from "@/functions/helpers";
-import { SortTypes } from "@/models/blogPostReturn";
 
 export default async function Page({
   params,
