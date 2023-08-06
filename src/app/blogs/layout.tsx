@@ -9,11 +9,12 @@ export default async function Layout({
 }) {
   return (
     <>
-      <Providers>
-        <BlogPostListSort />
-        <BlogPostSearch />
-      </Providers>
-
+      <div id="blog-list-controls">
+        <Providers>
+          <BlogPostListSort />
+          <BlogPostSearch />
+        </Providers>
+      </div>
       {children}
     </>
   );

@@ -2,6 +2,8 @@
 
 import { AppDispatch, RootState, store } from "@/store";
 import { setSearch as setStoreSearch } from "@/store/search";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
@@ -21,15 +23,19 @@ export default function Search(props: any) {
         dispatch(setStoreSearch(search));
         router.push("/blogs/1");
       }}
+      style={{ position: "relative" }}
     >
       <input
         type="text"
-        placeholder="search"
+        placeholder="Search . . ."
         className="form-input"
+        id="search-form-input"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      <button type="submit">GO</button>
+      <button type="submit" className="search-button">
+        <FontAwesomeIcon icon={faMagnifyingGlass} />
+      </button>
     </form>
   );
 }

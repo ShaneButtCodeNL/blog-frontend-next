@@ -8,6 +8,16 @@ import { setSortType } from "@/store/blogPosts";
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
+const sortTypeToReadableString: string[] = [
+  "You Shoud never See this one",
+  "Ascending Dates",
+  "Descending Dates",
+  "Ascending Title",
+  "Descending Title",
+  "Least Liked",
+  "Most Liked",
+];
+
 export default function BlogPostListSort() {
   const dispatch = useAppDispatch();
   const currentSort = useAppSelector((state) =>
@@ -41,17 +51,33 @@ export default function BlogPostListSort() {
     dispatch(setSortType(getSortType(parseInt(e.target.value))));
   }
   return (
-    <div>
+    <div style={{ display: "flex", flexDirection: "column" }}>
+      <label style={{ textDecoration: "underline", marginLeft: "1em" }}>
+        Sort{" "}
+      </label>
       <select
         onChange={selectFunction}
         defaultValue={currentSort}
-        className="form-input"
+        id="sort-type-selection"
+        className="form-input sort-selection"
       >
         {Object.keys(SortTypes)
           .filter((v) => isNaN(Number(v)))
-          .map((v: string) => (
-            //@ts-ignore
-            <option value={SortTypes[v]}>{v}</option>
+          .map((v: string, i: number) => (
+            <option
+              key={`option-${i + 1}-${v}`}
+              value={
+                //@ts-ignore
+                SortTypes[v]
+              }
+              id={`sort-option-${i + 1}`}
+              className="sort-option"
+            >
+              {
+                //@ts-ignore
+                sortTypeToReadableString[SortTypes[v]]
+              }
+            </option>
           ))}
       </select>
     </div>

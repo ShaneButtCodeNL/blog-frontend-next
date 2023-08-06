@@ -34,12 +34,19 @@ export default async function Page({
   const data = await getUserDetails(params.username);
   return (
     <div id="user-display-container">
-      <div id="username">{data.username}</div>
-      <div id="user-id">{data.userId}</div>
-      <div id="user-creation-date">
-        Member since: {getDateString(data.createdOn)}
+      <label>
+        Username <span className="fade-text">User Id</span> :
+      </label>
+      <div id="username">
+        {data.username + " "}
+        <span id="user-id" className="fade-text">
+          ({data.userId})
+        </span>
       </div>
-      <div id="user-role">Role : {getHighestRole(data)}</div>
+      <label>Member Since :</label>
+      <div id="user-creation-date">{getDateString(data.createdOn)}</div>
+      <label>Main Role :</label>
+      <div id="user-role">{getHighestRole(data)}</div>
     </div>
   );
 }

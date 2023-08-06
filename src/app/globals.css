@@ -3,18 +3,23 @@
 @tailwind utilities;
 
 :root {
-  --foreground-1: #5c469c;
-  --foreground-2: #d4adfc;
-  --background-1: #0c134f;
-  --background-2: #1d267d;
-  --font-color: #fff;
+  --foreground-2: #717288;
+  --foreground-1: #bac6ce;
+  --background-1: #ffffff;
+  --background-2: #c4c4c4;
+  --input-bg: #ebebeb;
+  --font-color: #2c2c2c;
+  --font-color-fade: #dfdfdf8f;
   --error-text-color: red;
   --error-text-shadow: 0px 0px 1px darkred;
   --valid-text-color: greenyellow;
   --valid-text-shadow: 0px 0px 1px green;
   --disable-text-opacity: 0.5;
-  --background-fade: rgba(255, 255, 255, 0.2);
-  --backgroung-highlight: rgba(255, 255, 255, 0.1);
+  --background-fade: rgba(175, 175, 175, 0.2);
+  --backgroung-highlight: rgba(175, 175, 175, 0.1);
+  --header-font-size: 1.5em;
+  --title-font-size: 2em;
+  --heart-color: palevioletred;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,6 +28,8 @@
     --foreground-2: #d4adfc;
     --background-1: #0c134f;
     --background-2: #1d267d;
+    --input-bg: #000000;
+
     --font-color: #fff;
     --error-text-color: red;
     --error-text-shadow: 0px 0px 1px darkred;
@@ -35,6 +42,9 @@
 html body {
   height: 100%;
   margin: 0;
+}
+select {
+  cursor: pointer;
 }
 body {
   position: relative;
@@ -65,11 +75,46 @@ header {
   background-color: var(--background-fade);
   margin-bottom: 1em;
 }
+
 #header-content {
-  width: 70%;
-  margin: auto;
+  width: 100%;
+  margin: 0;
+  padding: 0 2em;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+}
+.title {
+  font-size: var(--title-font-size);
+  text-decoration: underline;
+  justify-self: left;
+  align-self: center;
+}
+#main-nav {
   display: flex;
-  justify-content: space-between;
+  gap: 1em;
+  justify-self: right;
+  align-self: center;
+}
+#main-nav svg {
+  font-size: var(--header-font-size);
+}
+#user-display-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  width: fit-content;
+  gap: 3em;
+  row-gap: 1em;
+  margin: auto;
+  height: 100%;
+  place-content: center;
+}
+#user-display-container label {
+  text-align: right;
+}
+
+.fade-text {
+  color: var(--font-color-fade);
+  font-style: italic;
 }
 
 footer {
@@ -114,10 +159,7 @@ main {
 #main-body-content {
   width: 70%;
   margin: auto;
-}
-#main-nav {
-  display: flex;
-  gap: 1em;
+  height: 100%;
 }
 
 #blog-list-slice-container {
@@ -200,7 +242,7 @@ main {
 }
 
 #blog-comments {
-  border: #1d267d 3px solid;
+  border: var(--foreground-2) 3px solid;
   display: flex;
   flex-direction: column;
 }
@@ -213,7 +255,7 @@ main {
 .blog-post-comment-container {
   margin-left: 0.5em;
   margin-top: 0.5em;
-  border-left: #5c469c solid 3px;
+  border-left: var(--foreground-1) solid 3px;
   padding-left: 0.5em;
 }
 
@@ -282,7 +324,7 @@ main {
   line-height: 3em;
   text-align: left;
   padding-left: 1.5em;
-  background: black;
+  background: var(--input-bg);
   border: var(--background-2) 2px outset;
   border-radius: 1em;
   color: var(--font-color);
@@ -334,7 +376,7 @@ main {
   position: relative;
 }
 .boxshadow-alert {
-  box-shadow: 0em 0em 0em 0.5em red;
+  box-shadow: 0em 0em 0em 0.5em var(--error-text-color);
 }
 .password-error-box {
   transition: max-height 1s ease-out;
@@ -349,12 +391,12 @@ main {
 }
 
 .text-accept {
-  color: greenyellow;
-  text-shadow: 0px 0px 1px darkgreen;
+  color: var(--valid-text-color);
+  text-shadow: var(--valid-text-shadow);
 }
 .text-reject {
-  color: red;
-  text-shadow: 0px 0px 1px darkred;
+  color: var(--error-text-color);
+  text-shadow: var(--error-text-shadow);
 }
 
 #write-new-post-form {
@@ -398,7 +440,7 @@ main {
   gap: 0.5em;
 }
 .heart {
-  color: palevioletred;
+  color: var(--heart-color);
   font-size: 1.5em;
   line-height: 2em;
 }
@@ -425,7 +467,7 @@ main {
   padding: 1em;
   background-color: var(--background-2);
   border-radius: 1em;
-  border: #5c469c solid 5px;
+  border: var(--foreground-1) solid 5px;
   width: max(50%, 900px);
   display: grid;
   gap: 1em;
@@ -487,7 +529,8 @@ main {
   padding: 1em;
 }
 #login-modal-error {
-  color: red;
+  color: var(--error-text-color);
+  text-shadow: var(--error-text-shadow);
   background-color: var(--background-fade);
   grid-area: error;
   padding: 0.5em;
@@ -539,4 +582,28 @@ main {
 }
 #restore-post-modal-cancel {
   grid-area: cancel;
+}
+
+#blog-list-controls {
+  display: flex;
+  gap: 2em;
+  border-bottom: var(--background-fade) outset 2px;
+  padding-bottom: 1em;
+}
+
+#search-form-input {
+  padding-right: 3em;
+}
+
+.search-button {
+  position: absolute;
+  right: 1em;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.sort-selection {
+  line-height: 1.5em;
+  padding: 0.5em 1em;
+  height: 100%;
 }
