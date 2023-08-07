@@ -74,6 +74,9 @@ header {
   width: 100%;
   background-color: var(--background-fade);
   margin-bottom: 1em;
+  position: sticky;
+  top: 0%;
+  backdrop-filter: blur(2px);
 }
 
 #header-content {
@@ -98,6 +101,16 @@ header {
 #main-nav svg {
   font-size: var(--header-font-size);
 }
+
+#home-page-div {
+  text-align: center;
+}
+#home-page-div h2 {
+  padding: 1em 0;
+  font-size: 1.5em;
+  text-decoration: underline;
+}
+
 #user-display-container {
   display: grid;
   grid-template-columns: auto auto;
@@ -398,18 +411,55 @@ main {
   color: var(--error-text-color);
   text-shadow: var(--error-text-shadow);
 }
-
+#write-new-post-form-container {
+  display: inline-block;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+#write-new-post-preview {
+  width: 100%;
+  transition: max-width 1s ease-out, margin 1s ease-out,
+    border-width 1s ease-out, opacity 1s ease-out;
+  margin: 0;
+  border-style: solid;
+  border-radius: 1em;
+  box-sizing: border-box;
+  max-height: 100%;
+  overflow: hidden;
+}
+.collapse-preview {
+  max-width: 0%;
+  padding: 0;
+  border-width: 0px;
+  opacity: 0;
+}
+.expand-preview {
+  max-width: 50%;
+  padding: 1em;
+  border-width: 1px;
+  opacity: 1;
+}
 #write-new-post-form {
   display: grid;
   grid-template-areas:
     "title-label title-input title-input title-input"
     "body-textarea body-textarea body-textarea body-textarea"
-    ". submit-button cancel-button .";
-  grid-template-rows: auto auto auto;
+    ". submit-button cancel-button show-preview-button";
+  grid-template-rows: 3em auto auto;
   gap: 1em;
   padding: 1em;
   width: 75%;
-  margin: auto;
+  margin: 0 auto;
+}
+#show-preview-checkbox-container {
+  grid-area: show-preview-button;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 1em;
+  margin-bottom: auto;
+  margin-top: 1em;
 }
 #new-post-label-title {
   grid-area: title-label;
@@ -422,9 +472,11 @@ main {
 }
 #new-post-submit-button {
   grid-area: submit-button;
+  margin-top: 0;
 }
 #new-post-cancel-button {
   grid-area: cancel-button;
+  margin-top: 0;
 }
 .blog-post-controls-item {
   border: solid 3px var(--background-fade);

@@ -8,6 +8,7 @@ import { FormEvent, useState } from "react";
 export default function WritePost(params: any) {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
   const router = useRouter();
 
   function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -27,7 +28,7 @@ export default function WritePost(params: any) {
   }
 
   return (
-    <>
+    <div id="write-new-post-form-container">
       <form id="write-new-post-form" onSubmit={onSubmit}>
         <label htmlFor="title" id="new-post-label-title" className="form-label">
           Title
@@ -73,8 +74,23 @@ export default function WritePost(params: any) {
         >
           Cancel
         </button>
+        <div id="show-preview-checkbox-container">
+          <input
+            type="checkbox"
+            checked={showPreview}
+            className="form-input"
+            onChange={(e) => {
+              setShowPreview((v) => (v = !v));
+            }}
+          />
+          <label>Show Preview</label>
+        </div>
       </form>
-      <div id="preview-body"></div>
-    </>
+      <div
+        id="write-new-post-preview"
+        className={`${showPreview ? "expand-preview" : "collapse-preview"}`}
+        dangerouslySetInnerHTML={{ __html: markdownParserToHTMLString(body) }}
+      ></div>
+    </div>
   );
 }

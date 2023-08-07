@@ -16,30 +16,40 @@ const blockQuotePattern = /(?:^\>(\>*\s[^\n]*)\n*)/gim;
 const allBlockQuoteTemplate = "<blockquote>\n$1\n</blockquote>";
 const allBlockQuoteTemplateString = "\n$1\n";
 const headerPatternsAndTemplates: [RegExp, string, string][] = [
-  [/([^\n]+)\n(?=(={1}))\2{3,}\n/gm, "<h1>$1</h1>", "\n$1\n"],
-  [/([^\n]+)\n(?=(-{1}))\2{3,}\n/gm, "<h2>$1</h2>", "\n$1\n"],
-  [/#{6}\s+(.*)/gm, "<h6>$1</h6>", "\n$1\n"],
-  [/#{5}\s+(.*)/gm, "<h5>$1</h5>", "\n$1\n"],
-  [/#{4}\s+(.*)/gm, "<h4>$1</h4>", "\n$1\n"],
-  [/#{3}\s+(.*)/gm, "<h3>$1</h3>", "\n$1\n"],
-  [/#{2}\s+(.*)/gm, "<h2>$1</h2>", "\n$1\n"],
-  [/#{1}\s+(.*)/gm, "<h1>$1</h1>", "\n$1\n"],
+  [
+    /([^\n]+)\n(?=(={1}))\2{3,}\n/gm,
+    "<h1 class='blog-display-h1'>$1</h1>",
+    "\n$1\n",
+  ],
+  [
+    /([^\n]+)\n(?=(-{1}))\2{3,}\n/gm,
+    "<h2 class='blog-display-h2'>$1</h2>",
+    "\n$1\n",
+  ],
+  [/#{6}\s+(.*)/gm, "<h6 class='blog-display-h6'>$1</h6>", "\n$1\n"],
+  [/#{5}\s+(.*)/gm, "<h5 class='blog-display-h5'>$1</h5>", "\n$1\n"],
+  [/#{4}\s+(.*)/gm, "<h4 class='blog-display-h4'>$1</h4>", "\n$1\n"],
+  [/#{3}\s+(.*)/gm, "<h3 class='blog-display-h3'>$1</h3>", "\n$1\n"],
+  [/#{2}\s+(.*)/gm, "<h2 class='blog-display-h2'>$1</h2>", "\n$1\n"],
+  [/#{1}\s+(.*)/gm, "<h1 class='blog-display-h1'>$1</h1>", "\n$1\n"],
 ];
 const emphasisPatternsAndTemplates: [RegExp, string, string][] = [
   [/([\_\*]{2})([^\n]+)(?:\1)/gm, "<b>$2</b>", "$2"],
   [/([\_\*]{1})([^\n]+)(?:\1)/gm, "<i>$2</i>", "$2"],
 ];
 const codeFencePattern = /(`{2,})([\s\S]*?)(?:\1)/gi;
-const codeFenceTemplate = "<div><code>$2</code></div>";
+const codeFenceTemplate =
+  "<div class='codefence-container'><code class='codefence-item'>$2</code></div>";
 const codeFenceTemplateString = "``\n$2\n``";
 
 const codeLinePattern =
   /^(?!<div><code>)(.*)(`)(.+)(`)(.*\n?)(?!\n?<\/code><\/div>)/gm;
-const codeLineTemplate = "$1<code>$3</code>$5";
+const codeLineTemplate = "$1<code class='code-item'>$3</code>$5";
 const codeLineTemplateString = "$1$3$5";
 
 const imagePattern = /[^\n\[]*!\[(.*)\]\s*\({1}([^"\)\(\s]*)\s?"(.*)"\){1}/gm;
-const imageTemplate = '<image alt="$1" title="$3" src="$2"/>';
+const imageTemplate =
+  '<image class="blog-display-image" alt="$1" title="$3" src="$2"/>';
 const imageTemplateString = '"$1"';
 
 const linkPattern = /\[([^\]]+)\]\(([^)]+)\)/gm;

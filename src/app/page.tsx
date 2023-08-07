@@ -17,7 +17,6 @@ export default function Home() {
         </p>
       </section>
       <section>
-        <h2>Latest Post</h2>
         <LatestBlogPost />
       </section>
     </div>
