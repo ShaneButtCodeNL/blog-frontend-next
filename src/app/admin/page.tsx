@@ -1,3 +1,9 @@
+import UserRoleEditor from "@/components/UserRoleEditor";
+
 export default function Page() {
-  return <div>ADMIN PAGE</div>;
+  return (
+    <div>
+      <UserRoleEditor />
+    </div>
+  );
 }

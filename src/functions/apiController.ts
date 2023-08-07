@@ -14,6 +14,7 @@ const registerPath = `${userPath}/register`;
 const getBlogsPath = `${blogPath}/`;
 const getLatestBlogPostPath = `${blogPath}/latest`;
 const makeBlogPostPath = `${blogPath}/`;
+const getAllUsernamesPath = `${userPath}/all-users`;
 //const makeCommentPath = `${blogPath}/comment`;
 const searchBlogPath = `${getBlogsPath}search/title/`;
 const deleteBlogPostPath = `${blogPath}/delete/post`;
@@ -52,11 +53,20 @@ export async function login(
   });
   if (res.status >= 400) return null;
   if (!res) return null;
-  console.log(res);
   const data = await res.json();
-  console.log(data);
   if (!data) throw new Error("User not found");
 
+  return data;
+}
+
+export async function getAllUsernames(token: string) {
+  const res = await fetch(getAllUsernamesPath, {
+    method: POST,
+    headers: getBearerTokenHeader(token),
+    next: { revalidate: 5 * 60 },
+  });
+  if (!res || !res.ok) return [];
+  const data = res.json();
   return data;
 }
 
@@ -113,7 +123,6 @@ export async function register(
     next: { revalidate: 10 },
   });
   const data = await res.json();
-  console.log(data);
   if (!data) throw new Error("Register failed");
 
   return data;
@@ -146,13 +155,11 @@ export async function createBlogPost(
     cache: "no-store",
     body: JSON.stringify({ title, body }),
   });
-  console.log(res);
   if (res.status === 401) {
     return null;
   }
   const data = await res.json();
   if (!data) return null;
-  //revalidateTag("main-blog-list");
   return data;
 }
 
@@ -183,10 +190,7 @@ export async function searchBlogPostsWithTitleSnippit(
   const res = await fetch(`${searchBlogPath}${titleSnippit}`, {
     method: GET,
   });
-
   const data = await res.json();
-
-  console.log(data);
   if (!data) throw new Error("Somthing happened. Darn monkeys.");
   return data;
 }

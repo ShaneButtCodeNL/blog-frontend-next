@@ -7,6 +7,8 @@ import {
   deletePost,
   editComment,
   editPost,
+  getAllUsernames,
+  getUserDetailsFromUsername,
   isTokenValid,
   killComment,
   killPost,
@@ -23,6 +25,17 @@ export async function validateTokenFunction(token: string) {
   "use server";
   const valid = await isTokenValid(token);
   return valid;
+}
+export async function getAllUsernamesFunction(token: string) {
+  "use server";
+  const res = await getAllUsernames(token);
+  return res;
+}
+
+export async function getUserDetailsFromUsernameFunction(username: string) {
+  "use server";
+  const res = await getUserDetailsFromUsername(username);
+  return res;
 }
 
 export async function revalidateTokenFunction(token: string) {
