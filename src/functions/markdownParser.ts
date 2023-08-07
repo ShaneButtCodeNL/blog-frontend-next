@@ -18,20 +18,44 @@ const allBlockQuoteTemplateString = "\n$1\n";
 const headerPatternsAndTemplates: [RegExp, string, string][] = [
   [
     /([^\n]+)\n(?=(={1}))\2{3,}\n/gm,
-    "<h1 class='blog-display-h1'>$1</h1>",
+    "<h1 class='blog-display-header blog-display-h1'>$1</h1>",
     "\n$1\n",
   ],
   [
     /([^\n]+)\n(?=(-{1}))\2{3,}\n/gm,
-    "<h2 class='blog-display-h2'>$1</h2>",
+    "<h2 class='blog-display-header blog-display-h2'>$1</h2>",
     "\n$1\n",
   ],
-  [/#{6}\s+(.*)/gm, "<h6 class='blog-display-h6'>$1</h6>", "\n$1\n"],
-  [/#{5}\s+(.*)/gm, "<h5 class='blog-display-h5'>$1</h5>", "\n$1\n"],
-  [/#{4}\s+(.*)/gm, "<h4 class='blog-display-h4'>$1</h4>", "\n$1\n"],
-  [/#{3}\s+(.*)/gm, "<h3 class='blog-display-h3'>$1</h3>", "\n$1\n"],
-  [/#{2}\s+(.*)/gm, "<h2 class='blog-display-h2'>$1</h2>", "\n$1\n"],
-  [/#{1}\s+(.*)/gm, "<h1 class='blog-display-h1'>$1</h1>", "\n$1\n"],
+  [
+    /#{6}\s+(.*)/gm,
+    "<h6 class='blog-display-header blog-display-h6'>$1</h6>",
+    "\n$1\n",
+  ],
+  [
+    /#{5}\s+(.*)/gm,
+    "<h5 class='blog-display-header blog-display-h5'>$1</h5>",
+    "\n$1\n",
+  ],
+  [
+    /#{4}\s+(.*)/gm,
+    "<h4 class='blog-display-header blog-display-h4'>$1</h4>",
+    "\n$1\n",
+  ],
+  [
+    /#{3}\s+(.*)/gm,
+    "<h3 class='blog-display-header blog-display-h3'>$1</h3>",
+    "\n$1\n",
+  ],
+  [
+    /#{2}\s+(.*)/gm,
+    "<h2 class='blog-display-header blog-display-h2'>$1</h2>",
+    "\n$1\n",
+  ],
+  [
+    /#{1}\s+(.*)/gm,
+    "<h1 class='blog-display-header blog-display-h1'>$1</h1>",
+    "\n$1\n",
+  ],
 ];
 const emphasisPatternsAndTemplates: [RegExp, string, string][] = [
   [/([\_\*]{2})([^\n]+)(?:\1)/gm, "<b>$2</b>", "$2"],

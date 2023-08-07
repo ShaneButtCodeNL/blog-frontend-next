@@ -57,6 +57,24 @@ body {
     var(--background-1)
   );
 }
+ul,
+ol {
+  list-style-position: inside;
+  width: fit-content;
+  margin: auto;
+}
+ul {
+  list-style: disc;
+}
+ol {
+  list-style: decimal;
+}
+ul li,
+ol li {
+  padding-left: 1em;
+  margin: 0.5em 0;
+}
+
 #page {
   width: 100%;
   margin: auto;
@@ -658,4 +676,72 @@ main {
   line-height: 1.5em;
   padding: 0.5em 1em;
   height: 100%;
+}
+
+#blog-body {
+  text-align: center;
+  position: relative;
+}
+.codefence-container {
+  background-color: var(--background-fade);
+  padding: 1em;
+  width: fit-content;
+  margin: 0.5em auto;
+}
+.code-item {
+  background-color: var(--background-fade);
+  padding: 0.2em 0.5em;
+}
+.blog-display-header {
+  font-weight: 600;
+  font-size: 1.2em;
+  text-decoration: underline;
+  margin-bottom: 0.5em;
+  margin-top: 0.2em;
+}
+.blog-display-h5 {
+  font-weight: 650;
+  font-size: 1.4em;
+}
+.blog-display-h4 {
+  font-weight: 650;
+  font-size: 1.6em;
+}
+.blog-display-h3 {
+  font-weight: 650;
+  font-size: 1.8em;
+}
+.blog-display-h2 {
+  font-weight: 650;
+  font-size: 2em;
+}
+.blog-display-h1 {
+  font-weight: 650;
+  font-size: 2.2em;
+  margin-bottom: 1em;
+}
+blockquote {
+  background-color: var(--background-fade);
+  margin: 1em auto;
+  width: fit-content;
+  padding: 2em;
+  position: relative;
+}
+blockquote::before,
+blockquote::after {
+  position: absolute;
+  width: 1em;
+  content: "";
+  background-color: var(--background-fade);
+  left: 0;
+  height: 100%;
+  top: 0;
+}
+blockquote::after {
+  left: unset;
+  right: 0;
+}
+
+.blog-display-image {
+  margin: auto;
 }
