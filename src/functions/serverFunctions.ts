@@ -20,6 +20,11 @@ import {
   restoreComment,
   restorePost,
   revalidateToken,
+  banUser,
+  unbanUser,
+  deleteUser,
+  disableUser,
+  enableUser,
 } from "./apiController";
 import { BlogPostEditDetails, CommentDetails } from "@/models/blogPostReturn";
 
@@ -221,5 +226,30 @@ export async function removeRoleToUserFunction(
   if (!res) return null;
   revalidateTag("get-user-from-username");
 
+  return res;
+}
+export async function banUserFunction(token: string, username: string) {
+  "use server";
+  const res = await banUser(token, username);
+  return res;
+}
+export async function unbanUserFunction(token: string, username: string) {
+  "use server";
+  const res = await unbanUser(token, username);
+  return res;
+}
+export async function disableUserFunction(token: string, username: string) {
+  "use server";
+  const res = await disableUser(token, username);
+  return res;
+}
+export async function enableUserFunction(token: string, username: string) {
+  "use server";
+  const res = await enableUser(token, username);
+  return res;
+}
+export async function deleteUserFunction(token: string, username: string) {
+  "use server";
+  const res = await deleteUser(token, username);
   return res;
 }

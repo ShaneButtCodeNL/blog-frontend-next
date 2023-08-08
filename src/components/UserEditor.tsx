@@ -14,6 +14,22 @@ export default function UserRoleEditor() {
   const [user, setUser] = useState<UserDetails | null>(null);
   const [action, setAction] = useState(0);
   const [role, setRole] = useState<"" | "ADMIN" | "WRITER" | "MODERATOR">("");
+  function isRoleAction() {
+    return action === 0 || action === 1;
+  }
+  function getActionMessage() {
+    switch (action) {
+      case 3: {
+        return "Removing user is an unreversable action. This user will be removed from the database permanent action.";
+      }
+      case 2: {
+        return "This will ban user. User data will be kept in the database but user will no longer be able to log in or preform actions with this account or it's tokens.";
+      }
+      default: {
+        return "";
+      }
+    }
+  }
   useEffect(() => {
     if (!window) return;
     const token = localStorage.getItem("token");
@@ -31,8 +47,8 @@ export default function UserRoleEditor() {
     if (role === "" || role === "MODERATOR") return;
     if (!user) return;
     console.log("action:", action, "\nrole:", role, "\nuser:", user);
-    //Remove
-    if (action) {
+    //Remove Role
+    if (action === 1) {
       removeRoleToUserFunction(token, role, user.username as string).then(
         (res) => {
           console.log(res);
@@ -41,7 +57,7 @@ export default function UserRoleEditor() {
       );
     }
     //Add
-    else {
+    else if (action === 0) {
       addRoleToUserFunction(token, role, user.username as string).then(
         (res) => {
           console.log(res);
@@ -50,9 +66,16 @@ export default function UserRoleEditor() {
         }
       );
     }
+    // Remove user
+    else if (action === 3) {
+    }
   }
   return (
-    <div className="admin-control-form-container">
+    <fieldset
+      className="admin-control-form-container"
+      style={{ border: "solid 1px", padding: "1em 2em" }}
+    >
+      <legend style={{ padding: "0 1em" }}>User Role Editor</legend>
       <form
         id="user-role-editor-form"
         onSubmit={submitFunction}
@@ -82,7 +105,9 @@ export default function UserRoleEditor() {
         </select>
         <label id="current-roles-label">Current Roles</label>
         <div id="user-current-roles-list">
-          {user ? user.roles.map((v) => <p>{v}</p>) : "Select a User"}
+          {user
+            ? user.roles.map((v) => <p>{v.substring(5)}</p>)
+            : "Select a User"}
         </div>
         <label id="action-label" htmlFor="user-role-action-select">
           Action :
@@ -96,8 +121,14 @@ export default function UserRoleEditor() {
         >
           <option value={0}>Add Role</option>
           <option value={1}>Remove Role</option>
+          <option value={2}>Ban User(Not Implemented)</option>
+          <option value={3}>Remove User</option>
         </select>
-        <label id="role-label" htmlFor="role-select">
+        <label
+          id="role-label"
+          htmlFor="role-select"
+          style={isRoleAction() ? {} : { display: "none" }}
+        >
           Role:
         </label>
         <select
@@ -108,6 +139,7 @@ export default function UserRoleEditor() {
           onChange={(e) =>
             setRole(e.target.value as "" | "ADMIN" | "WRITER" | "MODERATOR")
           }
+          style={isRoleAction() ? {} : { display: "none" }}
         >
           <option value="">Select a Role</option>
           <option value="ADMIN">Admin</option>
@@ -119,14 +151,21 @@ export default function UserRoleEditor() {
           type="submit"
           disabled={
             user === null ||
-            role === "" ||
+            (role === "" && isRoleAction()) ||
             (action === 0 && user.roles.includes(role)) ||
             (action === 1 && !user.roles.includes(`ROLE_${role}`))
           }
         >
           Confirm
         </button>
+        <div
+          id="user-editor-message"
+          className="text-reject"
+          style={isRoleAction() ? {} : { opacity: 1 }}
+        >
+          {getActionMessage()}
+        </div>
       </form>
-    </div>
+    </fieldset>
   );
 }

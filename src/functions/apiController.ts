@@ -15,7 +15,6 @@ const getBlogsPath = `${blogPath}/`;
 const getLatestBlogPostPath = `${blogPath}/latest`;
 const makeBlogPostPath = `${blogPath}/`;
 const getAllUsernamesPath = `${userPath}/all-users`;
-//const makeCommentPath = `${blogPath}/comment`;
 const searchBlogPath = `${getBlogsPath}search/title/`;
 const deleteBlogPostPath = `${blogPath}/delete/post`;
 const deleteCommentPath = `${blogPath}/delete/comment`;
@@ -25,6 +24,11 @@ const killBlogPostPath = `${blogPath}/blog`;
 const makeKillEditCommentPath = `${blogPath}/comment`;
 const addRolePathWithoutRole = `${userPath}/add-auth/`;
 const removeRolePathWithoutRole = `${userPath}/remove-auth/`;
+const banUserPathWithoutUsername = `${userPath}/ban-user/`;
+const unbanUserPathWithoutUsername = `${userPath}/unban-user/`;
+const disableUserPathWithoutUsername = `${userPath}/disable-user/`;
+const enableUserPathWithoutUsername = `${userPath}/enable-user/`;
+const deleteUserPathWithoutUsername = `${userPath}/delete-user/`;
 
 const GET = "GET";
 const POST = "POST";
@@ -406,6 +410,57 @@ export async function removeRole(
       cache: "no-cache",
     }
   );
+  if (!res || !res.ok) return null;
+  const data = await res.json();
+  return data;
+}
+
+export async function banUser(token: string, username: string) {
+  const res = await fetch(`${banUserPathWithoutUsername}${username}`, {
+    method: PUT,
+    headers: getBearerTokenHeader(token),
+    cache: "no-cache",
+  });
+  if (!res || !res.ok) return null;
+  const data = await res.json();
+  return data;
+}
+export async function unbanUser(token: string, username: string) {
+  const res = await fetch(`${unbanUserPathWithoutUsername}${username}`, {
+    method: PUT,
+    headers: getBearerTokenHeader(token),
+    cache: "no-cache",
+  });
+  if (!res || !res.ok) return null;
+  const data = await res.json();
+  return data;
+}
+export async function disableUser(token: string, username: string) {
+  const res = await fetch(`${disableUserPathWithoutUsername}${username}`, {
+    method: PUT,
+    headers: getBearerTokenHeader(token),
+    cache: "no-cache",
+  });
+  if (!res || !res.ok) return null;
+  const data = await res.json();
+  return data;
+}
+export async function enableUser(token: string, username: string) {
+  const res = await fetch(`${enableUserPathWithoutUsername}${username}`, {
+    method: PUT,
+    headers: getBearerTokenHeader(token),
+    cache: "no-cache",
+  });
+  if (!res || !res.ok) return null;
+  const data = await res.json();
+  return data;
+}
+export async function deleteUser(token: string, username: string) {
+  const res = await fetch(`${deleteUserPathWithoutUsername}${username}`, {
+    method: DELETE,
+    headers: getBearerTokenHeader(token),
+    cache: "no-cache",
+  });
   if (!res || !res.ok) return null;
   const data = await res.json();
   return data;

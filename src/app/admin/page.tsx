@@ -1,4 +1,4 @@
-import UserRoleEditor from "@/components/UserRoleEditor";
+import UserRoleEditor from "@/components/UserEditor";
 
 export default function Page() {
   return (
