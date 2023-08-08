@@ -23,6 +23,8 @@ const restorePostPath = `${blogPath}/restore/blog`;
 const restoreCommentPath = `${blogPath}/restore/comment`;
 const killBlogPostPath = `${blogPath}/blog`;
 const makeKillEditCommentPath = `${blogPath}/comment`;
+const addRolePathWithoutRole = `${userPath}/add-auth/`;
+const removeRolePathWithoutRole = `${userPath}/remove-auth/`;
 
 const GET = "GET";
 const POST = "POST";
@@ -83,7 +85,9 @@ export async function getUserDetailsFromUsername(
   username: string
 ): Promise<UserDetails> {
   const fetchStr = `${userPath}/details/${username}`;
-  const res = await fetch(fetchStr, { next: { revalidate: 12 * 60 * 60 } });
+  const res = await fetch(fetchStr, {
+    next: { revalidate: 12 * 60 * 60, tags: ["get-user-from-username"] },
+  });
   if (!res.ok) throw new Error("User Not Found");
   return res.json();
 }
@@ -372,6 +376,37 @@ export async function getLatestPost(): Promise<BlogPostReturn | null> {
     next: { revalidate: thirtySeconds, tags: ["get-latest-post"] },
   });
   if (!res.ok) return null;
+  const data = await res.json();
+  return data;
+}
+
+export async function addRole(token: string, role: string, username: string) {
+  const res = await fetch(`${addRolePathWithoutRole}${role.toLowerCase()}`, {
+    method: PUT,
+    headers: getBearerTokenHeader(token),
+    body: JSON.stringify({ username }),
+    cache: "no-cache",
+  });
+  if (!res || !res.ok) return null;
+  const data = await res.json();
+  return data;
+}
+
+export async function removeRole(
+  token: string,
+  role: "ADMIN" | "WRITER" | "MODERATOR",
+  username: string
+) {
+  const res = await fetch(
+    `${removeRolePathWithoutRole}${role.toLocaleLowerCase()}`,
+    {
+      method: PUT,
+      headers: getBearerTokenHeader(token),
+      body: JSON.stringify({ username }),
+      cache: "no-cache",
+    }
+  );
+  if (!res || !res.ok) return null;
   const data = await res.json();
   return data;
 }

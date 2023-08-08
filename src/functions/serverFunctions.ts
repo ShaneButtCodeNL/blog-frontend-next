@@ -1,6 +1,7 @@
 "use server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import {
+  addRole,
   createBlogPost,
   createComment,
   deleteComment,
@@ -15,6 +16,7 @@ import {
   likeBlogPost,
   likeBlogPostComment,
   login,
+  removeRole,
   restoreComment,
   restorePost,
   revalidateToken,
@@ -197,4 +199,27 @@ export async function editCommentFunction(
 }
 export async function revalidateTagServer(tag: string) {
   revalidateTag(tag);
+}
+
+export async function addRoleToUserFunction(
+  token: string,
+  role: "ADMIN" | "WRITER" | "MODERATOR",
+  username: string
+) {
+  const res = await addRole(token, role, username);
+  if (!res) return null;
+  revalidateTag("get-user-from-username");
+  return res;
+}
+
+export async function removeRoleToUserFunction(
+  token: string,
+  role: "ADMIN" | "WRITER" | "MODERATOR",
+  username: string
+) {
+  const res = await removeRole(token, role, username);
+  if (!res) return null;
+  revalidateTag("get-user-from-username");
+
+  return res;
 }

@@ -745,3 +745,74 @@ blockquote::after {
 .blog-display-image {
   margin: auto;
 }
+
+.form-select {
+  background: var(--input-bg);
+  border-radius: 1em;
+  padding: 1em 1em;
+}
+
+#admin-control-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+}
+
+.admin-control-form-container {
+  width: fit-content;
+}
+
+#user-role-editor-form {
+  display: grid;
+  gap: 1em;
+  row-gap: 1.5em;
+  grid-template-areas:
+    "username-label username-select current-role-label current-role-list button"
+    "action-label action-select role-label role-select button";
+}
+
+#user-role-editor-form label {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+#role-select {
+  grid-area: role-select;
+}
+
+#role-label {
+  grid-area: role-label;
+}
+
+#user-role-editor-actions {
+  grid-area: action-select;
+}
+
+#action-label {
+  grid-area: action-label;
+}
+
+#user-current-roles-list {
+  grid-area: current-role-list;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#current-roles-label {
+  grid-area: current-role-label;
+}
+
+#user-role-editor-user-select {
+  grid-area: username-select;
+}
+
+#user-role-editor-confirm {
+  grid-area: button;
+}
+
+#username-label {
+  grid-area: username-label;
+}
