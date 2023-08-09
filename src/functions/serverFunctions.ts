@@ -231,25 +231,31 @@ export async function removeRoleToUserFunction(
 export async function banUserFunction(token: string, username: string) {
   "use server";
   const res = await banUser(token, username);
+  revalidateTag("get-user-from-username");
   return res;
 }
 export async function unbanUserFunction(token: string, username: string) {
   "use server";
   const res = await unbanUser(token, username);
+  revalidateTag("get-user-from-username");
   return res;
 }
 export async function disableUserFunction(token: string, username: string) {
   "use server";
   const res = await disableUser(token, username);
+  revalidateTag("get-user-from-username");
   return res;
 }
 export async function enableUserFunction(token: string, username: string) {
   "use server";
   const res = await enableUser(token, username);
+  revalidateTag("get-user-from-username");
   return res;
 }
 export async function deleteUserFunction(token: string, username: string) {
   "use server";
   const res = await deleteUser(token, username);
+  revalidateTag("get-user-from-username");
+  revalidateTag("get-all-usernames");
   return res;
 }

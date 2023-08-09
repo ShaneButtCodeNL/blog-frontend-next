@@ -2,12 +2,25 @@
 
 import {
   addRoleToUserFunction,
+  banUserFunction,
+  deleteUserFunction,
+  disableUserFunction,
+  enableUserFunction,
   getAllUsernamesFunction,
   getUserDetailsFromUsernameFunction,
   removeRoleToUserFunction,
+  unbanUserFunction,
 } from "@/functions/serverFunctions";
 import { UserDetails } from "@/models/userReturn";
 import { ChangeEvent, useEffect, useState } from "react";
+
+const addRoleAction = 0;
+const removeRoleAction = 1;
+const banUserAction = 2;
+const unbanUserAction = 3;
+const disableUserAction = 4;
+const enableUserAction = 5;
+const deleteUserAction = 6;
 
 export default function UserRoleEditor() {
   const [userList, setUserList] = useState<string[]>([]);
@@ -19,11 +32,14 @@ export default function UserRoleEditor() {
   }
   function getActionMessage() {
     switch (action) {
-      case 3: {
+      case deleteUserAction: {
         return "Removing user is an unreversable action. This user will be removed from the database permanent action.";
       }
-      case 2: {
+      case banUserAction: {
         return "This will ban user. User data will be kept in the database but user will no longer be able to log in or preform actions with this account or it's tokens.";
+      }
+      case disableUserAction: {
+        return "This will disable account. User data will be kept in the database, user will no longer be able to log in or preform actions with this account and data will be hidden.";
       }
       default: {
         return "";
@@ -44,30 +60,47 @@ export default function UserRoleEditor() {
     if (!window) return;
     const token = localStorage.getItem("token");
     if (!token) return;
-    if (role === "" || role === "MODERATOR") return;
     if (!user) return;
     console.log("action:", action, "\nrole:", role, "\nuser:", user);
-    //Remove Role
-    if (action === 1) {
+    if (action === removeRoleAction) {
+      if (role === "") return;
       removeRoleToUserFunction(token, role, user.username as string).then(
         (res) => {
-          console.log(res);
           setUser(res);
         }
       );
-    }
-    //Add
-    else if (action === 0) {
+    } else if (action === addRoleAction) {
+      if (role === "") return;
       addRoleToUserFunction(token, role, user.username as string).then(
         (res) => {
-          console.log(res);
-
           setUser(res);
         }
       );
-    }
-    // Remove user
-    else if (action === 3) {
+    } else if (action === banUserAction) {
+      banUserFunction(token, user.username as string).then((res) => {
+        setUser(res);
+        setAction(unbanUserAction);
+      });
+    } else if (action === unbanUserAction) {
+      unbanUserFunction(token, user.username as string).then((res) => {
+        setUser(res);
+        setAction(banUserAction);
+      });
+    } else if (action === disableUserAction) {
+      disableUserFunction(token, user.username as string).then((res) => {
+        setUser(res);
+        setAction(enableUserAction);
+      });
+    } else if (action === enableUserAction) {
+      enableUserFunction(token, user.username as string).then((res) => {
+        setUser(res);
+        setAction(disableUserAction);
+      });
+    } else if (action === deleteUserAction) {
+      deleteUserFunction(token, user.username as string).then((res) => {
+        setUser(null);
+        setAction(0);
+      });
     }
   }
   return (
@@ -109,6 +142,22 @@ export default function UserRoleEditor() {
             ? user.roles.map((v) => <p>{v.substring(5)}</p>)
             : "Select a User"}
         </div>
+        <label id="ban-label">Ban Status :</label>
+        <div
+          id="ban-status"
+          className={user ? (user.banned ? "text-reject" : "text-accept") : ""}
+        >
+          {user ? (user.banned ? "Banned" : "Not Banned") : "Select A User"}
+        </div>
+        <label id="disabled-label">Disabled Status:</label>
+        <div
+          id="disabled-status"
+          className={
+            user ? (user.disabled ? "text-reject" : "text-accept") : ""
+          }
+        >
+          {user ? (user.disabled ? "Disabled" : "Enabled") : "Select A User"}
+        </div>
         <label id="action-label" htmlFor="user-role-action-select">
           Action :
         </label>
@@ -119,10 +168,16 @@ export default function UserRoleEditor() {
           value={action}
           onChange={(e) => setAction(parseInt(e.target.value))}
         >
-          <option value={0}>Add Role</option>
-          <option value={1}>Remove Role</option>
-          <option value={2}>Ban User(Not Implemented)</option>
-          <option value={3}>Remove User</option>
+          <option value={addRoleAction}>Add Role</option>
+          <option value={removeRoleAction}>Remove Role</option>
+          <option
+            value={user?.banned ? unbanUserAction : banUserAction}
+            style={{}}
+          >{`${user?.banned ? "Unb" : "B"}an User`}</option>
+          <option
+            value={user?.disabled ? enableUserAction : disableUserAction}
+          >{`${user?.disabled ? "En" : "Dis"}able User`}</option>
+          <option value={deleteUserAction}>Remove User</option>
         </select>
         <label
           id="role-label"

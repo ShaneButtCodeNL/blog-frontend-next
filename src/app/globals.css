@@ -773,11 +773,16 @@ blockquote::after {
   gap: 1em;
   row-gap: 1.5em;
   grid-template-areas:
-    "username-label username-select current-role-label current-role-list button"
-    "action-label action-select role-label role-select button"
-    "message message message message button";
-  grid-template-rows: auto auto 1fr;
-  grid-template-columns: auto 1fr auto 1fr auto;
+    ". username-label username-select ."
+    ". current-role-label current-role-list ."
+    ". ban-label ban-status ."
+    ". disabled-label disabled-status ."
+    ". action-label action-select ."
+    ". role-label role-select ."
+    ". button button ."
+    ". message message .";
+  grid-template-columns: 1fr auto 2fr 1fr;
+  grid-template-rows: repeat(8, 4.5em);
 }
 
 #user-editor-message {
@@ -810,6 +815,25 @@ blockquote::after {
   grid-area: action-label;
 }
 
+#ban-label {
+  grid-area: ban-label;
+}
+#ban-status {
+  grid-area: ban-status;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+#disabled-label {
+  grid-area: disabled-label;
+}
+#disabled-status {
+  grid-area: disabled-status;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
 #user-current-roles-list {
   grid-area: current-role-list;
   display: flex;
@@ -824,7 +848,9 @@ blockquote::after {
 #user-role-editor-user-select {
   grid-area: username-select;
 }
-
+#user-role-editor-role-select {
+  grid-area: role-select;
+}
 #user-role-editor-confirm {
   grid-area: button;
 }

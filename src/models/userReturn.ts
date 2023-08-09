@@ -3,8 +3,8 @@ export interface UserDetails {
   username: String;
   roles: String[];
   createdOn: Date;
-  isBanned: boolean;
-  isDisabled: boolean;
+  banned: boolean;
+  disabled: boolean;
 }
 
 export interface LoginReturnDetails {

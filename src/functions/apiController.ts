@@ -69,7 +69,7 @@ export async function getAllUsernames(token: string) {
   const res = await fetch(getAllUsernamesPath, {
     method: POST,
     headers: getBearerTokenHeader(token),
-    next: { revalidate: 5 * 60 },
+    next: { revalidate: 5 * 60, tags: ["get-all-usernames"] },
   });
   if (!res || !res.ok) return [];
   const data = res.json();
@@ -90,7 +90,7 @@ export async function getUserDetailsFromUsername(
 ): Promise<UserDetails> {
   const fetchStr = `${userPath}/details/${username}`;
   const res = await fetch(fetchStr, {
-    next: { revalidate: 12 * 60 * 60, tags: ["get-user-from-username"] },
+    next: { revalidate: 60 * 60, tags: ["get-user-from-username"] },
   });
   if (!res.ok) throw new Error("User Not Found");
   return res.json();
@@ -416,6 +416,7 @@ export async function removeRole(
 }
 
 export async function banUser(token: string, username: string) {
+  console.log("BAN_USER");
   const res = await fetch(`${banUserPathWithoutUsername}${username}`, {
     method: PUT,
     headers: getBearerTokenHeader(token),
