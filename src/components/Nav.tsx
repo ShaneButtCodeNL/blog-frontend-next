@@ -76,7 +76,7 @@ export default function Nav(props: any) {
       {loggedIn &&
       userDetails &&
       hasRole(userDetails, "ROLE_ADMIN", "ROLE_OWNER") ? (
-        <Link href="/admin">
+        <Link href="/admin/controls">
           <button type="button" title="Admin Controls">
             <FontAwesomeIcon icon={faToolbox} />
             {" Admin"}

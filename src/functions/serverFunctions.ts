@@ -25,8 +25,13 @@ import {
   deleteUser,
   disableUser,
   enableUser,
+  getLatestPost,
+  register,
+  isUsernameAvailable,
+  hasAnyAuth,
 } from "./apiController";
 import { BlogPostEditDetails, CommentDetails } from "@/models/blogPostReturn";
+import { cookies } from "next/dist/client/components/headers";
 
 export async function validateTokenFunction(token: string) {
   "use server";
@@ -85,6 +90,7 @@ export async function loginFunction(username: string, password: string) {
   if (!res) {
     return;
   }
+  await setTokenInCookie(res.token as string);
   return res;
 }
 
@@ -257,5 +263,38 @@ export async function deleteUserFunction(token: string, username: string) {
   const res = await deleteUser(token, username);
   revalidateTag("get-user-from-username");
   revalidateTag("get-all-usernames");
+  return res;
+}
+export async function getLatestPostFunction() {
+  "use server";
+  const res = await getLatestPost();
+  return res;
+}
+export async function setTokenInCookie(token: string) {
+  "use server";
+  console.log("SETTING COOKIE", token);
+  cookies().set({ name: "token", value: token, httpOnly: true });
+}
+
+export async function registerFunction(username: string, password: string) {
+  "use server";
+  const res = await register(username, password);
+  if (!res) {
+    return;
+  }
+  return res;
+}
+export async function checkUsernameIsAvailableFunction(username: string) {
+  "use server";
+  const res = await isUsernameAvailable(username);
+  console.log("is ", username as string, " available: ", res);
+  return res === true;
+}
+
+export async function hasAnyAuthFunction(
+  token: string | undefined,
+  roles: string[]
+) {
+  const res = await hasAnyAuth(token, roles);
   return res;
 }

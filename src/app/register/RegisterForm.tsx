@@ -11,7 +11,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { setLoggedIn, setUserDetails } from "@/store/login";
 import React, { FormEvent, useRef, useState } from "react";
-import { checkUsernameIsAvailableFunction, registerFunction } from "./actions";
+import {
+  checkUsernameIsAvailableFunction,
+  registerFunction,
+  setTokenInCookie,
+} from "@/functions/serverFunctions";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
@@ -136,6 +140,7 @@ export default function RegisterForm(props: any) {
 
     localStorage.setItem("token", res.token as string);
     localStorage.setItem("userDetails", JSON.stringify(res.details));
+    await setTokenInCookie(res.token as string);
     dispatch(setLoggedIn(true));
     dispatch(setUserDetails(res.details));
 

@@ -1,8 +1,8 @@
-import { getLatestPost } from "@/functions/apiController";
 import BlogListDisplayItem from "./BlogListDisplayItem";
+import { getLatestPostFunction } from "@/functions/serverFunctions";
 
 export default async function LatestBlogPost() {
-  const data = await getLatestPost();
+  const data = await getLatestPostFunction();
   return (
     <div id="latest-blog-post">
       <h2>Latest Post</h2>

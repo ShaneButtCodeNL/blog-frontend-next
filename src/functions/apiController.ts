@@ -29,6 +29,7 @@ const unbanUserPathWithoutUsername = `${userPath}/unban-user/`;
 const disableUserPathWithoutUsername = `${userPath}/disable-user/`;
 const enableUserPathWithoutUsername = `${userPath}/enable-user/`;
 const deleteUserPathWithoutUsername = `${userPath}/delete-user/`;
+const hasAnyAuthCheckPath = `${userPath}/has-any-auth`;
 
 const GET = "GET";
 const POST = "POST";
@@ -463,6 +464,23 @@ export async function deleteUser(token: string, username: string) {
     cache: "no-cache",
   });
   if (!res || !res.ok) return null;
+  const data = await res.json();
+  return data;
+}
+export async function hasAnyAuth(token: string | undefined, roles: string[]) {
+  if (!token) return null;
+  const res = await fetch(hasAnyAuthCheckPath, {
+    method: POST,
+    headers: getJSONHeader(),
+    cache: "no-cache",
+    body: JSON.stringify({ token, roles }),
+  });
+  if (!res || !res.ok) {
+    console.log("AUTH FAILED");
+    return null;
+  }
+  console.log("AUTH PASSED");
+
   const data = await res.json();
   return data;
 }

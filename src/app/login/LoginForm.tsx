@@ -1,6 +1,6 @@
 "use client";
 
-import { loginFunction } from "./actions";
+import { loginFunction } from "../../functions/serverFunctions";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
