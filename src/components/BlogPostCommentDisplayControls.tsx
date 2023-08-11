@@ -92,11 +92,13 @@ export default function BlogPostCommentDisplayControls({
 
   function likeButtonClick() {
     if (!window) return;
+
     if (!store.getState().login.loggedIn) {
       openLoginModal();
       return;
     }
     const token = localStorage.getItem("token") as string;
+
     likeCommentFunction(mainComment.blogId, mainComment.commentId, token).then(
       (_) => {
         setLikeCount((v) => v + (liked ? -1 : 1));

@@ -81,6 +81,7 @@ export async function likeCommentFunction(
   commentId: string,
   token: string
 ) {
+  "use server";
   const res = await likeBlogPostComment(blogId, commentId, token);
   revalidatePath(`/blog/${blogId}`);
   return;

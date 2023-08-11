@@ -220,13 +220,15 @@ export async function likeBlogPostComment(
   commentId: string,
   token: string
 ) {
-  const res = await fetch(`${getBlogsPath}post/like/${blogId}/${commentId}`, {
-    cache: "no-store",
-    method: PUT,
-    headers: getBearerTokenHeader(token),
-  });
+  const res = await fetch(
+    `${getBlogsPath}comment/like/${blogId}/${commentId}`,
+    {
+      cache: "no-store",
+      method: PUT,
+      headers: getBearerTokenHeader(token),
+    }
+  );
   const data: string = await res.text();
-
   return data;
 }
 
