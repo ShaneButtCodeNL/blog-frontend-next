@@ -30,6 +30,7 @@ import {
   isUsernameAvailable,
   hasAnyAuth,
   hasAllAuth,
+  logoffServer,
 } from "./apiController";
 import { BlogPostEditDetails, CommentDetails } from "@/models/blogPostReturn";
 import { cookies } from "next/dist/client/components/headers";
@@ -49,6 +50,11 @@ export async function getUserDetailsFromUsernameFunction(username: string) {
   "use server";
   const res = await getUserDetailsFromUsername(username);
   return res;
+}
+
+export async function logoutServerFunction() {
+  "use server";
+  await logoffServer();
 }
 
 export async function revalidateTokenFunction(token: string) {

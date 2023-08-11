@@ -4,6 +4,7 @@ import {
   CommentDetails,
 } from "@/models/blogPostReturn";
 import { LoginReturnDetails, UserDetails } from "@/models/userReturn";
+import { cookies } from "next/headers";
 
 const userPath = `${process.env.API_HOST}${process.env.API_USER_BASE}`;
 const blogPath = `${process.env.API_HOST}${process.env.API_POST_BASE}`;
@@ -137,7 +138,9 @@ export async function register(
   return data;
 }
 
-export function logoff() {}
+export async function logoffServer() {
+  cookies().delete("token");
+}
 
 export async function getAllBlogPosts(): Promise<BlogPostReturn[]> {
   console.log("\n\nGET ALL POSTS\n\n");

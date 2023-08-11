@@ -3,6 +3,7 @@ import { UserDetails } from "@/models/userReturn";
 import { store } from "@/store";
 import { setBlogId, setBody, setParentCommentId } from "@/store/commentReply";
 import login, { setLoggedIn, setUserDetails } from "@/store/login";
+import { logoutServerFunction } from "./serverFunctions";
 
 const TOKEN = "token";
 const USER_DETAILS = "userDetails";
