@@ -132,6 +132,7 @@ export default function BlogPostCommentDisplayControls({
     if (!dialog) return;
     store.dispatch(setCommentId(mainComment.commentId));
     store.dispatch(setBlogId(mainComment.blogId));
+    store.dispatch(setParentCommentId(mainComment.commentId));
     dialog.show();
   }
 

@@ -22,6 +22,7 @@ export default function MakeCommentReplyModal() {
       "make-comment-reply-modal"
     ) as HTMLDialogElement;
     if (!dialog) return;
+    dispatch(setParentCommentId(""));
     dialog.close();
   }
 

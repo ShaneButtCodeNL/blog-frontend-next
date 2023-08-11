@@ -4,9 +4,11 @@ import { getDateString } from "@/functions/helpers";
 
 import { BlogPostCommentReturn } from "@/models/blogPostReturn";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BlogPostCommentDisplayControls from "./BlogPostCommentDisplayControls";
 import Providers from "./Provider";
+import { getUserDetailsFromUsername } from "@/functions/apiController";
+import { getUserDetailsFromUsernameFunction } from "@/functions/serverFunctions";
 
 export default function BlogPostCommentDisplay({
   mainComment,
@@ -16,7 +18,25 @@ export default function BlogPostCommentDisplay({
   order: number;
 }) {
   const [hide, setHide] = useState(false);
-
+  const [author, setAuthor] = useState("");
+  const [disabled, setDisabled] = useState(false);
+  const [banned, setBanned] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    getUserDetailsFromUsernameFunction(mainComment.author).then((res) => {
+      if (res) {
+        if (!res.disabled) {
+          setAuthor(res.username as string);
+          setDisabled(false);
+        } else {
+          setAuthor("(DELETED)");
+          setDisabled(true);
+        }
+        setBanned(res.banned);
+        setLoaded(true);
+      }
+    });
+  }, []);
   return (
     <div
       className="blog-post-comment-container"
@@ -32,7 +52,19 @@ export default function BlogPostCommentDisplay({
             id={`${mainComment.commentId}-details`}
             className="blog-post-comment-display-details"
           >
-            <div className="comment-author">{mainComment.author}</div>
+            {loaded ? (
+              <div
+                className={`comment-author ${banned ? "text-reject" : ""} ${
+                  disabled ? "fade-text" : ""
+                }`}
+              >
+                {author}
+              </div>
+            ) : (
+              <div className="comment-author text-hidden">
+                {mainComment.author}
+              </div>
+            )}
             <div className="comment-created-on">
               {getDateString(mainComment.createdOn)}
             </div>

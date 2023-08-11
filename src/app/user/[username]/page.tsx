@@ -35,12 +35,32 @@ export default async function Page({
   return (
     <div id="user-display-container">
       <label>
-        Username <span className="fade-text">User Id</span> :
+        Username <span className="fade-text">(User Id)</span> :
       </label>
       <div id="username">
         {data.username + " "}
         <span id="user-id" className="fade-text">
           ({data.userId})
+        </span>
+      </div>
+      <label style={data.banned || data.disabled ? {} : { display: "none" }}>
+        Status :
+      </label>
+      <div
+        id="user-status-list"
+        style={data.banned || data.disabled ? {} : { display: "none" }}
+      >
+        <span
+          style={data.banned ? {} : { display: "none" }}
+          className="text-reject"
+        >
+          BANNED
+        </span>
+        <span
+          style={data.disabled ? {} : { display: "none" }}
+          className="text-reject"
+        >
+          DISABLED
         </span>
       </div>
       <label>Member Since :</label>

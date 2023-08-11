@@ -22,6 +22,15 @@
   --heart-color: palevioletred;
 }
 
+@keyframes sliding-loading-bar {
+  0% {
+    left: -9%;
+  }
+  100% {
+    left: 99%;
+  }
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-1: #5c469c;
@@ -139,6 +148,7 @@ header {
   height: 100%;
   place-content: center;
 }
+
 #user-display-container label {
   text-align: right;
 }
@@ -154,6 +164,7 @@ footer {
   justify-content: space-around;
   background-color: var(--background-fade);
   height: 14em;
+  margin-top: 3em;
 }
 .footer-div {
   display: flex;
@@ -207,11 +218,41 @@ main {
   gap: 1em;
 }
 
-.blog-display-item {
+.blog-display-item-wrapper {
   width: 50%;
   margin: auto;
   border: var(--background-2) 3px outset;
-  padding: 1em 5em;
+  min-height: 200px;
+  position: relative;
+  border-radius: 1em;
+  overflow: hidden;
+}
+
+.blog-display-item {
+  margin: 1em 5em;
+}
+
+.loading-display-item {
+  position: absolute;
+  width: 10%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--background-fade),
+    transparent
+  );
+  min-height: 200px;
+  animation: sliding-loading-bar;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+.loading-display-item-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .blog-to-display-social-interactions {
@@ -428,6 +469,9 @@ main {
 .text-reject {
   color: var(--error-text-color);
   text-shadow: var(--error-text-shadow);
+}
+.text-hidden {
+  color: transparent;
 }
 #write-new-post-form-container {
   display: inline-block;

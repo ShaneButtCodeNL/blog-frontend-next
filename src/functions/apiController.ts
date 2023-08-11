@@ -88,12 +88,12 @@ export async function isUsernameAvailable(username: string): Promise<boolean> {
 
 export async function getUserDetailsFromUsername(
   username: string
-): Promise<UserDetails> {
+): Promise<UserDetails | null> {
   const fetchStr = `${userPath}/details/${username}`;
   const res = await fetch(fetchStr, {
     next: { revalidate: 60 * 60, tags: ["get-user-from-username"] },
   });
-  if (!res.ok) throw new Error("User Not Found");
+  if (!res.ok) return null;
   return res.json();
 }
 
@@ -468,6 +468,23 @@ export async function deleteUser(token: string, username: string) {
   return data;
 }
 export async function hasAnyAuth(token: string | undefined, roles: string[]) {
+  if (!token) return null;
+  const res = await fetch(hasAnyAuthCheckPath, {
+    method: POST,
+    headers: getJSONHeader(),
+    cache: "no-cache",
+    body: JSON.stringify({ token, roles }),
+  });
+  if (!res || !res.ok) {
+    console.log("AUTH FAILED");
+    return null;
+  }
+  console.log("AUTH PASSED");
+
+  const data = await res.json();
+  return data;
+}
+export async function hasAllAuth(token: string | undefined, roles: string[]) {
   if (!token) return null;
   const res = await fetch(hasAnyAuthCheckPath, {
     method: POST,

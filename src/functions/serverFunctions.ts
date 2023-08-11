@@ -29,6 +29,7 @@ import {
   register,
   isUsernameAvailable,
   hasAnyAuth,
+  hasAllAuth,
 } from "./apiController";
 import { BlogPostEditDetails, CommentDetails } from "@/models/blogPostReturn";
 import { cookies } from "next/dist/client/components/headers";
@@ -176,6 +177,7 @@ export async function killCommentFunction(
   token: string
 ) {
   const res = await killComment(blogId, commentId, token);
+  console.log(res);
   if (!res) {
     return null;
   }
@@ -296,5 +298,13 @@ export async function hasAnyAuthFunction(
   roles: string[]
 ) {
   const res = await hasAnyAuth(token, roles);
+  return res;
+}
+
+export async function hasAllAuthFunction(
+  token: string | undefined,
+  roles: string[]
+) {
+  const res = await hasAllAuth(token, roles);
   return res;
 }

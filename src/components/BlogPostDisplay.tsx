@@ -5,9 +5,16 @@ import BlogPostDisplayControls from "./BlogPostDisplayControls";
 import Providers from "./Provider";
 import markdownParserToHTMLString from "@/functions/markdownParser";
 import BlogPostDisplayBody from "./BlogPostDisplayBody";
+import { getUserDetailsFromUsername } from "@/functions/apiController";
 
-export default function BlogPostDisplay(params: any) {
+export default async function BlogPostDisplay(params: any) {
   const blogPost: BlogPostReturn = params.blogPost;
+  const user = await getUserDetailsFromUsername(blogPost.author);
+  let author = "(DELETED)";
+  if (user) {
+    if (!user.disabled) author = user.username as string;
+  }
+
   return (
     <div id="blog-post-display-container">
       {blogPost.deleted ? (
@@ -16,7 +23,12 @@ export default function BlogPostDisplay(params: any) {
         <>
           <h2 id="blog-post-title">{blogPost.title}</h2>
           <div id="blog-creation-details">
-            <div id="blog-author">Written By: {blogPost.author}</div>
+            <div id="blog-author">
+              Written By:{" "}
+              <span className={`${user?.disabled ? "fade-text" : ""}`}>
+                {author}
+              </span>
+            </div>
             <div id="blog-writen-on">
               Created On: {getDateString(blogPost.createdOn)}
             </div>
