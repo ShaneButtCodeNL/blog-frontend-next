@@ -5,10 +5,13 @@ import {
   openLoginModal,
   openMakeCommentReplyModal,
 } from "@/functions/helpers";
-import { likeCommentFunction } from "@/functions/serverFunctions";
+import {
+  getUserDetailsFromUsernameFunction,
+  likeCommentFunction,
+} from "@/functions/serverFunctions";
 import { BlogPostCommentReturn } from "@/models/blogPostReturn";
 import { store } from "@/store";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   setBlogId,
   setCommentId,
@@ -38,14 +41,18 @@ export default function BlogPostCommentDisplayControls({
   const userDetails = useSelector(
     (state: RootState) => state.login.userDetails
   );
+  const loggedIn = useSelector((state: RootState) => state.login.loggedIn);
+  console.log(loggedIn, userDetails);
   const [likeCount, setLikeCount] = useState(mainComment.likes.length);
   const [liked, setLiked] = useState(
-    store.getState().login.loggedIn
-      ? mainComment.likes.includes(
-          store.getState().login.userDetails?.userId as string
-        )
-      : false
+    loggedIn ? mainComment.likes.includes(userDetails?.userId as string) : false
   );
+  useEffect(() => {
+    console.log(loggedIn, userDetails);
+    getUserDetailsFromUsernameFunction(userDetails?.username as string).then(
+      (res) => setLiked(mainComment.likes.includes(res?.userId as string))
+    );
+  }, [loggedIn]);
 
   interface Credentials {
     roles: string[];
