@@ -104,6 +104,7 @@ header {
   position: sticky;
   top: 0%;
   backdrop-filter: blur(2px);
+  z-index: 30000;
 }
 
 #header-content {

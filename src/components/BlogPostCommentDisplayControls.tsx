@@ -42,13 +42,11 @@ export default function BlogPostCommentDisplayControls({
     (state: RootState) => state.login.userDetails
   );
   const loggedIn = useSelector((state: RootState) => state.login.loggedIn);
-  console.log(loggedIn, userDetails);
   const [likeCount, setLikeCount] = useState(mainComment.likes.length);
   const [liked, setLiked] = useState(
     loggedIn ? mainComment.likes.includes(userDetails?.userId as string) : false
   );
   useEffect(() => {
-    console.log(loggedIn, userDetails);
     getUserDetailsFromUsernameFunction(userDetails?.username as string).then(
       (res) => setLiked(mainComment.likes.includes(res?.userId as string))
     );
