@@ -154,11 +154,6 @@ header {
   text-align: right;
 }
 
-.fade-text {
-  color: var(--font-color-fade);
-  font-style: italic;
-}
-
 footer {
   width: 100%;
   display: flex;
@@ -166,6 +161,7 @@ footer {
   background-color: var(--background-fade);
   height: 14em;
   margin-top: 3em;
+  border-top: outset 0.5em var(--foreground-1);
 }
 .footer-div {
   display: flex;
@@ -470,6 +466,10 @@ main {
 .text-reject {
   color: var(--error-text-color);
   text-shadow: var(--error-text-shadow);
+}
+.fade-text {
+  color: var(--font-color-fade);
+  font-style: italic;
 }
 .text-hidden {
   color: transparent;

@@ -1,3 +1,16 @@
+export interface BlogWithAuthorDetails {
+  authorDetails: AuthorDetails;
+  blogDetails: BlogPostReturn;
+}
+
+export interface AuthorDetails {
+  username: string;
+  userId: string;
+  banned: boolean;
+  disabled: boolean;
+  highestRole: string;
+}
+
 export interface BlogPostCommentReturn {
   commentId: string;
   blogId: string;

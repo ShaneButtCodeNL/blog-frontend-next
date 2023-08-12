@@ -1,6 +1,7 @@
 import {
   BlogPostEditDetails,
   BlogPostReturn,
+  BlogWithAuthorDetails,
   CommentDetails,
 } from "@/models/blogPostReturn";
 import { LoginReturnDetails, UserDetails } from "@/models/userReturn";
@@ -379,7 +380,7 @@ export async function editPost(
   return data;
 }
 
-export async function getLatestPost(): Promise<BlogPostReturn | null> {
+export async function getLatestPost(): Promise<BlogWithAuthorDetails | null> {
   const res = await fetch(getLatestBlogPostPath, {
     method: GET,
     headers: getJSONHeader(),
