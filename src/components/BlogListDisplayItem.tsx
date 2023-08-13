@@ -1,48 +1,20 @@
-"use client";
+"use server";
 import { BlogPostReturn } from "@/models/blogPostReturn";
 import Link from "next/link";
 import markdownParserToHTMLString from "@/functions/markdownParser";
-import { useEffect, useState } from "react";
 import { getUserDetailsFromUsernameFunction } from "@/functions/serverFunctions";
 
-export default function BlogListDisplayItem({
+export default async function BlogListDisplayItem({
   blog,
 }: {
   blog: BlogPostReturn;
 }) {
-  const [author, setAuthor] = useState("(DELETED)");
-  const [loading, setLoading] = useState(true);
-  const [disabled, setDisabled] = useState(true);
-  const [banned, setBanned] = useState(false);
-  useEffect(() => {
-    getUserDetailsFromUsernameFunction(blog.author).then((user) => {
-      if (user) {
-        if (!user.disabled) {
-          setAuthor(user.username as string);
-          setDisabled(false);
-        }
-        setBanned(user.banned);
-        setLoading(false);
-      }
-    });
-  }, []);
+  const user = await getUserDetailsFromUsernameFunction(blog.author);
+  const disabled = user ? user.disabled : true;
+  const banned = user ? user.banned : false;
   return (
     <div className="blog-display-item-wrapper">
-      <div
-        className="loading-display-item"
-        style={loading ? {} : { display: "none" }}
-      ></div>
-      <div
-        className="loading-display-item-text"
-        style={loading ? {} : { display: "none" }}
-      >
-        Loading
-      </div>
-      <div
-        className="blog-display-item"
-        key={`key-${blog.blogId}`}
-        style={loading ? { display: "none" } : {}}
-      >
+      <div className="blog-display-item" key={`key-${blog.blogId}`}>
         <Link href={`/blog/${blog.blogId}`}>
           {blog.deleted ? (
             <div>Post Deleted</div>
@@ -57,7 +29,7 @@ export default function BlogListDisplayItem({
                       banned ? "text-reject" : ""
                     } ${disabled ? "fade-text" : ""}`}
                   >
-                    {author}
+                    {disabled ? "(DELETED)" : blog.author}
                   </i>
                 </div>
               </div>

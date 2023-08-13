@@ -7,6 +7,7 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
+  console.log("PAGE LAYOUT");
   return (
     <>
       <div id="blog-list-controls">

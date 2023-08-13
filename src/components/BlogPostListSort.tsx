@@ -1,9 +1,12 @@
 "use client";
 import { SortTypes } from "@/models/blogPostReturn";
 import { ChangeEvent } from "react";
-import { AppDispatch, RootState } from "@/store";
+import { AppDispatch, RootState, store } from "@/store";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { setSortType } from "@/store/blogPosts";
+import { useRouter } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { updateStoreSortType } from "@/functions/serverFunctions";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
@@ -19,10 +22,12 @@ const sortTypeToReadableString: string[] = [
 ];
 
 export default function BlogPostListSort() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const currentSort = useAppSelector((state) =>
     state.blogPostList.sortType.toString()
   );
+
   function getSortType(optVal: number) {
     switch (SortTypes[optVal]) {
       case "DATE_DEC": {
@@ -49,6 +54,9 @@ export default function BlogPostListSort() {
   }
   function selectFunction(e: ChangeEvent<HTMLSelectElement>) {
     dispatch(setSortType(getSortType(parseInt(e.target.value))));
+    updateStoreSortType(getSortType(parseInt(e.target.value))).then((_) => {
+      router.refresh();
+    });
   }
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>

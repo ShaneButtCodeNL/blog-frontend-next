@@ -144,11 +144,10 @@ export async function logoffServer() {
 }
 
 export async function getAllBlogPosts(): Promise<BlogPostReturn[]> {
-  console.log("\n\nGET ALL POSTS\n\n");
   const res = await fetch(getBlogsPath, {
     method: GET,
+    cache: "no-store",
     next: {
-      revalidate: tenSeconds,
       tags: ["main-blog-list"],
     },
   });
@@ -423,7 +422,6 @@ export async function removeRole(
 }
 
 export async function banUser(token: string, username: string) {
-  console.log("BAN_USER");
   const res = await fetch(`${banUserPathWithoutUsername}${username}`, {
     method: PUT,
     headers: getBearerTokenHeader(token),
@@ -482,10 +480,8 @@ export async function hasAnyAuth(token: string | undefined, roles: string[]) {
     body: JSON.stringify({ token, roles }),
   });
   if (!res || !res.ok) {
-    console.log("AUTH FAILED");
     return null;
   }
-  console.log("AUTH PASSED");
 
   const data = await res.json();
   return data;
@@ -499,10 +495,8 @@ export async function hasAllAuth(token: string | undefined, roles: string[]) {
     body: JSON.stringify({ token, roles }),
   });
   if (!res || !res.ok) {
-    console.log("AUTH FAILED");
     return null;
   }
-  console.log("AUTH PASSED");
 
   const data = await res.json();
   return data;

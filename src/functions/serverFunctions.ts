@@ -31,9 +31,18 @@ import {
   hasAnyAuth,
   hasAllAuth,
   logoffServer,
+  getAllBlogPosts,
 } from "./apiController";
-import { BlogPostEditDetails, CommentDetails } from "@/models/blogPostReturn";
+import {
+  BlogPostEditDetails,
+  BlogPostReturn,
+  CommentDetails,
+  SortTypes,
+} from "@/models/blogPostReturn";
 import { cookies } from "next/dist/client/components/headers";
+import { store } from "@/store";
+import { setSortType } from "@/store/blogPosts";
+import { applySorting, applyTitleFilter } from "./helpers";
 
 export async function validateTokenFunction(token: string) {
   "use server";
@@ -43,6 +52,11 @@ export async function validateTokenFunction(token: string) {
 export async function getAllUsernamesFunction(token: string) {
   "use server";
   const res = await getAllUsernames(token);
+  return res;
+}
+export async function getAllBlogPostsFunction() {
+  "use server";
+  const res = await getAllBlogPosts();
   return res;
 }
 
@@ -77,7 +91,6 @@ export async function makeNewPostFunction(
 
 export async function likePost(blogId: string, token: string) {
   const res = await likeBlogPost(blogId, token);
-  console.log(res);
   revalidatePath(`/blog/${blogId}`);
   return;
 }
@@ -158,7 +171,6 @@ export async function restoreCommentFunction(
   commentId: string,
   token: string
 ) {
-  console.log("INSIDE SERVER FUNCTION");
   const res = await restoreComment(blogId, commentId, token);
   if (!res) {
     return null;
@@ -184,7 +196,6 @@ export async function killCommentFunction(
   token: string
 ) {
   const res = await killComment(blogId, commentId, token);
-  console.log(res);
   if (!res) {
     return null;
   }
@@ -281,7 +292,6 @@ export async function getLatestPostFunction() {
 }
 export async function setTokenInCookie(token: string) {
   "use server";
-  console.log("SETTING COOKIE", token);
   cookies().set({ name: "token", value: token, httpOnly: true });
 }
 
@@ -296,7 +306,6 @@ export async function registerFunction(username: string, password: string) {
 export async function checkUsernameIsAvailableFunction(username: string) {
   "use server";
   const res = await isUsernameAvailable(username);
-  console.log("is ", username as string, " available: ", res);
   return res === true;
 }
 
@@ -314,4 +323,22 @@ export async function hasAllAuthFunction(
 ) {
   const res = await hasAllAuth(token, roles);
   return res;
+}
+export async function updateStoreSortType(sortType: SortTypes) {
+  "use server";
+  revalidatePath("/blogs/[pageNumber]");
+  store.dispatch(setSortType(sortType));
+  return;
+}
+export async function applySortingServerFunction(
+  list: BlogPostReturn[],
+  sortType: SortTypes | null | undefined
+) {
+  return applySorting(list, sortType);
+}
+export async function applyTitleFilterServerFunction(
+  list: BlogPostReturn[],
+  searchString: string
+) {
+  return applyTitleFilter(list, searchString);
 }

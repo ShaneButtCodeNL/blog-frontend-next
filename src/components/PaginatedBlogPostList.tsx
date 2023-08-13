@@ -1,37 +1,28 @@
-"use client";
-import { BlogPostReturn } from "@/models/blogPostReturn";
+"use server";
+import { BlogPostReturn, SortTypes } from "@/models/blogPostReturn";
 import { AppDispatch, RootState, store } from "@/store";
 import BlogListDisplayItem from "./BlogListDisplayItem";
 import PaginatedBlogPostListControls from "./PaginatedBlogPostListControls";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { applySorting, applyTitleFilter } from "@/functions/helpers";
+import { ReactNode } from "react";
+import { getAllBlogPosts } from "@/functions/apiController";
+import {
+  applySortingServerFunction,
+  getAllBlogPostsFunction,
+} from "@/functions/serverFunctions";
 
-export const useAppDispatch: () => AppDispatch = useDispatch;
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-
-export default function PaginatedBlogPostList() {
-  const search = useAppSelector((state) => state.search.search);
-  const sortType = useAppSelector((state) => state.blogPostList.sortType);
-  const blogList = useAppSelector((state) => state.blogPostList.list);
-  const startPage: number =
-    (store.getState().blogPostList.currentPage - 1) *
-    store.getState().blogPostList.displayNumber;
-  const endPage: number =
-    startPage + store.getState().blogPostList.displayNumber;
-  const list: BlogPostReturn[] = applyTitleFilter(
-    applySorting(blogList, sortType),
-    search
-  );
-  const listSlice = list.slice(startPage, endPage);
-
+export default async function PaginatedBlogPostList({
+  children,
+  itemsCount,
+}: {
+  children: ReactNode;
+  itemsCount: number;
+}) {
   return (
     <div id="blog-list-slice-container">
-      <div id="blog-list-slice">
-        {listSlice.map((blog, index) => (
-          <BlogListDisplayItem blog={blog} key={`${blog.blogId}-#${index}`} />
-        ))}
-      </div>
-      <PaginatedBlogPostListControls listItemCount={list.length} />
+      <div id="blog-list-slice">{children}</div>
+      <PaginatedBlogPostListControls listItemCount={itemsCount} />
     </div>
   );
 }
