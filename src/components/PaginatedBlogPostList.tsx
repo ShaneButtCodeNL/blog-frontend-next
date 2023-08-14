@@ -15,14 +15,19 @@ import {
 export default async function PaginatedBlogPostList({
   children,
   itemsCount,
+  searchTitle,
 }: {
   children: ReactNode;
   itemsCount: number;
+  searchTitle: string;
 }) {
   return (
     <div id="blog-list-slice-container">
       <div id="blog-list-slice">{children}</div>
-      <PaginatedBlogPostListControls listItemCount={itemsCount} />
+      <PaginatedBlogPostListControls
+        listItemCount={itemsCount}
+        searchTitle={searchTitle}
+      />
     </div>
   );
 }

@@ -1,11 +1,10 @@
 "use client";
 import { SortTypes } from "@/models/blogPostReturn";
 import { ChangeEvent } from "react";
-import { AppDispatch, RootState, store } from "@/store";
+import { AppDispatch, RootState } from "@/store";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { setSortType } from "@/store/blogPosts";
 import { useRouter } from "next/navigation";
-import { revalidatePath } from "next/cache";
 import { updateStoreSortType } from "@/functions/serverFunctions";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;

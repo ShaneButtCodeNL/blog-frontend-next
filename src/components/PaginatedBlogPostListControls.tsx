@@ -5,11 +5,12 @@ import Link from "next/link";
 export default function PaginatedBlogPostListControls({
   sorted,
   listItemCount,
+  searchTitle,
 }: {
   sorted?: string;
+  searchTitle: string;
   listItemCount: number;
 }) {
-  console.log("count", listItemCount);
   const firstPage = 1;
   const lastPage = Math.ceil(
     listItemCount / store.getState().blogPostList.displayNumber
@@ -29,7 +30,9 @@ export default function PaginatedBlogPostListControls({
       style={firstPage === lastPage ? { display: "none" } : {}}
     >
       <Link
-        href={`/blogs/${sorted ? `sorted/${sorted}/` : ""}${currentPage - 1}`}
+        href={`/blogs/${currentPage - 1}${searchTitle !== "" ? "?" : ""}${
+          searchTitle === "" ? "" : `searchTitle=${searchTitle}`
+        }`}
       >
         <button
           type="button"
@@ -39,7 +42,11 @@ export default function PaginatedBlogPostListControls({
           {"<"}
         </button>
       </Link>
-      <Link href={`/blogs/${sorted ? `sorted/${sorted}/` : ""}${firstPage}`}>
+      <Link
+        href={`/blogs/${firstPage}${searchTitle !== "" ? "?" : ""}${
+          searchTitle === "" ? "" : `searchTitle=${searchTitle}`
+        }`}
+      >
         <button type="button">{firstPage}</button>
       </Link>
       <div style={currentPage - siblings >= 3 ? {} : { display: "none" }}>
@@ -47,7 +54,9 @@ export default function PaginatedBlogPostListControls({
       </div>
       {range.map((v) => (
         <Link
-          href={`/blogs/${sorted ? `sorted/${sorted}/` : ""}${v}`}
+          href={`/blogs/${v}${searchTitle !== "" ? "?" : ""}${
+            searchTitle === "" ? "" : `searchTitle=${searchTitle}`
+          }`}
           key={`link-key-page-${v}`}
         >
           <button key={`page-key-${v}`}>{v}</button>
@@ -58,11 +67,17 @@ export default function PaginatedBlogPostListControls({
       >
         {ellipses}
       </div>
-      <Link href={`/blogs/${sorted ? `sorted/${sorted}/` : ""}${lastPage}`}>
+      <Link
+        href={`/blogs/${lastPage}${searchTitle !== "" ? "?" : ""}${
+          searchTitle === "" ? "" : `searchTitle=${searchTitle}`
+        }`}
+      >
         <button type="button">{lastPage}</button>
       </Link>
       <Link
-        href={`/blogs/${sorted ? `sorted/${sorted}/` : ""}${currentPage + 1}`}
+        href={`/blogs/${currentPage + 1}${searchTitle !== "" ? "?" : ""}${
+          searchTitle === "" ? "" : `searchTitle=${searchTitle}`
+        }`}
       >
         <button
           type="button"

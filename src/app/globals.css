@@ -716,6 +716,16 @@ main {
   top: 50%;
   transform: translateY(-50%);
 }
+.search-box-list-input {
+  padding-right: 2.5em;
+}
+.search-box-list-button {
+  position: absolute;
+  right: 0em;
+  height: 80%;
+  top: 10%;
+  padding: 0 0.5em;
+}
 
 .sort-selection {
   line-height: 1.5em;

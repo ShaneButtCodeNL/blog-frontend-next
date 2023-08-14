@@ -43,6 +43,7 @@ import { cookies } from "next/dist/client/components/headers";
 import { store } from "@/store";
 import { setSortType } from "@/store/blogPosts";
 import { applySorting, applyTitleFilter } from "./helpers";
+import { setSearch } from "@/store/search";
 
 export async function validateTokenFunction(token: string) {
   "use server";
@@ -328,6 +329,14 @@ export async function updateStoreSortType(sortType: SortTypes) {
   "use server";
   revalidatePath("/blogs/[pageNumber]");
   store.dispatch(setSortType(sortType));
+  return;
+}
+export async function updateStoreSearchTitleServerFunction(
+  searchString: string
+) {
+  "use server";
+  revalidatePath("/blogs/[pageNumber]");
+  store.dispatch(setSearch(searchString));
   return;
 }
 export async function applySortingServerFunction(

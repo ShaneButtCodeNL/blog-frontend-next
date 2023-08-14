@@ -1,33 +1,24 @@
 "use client";
 
-import { AppDispatch, RootState, store } from "@/store";
-import { setSearch } from "@/store/search";
-import { useRouter } from "next/navigation";
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ChangeEvent, useState } from "react";
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
-export const useAppDispatch: () => AppDispatch = useDispatch;
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 const searchTypes = ["Title"];
 
 export default function BlogPostSearch() {
-  const dispatch = useAppDispatch();
+  const searchParams = useSearchParams();
+  const searchTitle = searchParams.get("searchTitle");
   const [searchType, setSearchType] = useState(0);
   const [localSearch, setLocalSearch] = useState(
-    useAppSelector((state) => state.search.search)
+    searchTitle ? searchTitle : ""
   );
-  let throttlePause = false;
-  const delayForThrottleInMilleSeconds = 750;
-  const throttle = (e: ChangeEvent<HTMLInputElement>) => {
-    if (throttlePause) return;
-    throttlePause = true;
-    setTimeout(() => {
-      dispatch(setSearch(e.target.value));
-      throttlePause = false;
-      router.push("/blogs/1");
-    }, delayForThrottleInMilleSeconds);
-  };
   const router = useRouter();
+
+  function clickFunction() {
+    router.push(`/blogs/1?searchTitle=${localSearch}`);
+  }
 
   return (
     <div
@@ -37,7 +28,6 @@ export default function BlogPostSearch() {
         textDecoration: "underline",
       }}
     >
-      <label style={{ display: "none" }}></label>
       <select
         style={{
           width: "fit-content",
@@ -51,19 +41,29 @@ export default function BlogPostSearch() {
         }}
       >
         {searchTypes.map((v, i) => (
-          <option value={i}>{v}</option>
+          <option value={i} key={`key-${i}-${v}`}>
+            {v}
+          </option>
         ))}
       </select>
-      <input
-        type="text"
-        placeholder="Search . . ."
-        className="form-input"
-        value={localSearch}
-        onChange={(e) => {
-          setLocalSearch(e.target.value);
-          throttle(e);
-        }}
-      />
+      <div className="search-box-list" style={{ position: "relative" }}>
+        <input
+          type="text"
+          placeholder="Search . . ."
+          className="form-input search-box-list-input"
+          value={localSearch}
+          onChange={(e) => {
+            setLocalSearch(e.target.value);
+          }}
+        />
+        <button
+          type="button"
+          className="search-box-list-button"
+          onClick={clickFunction}
+        >
+          <FontAwesomeIcon icon={faMagnifyingGlass} />
+        </button>
+      </div>
     </div>
   );
 }
