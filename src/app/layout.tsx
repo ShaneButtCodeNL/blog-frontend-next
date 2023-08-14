@@ -23,8 +23,8 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <PreloadLogin>
-        <body className={inter.className}>
+      <body className={inter.className}>
+        <PreloadLogin>
           <LoginModal />
           <Providers>
             <MakeCommentReplyModal />
@@ -44,8 +44,8 @@ export default async function RootLayout({
             </main>
             <Footer />
           </div>
-        </body>
-      </PreloadLogin>
+        </PreloadLogin>
+      </body>
     </html>
   );
 }

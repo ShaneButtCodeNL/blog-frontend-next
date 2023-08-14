@@ -591,9 +591,13 @@ main {
 #make-comment-form {
   width: max(50%, 900px);
   grid-template-areas:
+    "title title title title"
     "text text text text"
     ". submit cancel .";
-  grid-template-rows: auto auto;
+  grid-template-rows: auto auto auto;
+}
+#make-comment-modal-input {
+  grid-area: title;
 }
 #make-comment-modal-textarea {
   grid-area: text;

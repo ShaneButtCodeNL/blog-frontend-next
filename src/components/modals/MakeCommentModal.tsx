@@ -7,6 +7,7 @@ import { createPortal } from "react-dom";
 import { BlogPostCommentReturn } from "@/models/blogPostReturn";
 
 export default function MakeCommentModal({ blogId }: { blogId: string }) {
+  const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   function closeModal() {
     const dialog = document.getElementById(
@@ -14,13 +15,14 @@ export default function MakeCommentModal({ blogId }: { blogId: string }) {
     ) as HTMLDialogElement;
     if (!dialog) return;
     setBody("");
+    setTitle("");
     dialog.close();
   }
 
   function submitFormFunction(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const token = localStorage.getItem("token") as string;
-    createCommentFunction(blogId, token, { body, title: "" }).then((res) => {
+    createCommentFunction(blogId, token, { body, title }).then((res) => {
       closeModal();
     });
   }
@@ -32,6 +34,14 @@ export default function MakeCommentModal({ blogId }: { blogId: string }) {
         onClick={(e) => e.stopPropagation()}
         onSubmit={submitFormFunction}
       >
+        <input
+          type="text"
+          className="form-input"
+          placeholder="Title . . ."
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          id="make-comment-modal-input"
+        />
         <textarea
           id="make-comment-modal-textarea"
           className="form-input"
