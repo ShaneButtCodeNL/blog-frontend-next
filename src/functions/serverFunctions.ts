@@ -343,11 +343,13 @@ export async function applySortingServerFunction(
   list: BlogPostReturn[],
   sortType: SortTypes | null | undefined
 ) {
+  "use server";
   return applySorting(list, sortType);
 }
 export async function applyTitleFilterServerFunction(
   list: BlogPostReturn[],
   searchString: string
 ) {
+  "use server";
   return applyTitleFilter(list, searchString);
 }

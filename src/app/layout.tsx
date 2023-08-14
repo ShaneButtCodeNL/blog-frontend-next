@@ -23,28 +23,29 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <PreloadLogin />
-      <body className={inter.className}>
-        <LoginModal />
-        <Providers>
-          <MakeCommentReplyModal />
-        </Providers>
-        <div id="page">
-          <header style={{ paddingTop: "1em", paddingBottom: "1em" }}>
-            <div id="header-content">
-              <div className="title">Shane's Blog</div>
-              <Providers>
-                <Search title="Hello" />
-                <Nav />
-              </Providers>
-            </div>
-          </header>
-          <main>
-            <div id="main-body-content">{children}</div>
-          </main>
-          <Footer />
-        </div>
-      </body>
+      <PreloadLogin>
+        <body className={inter.className}>
+          <LoginModal />
+          <Providers>
+            <MakeCommentReplyModal />
+          </Providers>
+          <div id="page">
+            <header style={{ paddingTop: "1em", paddingBottom: "1em" }}>
+              <div id="header-content">
+                <div className="title">Shane's Blog</div>
+                <Providers>
+                  <Search title="Hello" />
+                  <Nav />
+                </Providers>
+              </div>
+            </header>
+            <main>
+              <div id="main-body-content">{children}</div>
+            </main>
+            <Footer />
+          </div>
+        </body>
+      </PreloadLogin>
     </html>
   );
 }

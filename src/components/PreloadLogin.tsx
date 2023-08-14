@@ -2,17 +2,16 @@
 import { store } from "@/store";
 import { UserDetails } from "@/models/userReturn";
 import { setLoggedIn, setUserDetails } from "@/store/login";
-import { useEffect, useRef } from "react";
+import { ReactNode, useMemo, useRef, useState } from "react";
 import {
   revalidateTokenFunction,
   validateTokenFunction,
 } from "@/functions/serverFunctions";
 
-//TODO update token with a new valid token
-export default function PreloadLogin() {
-  "use client";
+export default function PreloadLogin({ children }: { children: ReactNode }) {
   const loggedIn = useRef(false);
-  useEffect(() => {
+  const [loaded, setLoaded] = useState(false);
+  useMemo(() => {
     if (!loggedIn.current) {
       loggedIn.current = true;
       if (localStorage.getItem("token")) {
@@ -20,7 +19,6 @@ export default function PreloadLogin() {
         if (localStorage.getItem("userDetails")) {
           validateTokenFunction(token).then((v) => {
             if (v) {
-              console.log(token);
               revalidateTokenFunction(token).then((t) =>
                 localStorage.setItem("token", t)
               );
@@ -33,11 +31,16 @@ export default function PreloadLogin() {
                 )
               );
             }
+            setLoaded(true);
           });
+        } else {
+          setLoaded(true);
         }
+      } else {
+        setLoaded(true);
       }
     }
   }, []);
 
-  return null;
+  return loaded ? children : <></>;
 }
