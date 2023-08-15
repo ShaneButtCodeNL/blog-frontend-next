@@ -5,8 +5,10 @@
 :root {
   --foreground-2: #717288;
   --foreground-1: #bac6ce;
+  --foreground-1-fade: #bac6ce60;
   --background-1: #ffffff;
   --background-2: #c4c4c4;
+  --backgroung-2-fade: #c4c4c460;
   --input-bg: #ebebeb;
   --font-color: #2c2c2c;
   --font-color-fade: #dfdfdf8f;
@@ -35,8 +37,10 @@
   :root {
     --foreground-1: #5c469c;
     --foreground-2: #d4adfc;
+    --foreground-1-fade: #5c469c60;
     --background-1: #0c134f;
     --background-2: #1d267d;
+    --background-2-fade: #1d267d60;
     --input-bg: #000000;
 
     --font-color: #fff;
@@ -59,12 +63,14 @@ body {
   position: relative;
   color: var(--font-color);
   min-width: 100%;
+  max-height: 100vh;
   background-image: linear-gradient(
     to bottom right,
     var(--background-1),
     var(--background-2),
     var(--background-1)
   );
+  overflow: hidden;
 }
 ul,
 ol {
@@ -88,9 +94,15 @@ ol li {
   width: 100%;
   margin: auto;
   min-height: 100vh;
+  height: 100%;
+  max-height: 100vh;
   position: relative;
   display: grid;
   grid-template-rows: auto 1fr auto;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--foreground-1-fade) var(--background-2);
+  scrollbar-highlight-color: var(--foreground-1);
 }
 
 .button {
