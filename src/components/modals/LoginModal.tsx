@@ -11,7 +11,7 @@ export default function LoginModal() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
-  const dialogRef = useRef(null);
+  const dialogRef = useRef<null | HTMLDialogElement>(null);
 
   function submitFormFunction(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();

@@ -1,13 +1,11 @@
 "use client";
-import {
-  editBlogPostFunction,
-  killBlogPostFunction,
-} from "@/functions/serverFunctions";
+import { editBlogPostFunction } from "@/functions/serverFunctions";
 import { BlogPostEditDetails } from "@/models/blogPostReturn";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-export default function EditPostModal({ blogId }: { blogId: string }) {
+export default function EditPostModal() {
+  const params = useParams();
   const [body, setBody] = useState("");
   const [title, setTitle] = useState("");
   const [showError, setShowError] = useState(false);
@@ -23,7 +21,7 @@ export default function EditPostModal({ blogId }: { blogId: string }) {
 
   function submitFormFunction(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!window) {
+    if (!window || !params.blogId) {
       closeModal();
       return;
     }
@@ -34,17 +32,11 @@ export default function EditPostModal({ blogId }: { blogId: string }) {
       body === "" ? {} : { body: body },
       title === "" ? {} : { title: title }
     );
-    console.log("EDIT DETAILS", editDetails);
-    editBlogPostFunction(blogId, token, editDetails).then((res) => {
+    editBlogPostFunction(params.blogId, token, editDetails).then((res) => {
       if (!res) {
         setShowError(true);
         return;
       }
-      // console.log(res);
-      // const titleDiv = document.getElementById("blog-post-title");
-      // const bodyDiv = document.getElementById("blog-body");
-      // if (bodyDiv && body !== "") bodyDiv.innerHTML = body;
-      // if (titleDiv && title !== "") titleDiv.innerHTML = title;
       router.refresh();
       closeModal();
     });

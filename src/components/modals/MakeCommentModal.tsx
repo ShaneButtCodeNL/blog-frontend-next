@@ -2,11 +2,10 @@
 
 import { createCommentFunction } from "@/functions/serverFunctions";
 import { FormEvent, useState } from "react";
-import BlogPostCommentDisplay from "../BlogPostCommentDisplay";
-import { createPortal } from "react-dom";
-import { BlogPostCommentReturn } from "@/models/blogPostReturn";
+import { useParams } from "next/navigation";
 
-export default function MakeCommentModal({ blogId }: { blogId: string }) {
+export default function MakeCommentModal() {
+  const params = useParams();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   function closeModal() {
@@ -21,8 +20,12 @@ export default function MakeCommentModal({ blogId }: { blogId: string }) {
 
   function submitFormFunction(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (!params.blogId) {
+      closeModal();
+      return;
+    }
     const token = localStorage.getItem("token") as string;
-    createCommentFunction(blogId, token, { body, title }).then((res) => {
+    createCommentFunction(params.blogId, token, { body, title }).then((_) => {
       closeModal();
     });
   }

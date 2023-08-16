@@ -1,9 +1,10 @@
 "use client";
 import { killBlogPostFunction } from "@/functions/serverFunctions";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-export default function KillPostModal({ blogId }: { blogId: string }) {
+export default function KillPostModal() {
+  const params = useParams();
   const [showError, setShowError] = useState(false);
   const router = useRouter();
   function closeModal() {
@@ -17,12 +18,12 @@ export default function KillPostModal({ blogId }: { blogId: string }) {
 
   function submitFormFunction(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!window) {
+    if (!window || !params.blogId) {
       closeModal();
       return;
     }
     const token = localStorage.getItem("token") as string;
-    killBlogPostFunction(blogId, token).then((res) => {
+    killBlogPostFunction(params.blogId, token).then((res) => {
       if (!res) {
         setShowError(true);
         return;

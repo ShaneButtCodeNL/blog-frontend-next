@@ -13,16 +13,7 @@ import { useState } from "react";
 import { likePost } from "@/functions/serverFunctions";
 import { store } from "@/store";
 import { formatNumber, openLoginModal } from "@/functions/helpers";
-import MakeCommentModal from "./modals/MakeCommentModal";
 import React from "react";
-import DeletePostModal from "./modals/DeletePostModal";
-import RestorePostModal from "./modals/RestorePostModal";
-import KillPostModal from "./modals/KillPostModal";
-import EditPostModal from "./modals/EditPostModal";
-import RestoreCommentModal from "./modals/RestoreCommentModal";
-import DeleteCommentModal from "./modals/DeleteCommentModal";
-import KillCommentModal from "./modals/KillCommentModal";
-import EditCommentModal from "./modals/EditCommentModal";
 import { useSelector } from "react-redux";
 import { RootState } from "@/store";
 
@@ -245,16 +236,6 @@ export default function BlogPostDisplayControls({
           {" Edit"}
         </button>
       </div>
-
-      <MakeCommentModal blogId={blogId} />
-      <DeletePostModal blogId={blogId} />
-      <RestorePostModal blogId={blogId} />
-      <KillPostModal blogId={blogId} />
-      <EditPostModal blogId={blogId} />
-      <RestoreCommentModal />
-      <DeleteCommentModal />
-      <KillCommentModal />
-      <EditCommentModal />
     </div>
   );
 }

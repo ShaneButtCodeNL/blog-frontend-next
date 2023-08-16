@@ -79,7 +79,7 @@ export function openLoginModal() {
   "use client";
   const modal = document.getElementById("login-modal") as HTMLDialogElement;
   if (!modal) return;
-  modal.show();
+  modal.showModal();
 }
 
 export function openMakeCommentReplyModal(blogId: string) {

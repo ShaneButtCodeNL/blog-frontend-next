@@ -9,6 +9,15 @@ import MakeCommentReplyModal from "@/components/modals/MakeCommentReplyModal";
 import Footer from "@/components/Footer";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
+import MakeCommentModal from "@/components/modals/MakeCommentModal";
+import DeletePostModal from "@/components/modals/DeletePostModal";
+import RestorePostModal from "@/components/modals/RestorePostModal";
+import KillPostModal from "@/components/modals/KillPostModal";
+import EditPostModal from "@/components/modals/EditPostModal";
+import DeleteCommentModal from "@/components/modals/DeleteCommentModal";
+import RestoreCommentModal from "@/components/modals/RestoreCommentModal";
+import EditCommentModal from "@/components/modals/EditCommentModal";
+import KillCommentModal from "@/components/modals/KillCommentModal";
 config.autoAddCss = false; /* eslint-disable import/first */
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +36,22 @@ export default async function RootLayout({
         <PreloadLogin>
           <LoginModal />
           <Providers>
+            {
+              //Post Modals
+            }
+            <DeletePostModal />
+            <RestorePostModal />
+            <KillPostModal />
+            <MakeCommentModal />
+            <EditPostModal />
+            {
+              //Comment Modals
+            }
             <MakeCommentReplyModal />
+            <RestoreCommentModal />
+            <DeleteCommentModal />
+            <KillCommentModal />
+            <EditCommentModal />
           </Providers>
           <div id="page">
             <header style={{ paddingTop: "1em", paddingBottom: "1em" }}>

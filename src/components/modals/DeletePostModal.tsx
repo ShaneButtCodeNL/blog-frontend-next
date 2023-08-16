@@ -1,10 +1,10 @@
 "use client";
 import { deleteBlogPostFunction } from "@/functions/serverFunctions";
-import { revalidateTag } from "next/cache";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
-export default function DeletePostModal({ blogId }: { blogId: string }) {
+export default function DeletePostModal() {
+  const params = useParams();
   const [showError, setShowError] = useState(false);
   const router = useRouter();
   function closeModal() {
@@ -18,19 +18,18 @@ export default function DeletePostModal({ blogId }: { blogId: string }) {
 
   function submitFormFunction(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!window) {
+    if (!window || !params.blogId) {
       closeModal();
       return;
     }
     const token = localStorage.getItem("token") as string;
-    deleteBlogPostFunction(blogId, token).then((res) => {
+    deleteBlogPostFunction(params.blogId, token).then((res) => {
       if (!res) {
         setShowError(true);
         return;
       }
       closeModal();
       router.refresh();
-      //router.push(`/blog/${blogId}/deleted`);
     });
   }
 
