@@ -23,7 +23,7 @@ export default function LoginForm(params: any) {
     }
 
     setLoginDetails(res.token as string, res.details);
-    router.push("/login/success");
+    router.push("/");
   }
 
   return (

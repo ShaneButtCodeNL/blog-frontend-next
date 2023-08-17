@@ -3,7 +3,7 @@ import Nav from "../components/Nav";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Providers from "@/components/Provider";
-import PreloadLogin from "@/components/PreloadLogin";
+import PreloadLogin from "@/components/preloaders/PreloadLogin";
 import LoginModal from "@/components/modals/LoginModal";
 import MakeCommentReplyModal from "@/components/modals/MakeCommentReplyModal";
 import Footer from "@/components/Footer";
@@ -33,42 +33,42 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <PreloadLogin>
-          <LoginModal />
-          <Providers>
-            {
-              //Post Modals
-            }
-            <DeletePostModal />
-            <RestorePostModal />
-            <KillPostModal />
-            <MakeCommentModal />
-            <EditPostModal />
-            {
-              //Comment Modals
-            }
-            <MakeCommentReplyModal />
-            <RestoreCommentModal />
-            <DeleteCommentModal />
-            <KillCommentModal />
-            <EditCommentModal />
-          </Providers>
-          <div id="page">
-            <header style={{ paddingTop: "1em", paddingBottom: "1em" }}>
-              <div id="header-content">
-                <div className="title">Shane's Blog</div>
-                <Providers>
+        <LoginModal />
+        <Providers>
+          {
+            //Post Modals
+          }
+          <DeletePostModal />
+          <RestorePostModal />
+          <KillPostModal />
+          <MakeCommentModal />
+          <EditPostModal />
+          {
+            //Comment Modals
+          }
+          <MakeCommentReplyModal />
+          <RestoreCommentModal />
+          <DeleteCommentModal />
+          <KillCommentModal />
+          <EditCommentModal />
+        </Providers>
+        <div id="page">
+          <header style={{ paddingTop: "1em", paddingBottom: "1em" }}>
+            <div id="header-content">
+              <div className="title">Shane's Blog</div>
+              <Providers>
+                <PreloadLogin>
                   <Search title="Hello" />
                   <Nav />
-                </Providers>
-              </div>
-            </header>
-            <main>
-              <div id="main-body-content">{children}</div>
-            </main>
-            <Footer />
-          </div>
-        </PreloadLogin>
+                </PreloadLogin>
+              </Providers>
+            </div>
+          </header>
+          <main>
+            <div id="main-body-content">{children}</div>
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

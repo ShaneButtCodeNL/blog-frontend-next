@@ -6,6 +6,7 @@
   --foreground-2: #717288;
   --foreground-1: #bac6ce;
   --foreground-1-fade: #bac6ce60;
+  --foreground-2-fade: #71728860;
   --background-1: #ffffff;
   --background-2: #c4c4c4;
   --backgroung-2-fade: #c4c4c460;
@@ -32,12 +33,22 @@
     left: 99%;
   }
 }
+@keyframes pulse {
+  0% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 0.9;
+  }
+}
 
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-1: #5c469c;
     --foreground-2: #d4adfc;
     --foreground-1-fade: #5c469c60;
+    --foreground-2-fade: #d4adfc60;
+
     --background-1: #0c134f;
     --background-2: #1d267d;
     --background-2-fade: #1d267d60;
@@ -55,6 +66,7 @@
 html body {
   height: 100%;
   margin: 0;
+  background-color: black;
 }
 select {
   cursor: pointer;
@@ -132,6 +144,34 @@ header {
   justify-self: left;
   align-self: center;
 }
+.loading-search {
+  width: 19em;
+  background-color: var(--input-bg);
+  border-radius: 1em;
+  animation: pulse;
+  animation-duration: 300ms;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+.loading-nav {
+  display: flex;
+  gap: 1em;
+  align-items: center;
+  justify-self: end;
+}
+.loading-circle {
+  width: 2em;
+  height: 2em;
+  background-color: var(--foreground-2-fade);
+  border-radius: 50%;
+  animation: pulse;
+  animation-duration: 300ms;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
 #main-nav {
   display: flex;
   gap: 1em;
