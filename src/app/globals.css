@@ -334,10 +334,29 @@ main {
 }
 
 .blog-post-comment-container {
-  margin-left: 0.5em;
+  margin-left: 0.75em;
   margin-top: 0.5em;
+  position: relative;
+  overflow-y: clip;
+  height: fit-content;
+}
+.comment-show-hide-button-wrapper {
+  position: relative;
+  top: 0;
+  left: -0.3em;
+  height: 1.4em;
+  width: 1em;
+  margin-bottom: 0.2em;
+}
+.blog-post-comment-inner {
   border-left: var(--foreground-1) solid 3px;
   padding-left: 0.5em;
+}
+.comment-show-hide-button {
+  position: absolute;
+}
+.hide-comment {
+  max-height: 1.4em;
 }
 
 .comment-actions {

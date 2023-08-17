@@ -1,5 +1,3 @@
-"use client";
-
 import { getDateString } from "@/functions/helpers";
 
 import { BlogPostCommentReturn } from "@/models/blogPostReturn";
@@ -7,41 +5,23 @@ import { BlogPostCommentReturn } from "@/models/blogPostReturn";
 import { useEffect, useState } from "react";
 import BlogPostCommentDisplayControls from "./BlogPostCommentDisplayControls";
 import Providers from "./Provider";
-import { getUserDetailsFromUsername } from "@/functions/apiController";
 import { getUserDetailsFromUsernameFunction } from "@/functions/serverFunctions";
+import BlogPostCommentDisplayWrapper from "./BlogPostCommentDisplayWrapper";
 
-export default function BlogPostCommentDisplay({
+export default async function BlogPostCommentDisplay({
   mainComment,
-  order,
 }: {
   mainComment: BlogPostCommentReturn;
-  order: number;
 }) {
-  const [hide, setHide] = useState(false);
-  const [author, setAuthor] = useState("");
-  const [disabled, setDisabled] = useState(false);
-  const [banned, setBanned] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-  useEffect(() => {
-    getUserDetailsFromUsernameFunction(mainComment.author).then((res) => {
-      if (res) {
-        if (!res.disabled) {
-          setAuthor(res.username as string);
-          setDisabled(false);
-        } else {
-          setAuthor("(DELETED)");
-          setDisabled(true);
-        }
-        setBanned(res.banned);
-        setLoaded(true);
-      }
-    });
-  }, []);
+  const user = await getUserDetailsFromUsernameFunction(mainComment.author);
+  if (!user) return null;
+  const disabled = user.disabled;
+  const banned = user.banned;
+  const author = disabled ? "(DELETED)" : user.username;
   return (
     <div
-      className="blog-post-comment-container"
+      className="blog-post-comment-inner"
       key={`key-${mainComment.commentId}`}
-      style={{ order }}
     >
       {mainComment.deleted ? (
         <div id={`${mainComment.commentId}-title`}>Comment Deleted</div>
@@ -52,19 +32,13 @@ export default function BlogPostCommentDisplay({
             id={`${mainComment.commentId}-details`}
             className="blog-post-comment-display-details"
           >
-            {loaded ? (
-              <div
-                className={`comment-author ${banned ? "text-reject" : ""} ${
-                  disabled ? "fade-text" : ""
-                }`}
-              >
-                {author}
-              </div>
-            ) : (
-              <div className="comment-author text-hidden">
-                {mainComment.author}
-              </div>
-            )}
+            <div
+              className={`comment-author ${banned ? "text-reject" : ""} ${
+                disabled ? "fade-text" : ""
+              }`}
+            >
+              {author}
+            </div>
             <div className="comment-created-on">
               {getDateString(mainComment.createdOn)}
             </div>
@@ -88,8 +62,6 @@ export default function BlogPostCommentDisplay({
       <Providers>
         <BlogPostCommentDisplayControls
           mainComment={mainComment}
-          hide={hide}
-          setHide={setHide}
           key={`${mainComment.commentId}-controls`}
         />
       </Providers>
@@ -97,20 +69,16 @@ export default function BlogPostCommentDisplay({
       {mainComment.deleted ? (
         <></>
       ) : (
-        <div
-          id={`${mainComment.commentId}-body`}
-          style={hide ? { display: "none" } : {}}
-        >
-          {mainComment.body}
-        </div>
+        <div id={`${mainComment.commentId}-body`}>{mainComment.body}</div>
       )}
-      <div className="comment-replies" style={hide ? { display: "none" } : {}}>
+      <div className="comment-replies">
         {mainComment.replies.map((reply, i) => (
-          <BlogPostCommentDisplay
-            mainComment={reply}
-            order={mainComment.replies.length - i + 1}
+          <BlogPostCommentDisplayWrapper
+            order={mainComment.replies.length - 1 - i}
             key={reply.commentId}
-          />
+          >
+            <BlogPostCommentDisplay mainComment={reply} key={reply.commentId} />
+          </BlogPostCommentDisplayWrapper>
         ))}
       </div>
     </div>

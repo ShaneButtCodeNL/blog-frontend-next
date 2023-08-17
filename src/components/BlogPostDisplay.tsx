@@ -6,6 +6,7 @@ import Providers from "./Provider";
 import markdownParserToHTMLString from "@/functions/markdownParser";
 import BlogPostDisplayBody from "./BlogPostDisplayBody";
 import { getUserDetailsFromUsername } from "@/functions/apiController";
+import BlogPostCommentDisplayWrapper from "./BlogPostCommentDisplayWrapper";
 
 export default async function BlogPostDisplay(params: any) {
   const blogPost: BlogPostReturn = params.blogPost;
@@ -58,11 +59,15 @@ export default async function BlogPostDisplay(params: any) {
       </Providers>
       <div id="blog-comments">
         {blogPost.comments.map((comment, i) => (
-          <BlogPostCommentDisplay
-            mainComment={comment}
-            key={`key-BCD-${comment.commentId}`}
+          <BlogPostCommentDisplayWrapper
+            key={`key-BCD-wrapper-${comment.commentId}`}
             order={blogPost.comments.length - i + 1}
-          />
+          >
+            <BlogPostCommentDisplay
+              mainComment={comment}
+              key={`key-BCD-${comment.commentId}`}
+            />
+          </BlogPostCommentDisplayWrapper>
         ))}
       </div>
     </div>

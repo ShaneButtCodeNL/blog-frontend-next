@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  formatNumber,
-  openLoginModal,
-  openMakeCommentReplyModal,
-} from "@/functions/helpers";
+import { formatNumber, openLoginModal } from "@/functions/helpers";
 import {
   getUserDetailsFromUsernameFunction,
   likeCommentFunction,
@@ -31,12 +27,8 @@ import { RootState } from "@/store";
 
 export default function BlogPostCommentDisplayControls({
   mainComment,
-  setHide,
-  hide,
 }: {
   mainComment: BlogPostCommentReturn;
-  setHide: Dispatch<SetStateAction<boolean>>;
-  hide: boolean;
 }) {
   const userDetails = useSelector(
     (state: RootState) => state.login.userDetails
@@ -190,25 +182,6 @@ export default function BlogPostCommentDisplayControls({
 
   return (
     <div className="comment-actions">
-      <div
-        className="blog-post-controls-item make-comment-button like-controls"
-        style={mainComment.deleted ? { display: "none" } : {}}
-      >
-        <button
-          type="button"
-          onClick={() => setHide(true)}
-          style={hide ? { display: "none" } : {}}
-        >
-          Hide
-        </button>
-        <button
-          type="button"
-          onClick={() => setHide(false)}
-          style={hide ? {} : { display: "none" }}
-        >
-          Show
-        </button>
-      </div>
       <div className="blog-post-controls-item make-comment-button like-controls">
         <button
           type="button"
@@ -226,13 +199,9 @@ export default function BlogPostCommentDisplayControls({
       </div>
       <div
         className="blog-post-controls-item make-comment-button like-controls"
-        style={mainComment.deleted || hide ? { display: "none" } : {}}
+        style={mainComment.deleted ? { display: "none" } : {}}
       >
-        <button
-          type="button"
-          style={hide ? { display: "none" } : {}}
-          onClick={replyButtonClick}
-        >
+        <button type="button" onClick={replyButtonClick}>
           Reply
         </button>
       </div>
