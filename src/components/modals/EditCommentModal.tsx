@@ -26,7 +26,7 @@ export default function EditCommentModal() {
       closeModal();
       return;
     }
-    const token = localStorage.getItem("token") as string;
+    const token = store.getState().login.accessToken;
     editCommentFunction(
       store.getState().commentReply.blogId,
       store.getState().commentReply.commentId,

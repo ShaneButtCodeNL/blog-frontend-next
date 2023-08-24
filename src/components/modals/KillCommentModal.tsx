@@ -23,7 +23,7 @@ export default function KillCommentModal() {
       closeModal();
       return;
     }
-    const token = localStorage.getItem("token") as string;
+    const token = store.getState().login.accessToken;
     killCommentFunction(
       store.getState().commentReply.blogId,
       store.getState().commentReply.commentId,

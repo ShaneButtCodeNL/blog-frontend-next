@@ -23,7 +23,7 @@ export default function RestoreCommentModal() {
       closeModal();
       return;
     }
-    const token = localStorage.getItem("token") as string;
+    const token = store.getState().login.accessToken;
     restoreCommentFunction(
       store.getState().commentReply.blogId,
       store.getState().commentReply.commentId,

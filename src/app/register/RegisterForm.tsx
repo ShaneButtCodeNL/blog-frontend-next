@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import type { RootState, AppDispatch } from "@/store";
+import { type RootState, type AppDispatch, store } from "@/store";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEye,
@@ -9,7 +9,7 @@ import {
   faXmark,
   faCheck,
 } from "@fortawesome/free-solid-svg-icons";
-import { setLoggedIn, setUserDetails } from "@/store/login";
+import { setLoggedIn, setLogin, setUserDetails } from "@/store/login";
 import React, { FormEvent, useRef, useState } from "react";
 import {
   checkUsernameIsAvailableFunction,
@@ -137,12 +137,11 @@ export default function RegisterForm(props: any) {
       router.push("/register/fail");
       return;
     }
-
-    localStorage.setItem("token", res.token as string);
-    localStorage.setItem("userDetails", JSON.stringify(res.details));
-    await setTokenInCookie(res.token as string);
-    dispatch(setLoggedIn(true));
-    dispatch(setUserDetails(res.details));
+    //TODO update
+    sessionStorage.setItem("userDetails", JSON.stringify(res.details));
+    store.dispatch(
+      setLogin({ accessToken: res.token.token, userDetails: res.details })
+    );
 
     router.push("/register/success");
   };

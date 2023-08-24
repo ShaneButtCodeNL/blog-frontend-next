@@ -1,7 +1,7 @@
 "use client";
 import { closeMakeCommentReplyModal } from "@/functions/helpers";
 import { createCommentFunction } from "@/functions/serverFunctions";
-import type { RootState, AppDispatch } from "@/store";
+import { type RootState, type AppDispatch, store } from "@/store";
 import { setBody, setParentCommentId, setTitle } from "@/store/commentReply";
 import { FormEvent } from "react";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
@@ -29,7 +29,7 @@ export default function MakeCommentReplyModal() {
   const submitFunction = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!window) return;
-    const token = localStorage.getItem("token") as string;
+    const token = store.getState().login.accessToken;
     createCommentFunction(blogId, token, { body, title, parentCommentId }).then(
       (res) => {
         dispatch(setBody(""));

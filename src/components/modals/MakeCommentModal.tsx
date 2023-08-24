@@ -3,6 +3,7 @@
 import { createCommentFunction } from "@/functions/serverFunctions";
 import { FormEvent, useState } from "react";
 import { useParams } from "next/navigation";
+import { store } from "@/store";
 
 export default function MakeCommentModal() {
   const params = useParams();
@@ -24,7 +25,7 @@ export default function MakeCommentModal() {
       closeModal();
       return;
     }
-    const token = localStorage.getItem("token") as string;
+    const token = store.getState().login.accessToken;
     createCommentFunction(params.blogId, token, { body, title }).then((_) => {
       closeModal();
     });

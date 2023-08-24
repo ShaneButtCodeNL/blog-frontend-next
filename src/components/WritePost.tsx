@@ -2,6 +2,7 @@
 
 import markdownParserToHTMLString from "@/functions/markdownParser";
 import { makeNewPostFunction } from "@/functions/serverFunctions";
+import { store } from "@/store";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
@@ -14,17 +15,15 @@ export default function WritePost(params: any) {
   function onSubmit(e: FormEvent<HTMLFormElement>) {
     "use client";
     e.preventDefault();
-    makeNewPostFunction(
-      title,
-      body,
-      localStorage.getItem("token") as string
-    ).then((res) => {
-      if (res === null) {
-        router.push("/write-post/error");
-        return;
+    makeNewPostFunction(title, body, store.getState().login.accessToken).then(
+      (res) => {
+        if (res === null) {
+          router.push("/write-post/error");
+          return;
+        }
+        router.push(`/blog/${res?.blogId}`);
       }
-      router.push(`/blog/${res?.blogId}`);
-    });
+    );
   }
 
   return (

@@ -1,5 +1,6 @@
 "use client";
 import { restoreBlogPostFunction } from "@/functions/serverFunctions";
+import { store } from "@/store";
 import { useParams, useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
@@ -22,7 +23,7 @@ export default function RestorePostModal() {
       closeModal();
       return;
     }
-    const token = localStorage.getItem("token") as string;
+    const token = store.getState().login.accessToken;
     restoreBlogPostFunction(params.blogId, token).then((res) => {
       if (!res) {
         setShowError(true);

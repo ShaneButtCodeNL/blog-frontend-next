@@ -150,7 +150,7 @@ export default function BlogPostDisplayControls({
       openLoginModal();
       return;
     }
-    const token = localStorage.getItem("token") as string;
+    const token = store.getState().login.accessToken;
     likePost(blogId, token).then((_) => {
       setLikeCount((v) => v + (liked ? -1 : 1));
       setLiked((v) => !v);

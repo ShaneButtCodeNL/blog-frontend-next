@@ -1,6 +1,7 @@
 "use client";
 import { editBlogPostFunction } from "@/functions/serverFunctions";
 import { BlogPostEditDetails } from "@/models/blogPostReturn";
+import { store } from "@/store";
 import { useParams, useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
@@ -25,7 +26,7 @@ export default function EditPostModal() {
       closeModal();
       return;
     }
-    const token = localStorage.getItem("token") as string;
+    const token = store.getState().login.accessToken;
     // Will be either {} , {body} , {title}, {body,title}
     const editDetails: BlogPostEditDetails = Object.assign(
       {},

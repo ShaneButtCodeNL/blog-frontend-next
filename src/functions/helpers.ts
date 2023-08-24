@@ -2,7 +2,13 @@ import { BlogPostReturn, SortTypes } from "@/models/blogPostReturn";
 import { UserDetails } from "@/models/userReturn";
 import { store } from "@/store";
 import { setBlogId, setBody, setParentCommentId } from "@/store/commentReply";
-import login, { setLoggedIn, setUserDetails } from "@/store/login";
+import {
+  setAccessToken,
+  setLoggedIn,
+  setUserDetails,
+  setLogin,
+  setLogout,
+} from "@/store/login";
 import { logoutServerFunction } from "./serverFunctions";
 
 const TOKEN = "token";
@@ -38,20 +44,15 @@ export const getDateInXHours = (hours: number) => {
 
 export const setLoginDetails = (token: string, userDetails: UserDetails) => {
   "use client";
-  localStorage.setItem(TOKEN, token);
-  localStorage.setItem(USER_DETAILS, JSON.stringify(userDetails));
-  store.dispatch(setLoggedIn(true));
-  store.dispatch(setUserDetails(userDetails));
+  sessionStorage.setItem(USER_DETAILS, JSON.stringify(userDetails));
+  store.dispatch(setLogin({ accessToken: token, userDetails }));
 };
 
 export const setLogoutDetails = () => {
   if (typeof window !== "undefined") {
-    localStorage.removeItem(TOKEN);
-    localStorage.removeItem(USER_DETAILS);
+    sessionStorage.removeItem(USER_DETAILS);
   }
-  store.dispatch(setLoggedIn(false));
-  //@ts-ignore
-  store.dispatch(setUserDetails(null));
+  store.dispatch(setLogout());
 };
 
 export const getHighestRole = (userDetails: UserDetails) => {

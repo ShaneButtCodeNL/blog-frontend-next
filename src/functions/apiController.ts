@@ -50,18 +50,39 @@ const getBearerTokenHeader = (token: string) => ({
   "Content-Type": "application/json",
 });
 
+export async function refresh() {}
+
 export async function login(
   username: String,
   password: String
 ): Promise<LoginReturnDetails | null> {
-  const res = await fetch(loginPath, {
+  // const res = await fetch(loginPath, {
+  //   method: POST,
+  //   body: JSON.stringify({ username, password }),
+  //   headers: getJSONHeader(),
+  //   cache: "no-store",
+  // });
+  // if (res.status >= 400) return null;
+  // if (!res) return null;
+  const res = await fetch("http://localhost:3000/api/login", {
     method: POST,
     body: JSON.stringify({ username, password }),
     headers: getJSONHeader(),
     cache: "no-store",
   });
-  if (res.status >= 400) return null;
-  if (!res) return null;
+  const refreshToken = res.headers
+    .get("set-cookie")
+    ?.split("; ")[0]
+    .substring(4);
+  const dateString = res.headers.get("set-cookie")?.split("; ")[2].substring(8);
+  const expires = Date.parse(dateString!);
+  cookies().set("jwt", refreshToken!, {
+    httpOnly: true,
+    secure: true,
+    expires,
+    sameSite: true,
+    path: "/",
+  });
   const data = await res.json();
   if (!data) throw new Error("User not found");
 

@@ -107,12 +107,11 @@ export async function likeCommentFunction(
   return;
 }
 
-export async function loginFunction(username: string, password: string) {
+export async function loginFunctionServer(username: string, password: string) {
   const res = await login(username, password);
   if (!res) {
     return;
   }
-  await setTokenInCookie(res.token as string);
   return res;
 }
 

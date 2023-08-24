@@ -1,5 +1,6 @@
 "use client";
 import { killBlogPostFunction } from "@/functions/serverFunctions";
+import { store } from "@/store";
 import { useParams, useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
@@ -22,7 +23,7 @@ export default function KillPostModal() {
       closeModal();
       return;
     }
-    const token = localStorage.getItem("token") as string;
+    const token = store.getState().login.accessToken;
     killBlogPostFunction(params.blogId, token).then((res) => {
       if (!res) {
         setShowError(true);

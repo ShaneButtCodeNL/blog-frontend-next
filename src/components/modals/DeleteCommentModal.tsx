@@ -23,7 +23,7 @@ export default function DeleteCommentModal() {
       closeModal();
       return;
     }
-    const token = localStorage.getItem("token") as string;
+    const token = store.getState().login.accessToken;
     deleteCommentFunction(
       store.getState().commentReply.blogId,
       store.getState().commentReply.commentId,

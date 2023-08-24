@@ -1,6 +1,6 @@
 "use client";
 
-import { loginFunction } from "../../functions/serverFunctions";
+import { loginFunctionServer } from "../../functions/serverFunctions";
 import { useRouter } from "next/navigation";
 import React, { FormEvent, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -16,13 +16,13 @@ export default function LoginForm(params: any) {
   async function loginSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const res = await loginFunction(username, password);
+    const res = await loginFunctionServer(username, password);
     if (!res) {
       router.push("/login/failure");
       return;
     }
 
-    setLoginDetails(res.token as string, res.details);
+    setLoginDetails(res.token.token, res.details);
     router.push("/");
   }
 

@@ -12,6 +12,7 @@ import {
   unbanUserFunction,
 } from "@/functions/serverFunctions";
 import { UserDetails } from "@/models/userReturn";
+import { store } from "@/store";
 import { ChangeEvent, useEffect, useState } from "react";
 
 const addRoleAction = 0;
@@ -48,7 +49,7 @@ export default function UserRoleEditor() {
   }
   useEffect(() => {
     if (!window) return;
-    const token = localStorage.getItem("token");
+    const token = store.getState().login.accessToken;
     if (!token) return;
     getAllUsernamesFunction(token).then((res) => {
       setUserList(["", ...res]);
@@ -58,7 +59,7 @@ export default function UserRoleEditor() {
   function submitFunction(e: ChangeEvent<HTMLFormElement>) {
     e.preventDefault();
     if (!window) return;
-    const token = localStorage.getItem("token");
+    const token = store.getState().login.accessToken;
     if (!token) return;
     if (!user) return;
     console.log("action:", action, "\nrole:", role, "\nuser:", user);

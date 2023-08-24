@@ -6,8 +6,12 @@ export interface UserDetails {
   banned: boolean;
   disabled: boolean;
 }
+export interface TokenReturn {
+  token: string;
+  expires: string;
+}
 
 export interface LoginReturnDetails {
-  token: String;
+  token: TokenReturn;
   details: UserDetails;
 }

@@ -34,6 +34,7 @@ export default function BlogPostCommentDisplayControls({
     (state: RootState) => state.login.userDetails
   );
   const loggedIn = useSelector((state: RootState) => state.login.loggedIn);
+  const token = useSelector((state: RootState) => state.login.accessToken);
   const [likeCount, setLikeCount] = useState(mainComment.likes.length);
   const [liked, setLiked] = useState(
     loggedIn ? mainComment.likes.includes(userDetails?.userId as string) : false
@@ -94,7 +95,6 @@ export default function BlogPostCommentDisplayControls({
       openLoginModal();
       return;
     }
-    const token = localStorage.getItem("token") as string;
 
     likeCommentFunction(mainComment.blogId, mainComment.commentId, token).then(
       (_) => {

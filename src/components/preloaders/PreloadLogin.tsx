@@ -9,7 +9,7 @@ import {
 } from "@/functions/serverFunctions";
 import { store } from "@/store";
 import SplashPage from "../SplashPage";
-
+// TODO FIX
 export default function PreloadLogin({ children }: { children: ReactNode }) {
   const loggedIn = useRef(false);
   const [loaded, setLoaded] = useState(false);

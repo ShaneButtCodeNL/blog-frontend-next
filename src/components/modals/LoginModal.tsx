@@ -1,7 +1,7 @@
 "use client";
 
 import { closeLoginModal } from "@/functions/helpers";
-import { loginFunction } from "@/functions/serverFunctions";
+import { loginFunctionServer } from "@/functions/serverFunctions";
 import { store } from "@/store";
 import { setLoggedIn, setUserDetails } from "@/store/login";
 import Link from "next/link";
@@ -15,15 +15,16 @@ export default function LoginModal() {
 
   function submitFormFunction(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    loginFunction(username, password).then((res) => {
+    loginFunctionServer(username, password).then((res) => {
       if (!res) {
         setLoginError(true);
         return;
       }
+      //TODO FIX
       store.dispatch(setUserDetails(res.details));
       store.dispatch(setLoggedIn(true));
-      localStorage.setItem("token", res.token as string);
-      localStorage.setItem("userDetails", JSON.stringify(res.details));
+      //localStorage.setItem("token", res.token as string);
+      //localStorage.setItem("userDetails", JSON.stringify(res.details));
       closeModalFunction();
     });
   }
