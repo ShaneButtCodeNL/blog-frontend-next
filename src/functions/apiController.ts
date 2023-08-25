@@ -77,11 +77,8 @@ export async function refresh() {
   });
   const data = await res.json();
   if (!data) throw new Error("User not found");
-  //console.log(data);
   const dateStringAccess = parseInt(data.token.expires);
-  //console.log("dateSTR", dateStringAccess);
   const expiresAccess = new Date(dateStringAccess!);
-  //console.log(expiresAccess);
   cookies().set("accessToken", data.token.token, {
     httpOnly: true,
     secure: true,
@@ -91,7 +88,32 @@ export async function refresh() {
   });
   return data;
 }
+export async function refreshMiddleware(refreshToken: string) {
+  "use server";
+  console.log("HERE", typeof window);
 
+  const res = await fetch("http://localhost:3000/api/refresh", {
+    method: POST,
+    headers: getJSONHeader(),
+    cache: "no-store",
+    body: JSON.stringify({ refreshToken: refreshToken }),
+  });
+  const refreshTokenFromRes = res.headers
+    .get("set-cookie")
+    ?.split("; ")[0]
+    .substring(4);
+  const dateString = res.headers.get("set-cookie")?.split("; ")[2].substring(8);
+  const expires = Date.parse(dateString!);
+
+  const data = await res.json();
+  if (!data) throw new Error("User not found");
+  const dateStringAccess = parseInt(data.token.expires);
+  const expiresAccess = new Date(dateStringAccess!);
+  return {
+    access: { token: data.token.token, expires: expiresAccess.getTime() },
+    refresh: { token: refreshTokenFromRes, expires },
+  };
+}
 export async function login(
   username: String,
   password: String

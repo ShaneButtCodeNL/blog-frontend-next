@@ -33,6 +33,7 @@ import {
   logoffServer,
   getAllBlogPosts,
   refresh,
+  refreshMiddleware,
 } from "./apiController";
 import {
   BlogPostEditDetails,
@@ -122,6 +123,13 @@ export async function loginFunctionServer(username: string, password: string) {
 export async function refreshFunctionServer() {
   "use server";
   const res = await refresh();
+
+  return res;
+}
+
+export async function refreshFunctionMiddleware(refreshToken: string) {
+  "use server";
+  const res = await refreshMiddleware(refreshToken);
 
   return res;
 }
