@@ -1,3 +1,4 @@
+"use server";
 import {
   BlogPostEditDetails,
   BlogPostReturn,
@@ -50,25 +51,16 @@ const getBearerTokenHeader = (token: string) => ({
   "Content-Type": "application/json",
 });
 
-export async function refresh() {}
+export async function refresh() {
+  "use server";
+  console.log("HERE", typeof window);
+  const cookieStore = cookies();
 
-export async function login(
-  username: String,
-  password: String
-): Promise<LoginReturnDetails | null> {
-  // const res = await fetch(loginPath, {
-  //   method: POST,
-  //   body: JSON.stringify({ username, password }),
-  //   headers: getJSONHeader(),
-  //   cache: "no-store",
-  // });
-  // if (res.status >= 400) return null;
-  // if (!res) return null;
-  const res = await fetch("http://localhost:3000/api/login", {
+  const res = await fetch("http://localhost:3000/api/refresh", {
     method: POST,
-    body: JSON.stringify({ username, password }),
     headers: getJSONHeader(),
     cache: "no-store",
+    body: JSON.stringify({ refreshToken: cookieStore.get("jwt")?.value }),
   });
   const refreshToken = res.headers
     .get("set-cookie")
@@ -80,12 +72,65 @@ export async function login(
     httpOnly: true,
     secure: true,
     expires,
-    sameSite: true,
+    sameSite: "strict",
     path: "/",
   });
   const data = await res.json();
   if (!data) throw new Error("User not found");
+  //console.log(data);
+  const dateStringAccess = parseInt(data.token.expires);
+  //console.log("dateSTR", dateStringAccess);
+  const expiresAccess = new Date(dateStringAccess!);
+  //console.log(expiresAccess);
+  cookies().set("accessToken", data.token.token, {
+    httpOnly: true,
+    secure: true,
+    expires: expiresAccess,
+    sameSite: "strict",
+    path: "/",
+  });
+  return data;
+}
 
+export async function login(
+  username: String,
+  password: String
+): Promise<LoginReturnDetails | null> {
+  const res = await fetch("http://localhost:3000/api/login", {
+    method: POST,
+    body: JSON.stringify({ username, password }),
+    headers: getJSONHeader(),
+    cache: "no-store",
+  });
+  const refreshToken = res.headers
+    .get("set-cookie")
+    ?.split("; ")[0]
+    .substring(4);
+  const dateStringRefresh = res.headers
+    .get("set-cookie")
+    ?.split("; ")[2]
+    .substring(8);
+  const expiresRefresh = Date.parse(dateStringRefresh!);
+  cookies().set("jwt", refreshToken!, {
+    httpOnly: true,
+    secure: true,
+    expires: expiresRefresh,
+    sameSite: "strict",
+    path: "/",
+  });
+  const data = await res.json();
+  if (!data) throw new Error("User not found");
+  const dateStringAccess = parseInt(data.token.expires);
+  console.log("dateSTR", dateStringAccess);
+  const expiresAccess = new Date(dateStringAccess!);
+  console.log(expiresAccess);
+  cookies().set("accessToken", data.token.token, {
+    httpOnly: true,
+    secure: true,
+    expires: expiresAccess,
+    sameSite: "strict",
+    path: "/",
+  });
   return data;
 }
 

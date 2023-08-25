@@ -19,21 +19,18 @@ export async function POST(request: Request) {
   const data = await res.json();
   if (!data) throw new Error("User not found");
   const header = res.headers.get("token");
-  const expireDateString = res.headers
+  const expireDateStringRefresh = res.headers
     .get("tokenExpires")
     ?.replace("NDT", "GMT");
-  if (!expireDateString) return null;
-  const expireDate = Date.parse(expireDateString);
+  if (!expireDateStringRefresh) return null;
+  const expireDate = Date.parse(expireDateStringRefresh);
   if (!header) return null;
-  // const cookieStore = cookies();
-
-  // cookieStore.set("jwt", header, {
-  //   httpOnly: true,
-  //   path: "/",
-  //   secure: true,
-  //   sameSite: "strict",
-  //   expires: expireDate,
-  // });
+  const expireDateStringAccess = data.token.expires;
+  const expireDateAccess = Date.parse(
+    expireDateStringAccess.replace("NDT", "GMT")
+  );
+  data.token.expires = expireDateAccess;
+  console.log("DATA", data);
   const response = NextResponse.json(data);
   response.cookies.set({
     name: "jwt",

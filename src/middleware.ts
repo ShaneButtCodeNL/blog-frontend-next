@@ -1,13 +1,29 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { hasAnyAuthFunction } from "./functions/serverFunctions";
+import {
+  hasAnyAuthFunction,
+  refreshFunctionServer,
+} from "./functions/serverFunctions";
+import { cookies } from "next/headers";
+import { store } from "./store";
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
   //return NextResponse.redirect(new URL("/home", request.url));
-  const cookies = request.cookies;
+
   if (request.nextUrl.pathname.startsWith("/write-post")) {
-    const hasAuth = await hasAnyAuthFunction(cookies.get("token")?.value, [
+    let accessTokenCookie = request.cookies.get("accessToken");
+    let accessToken;
+    if (!accessTokenCookie) {
+      console.log("HERE");
+      const refreshedToken = await refreshFunctionServer();
+      accessToken = refreshedToken.token.token;
+    } else {
+      accessToken = accessTokenCookie.value;
+    }
+    console.log("ACCESS:", accessToken);
+
+    const hasAuth = await hasAnyAuthFunction(accessToken, [
       "ROLE_ADMIN",
       "ROLE_WRITER",
     ]);
@@ -22,9 +38,12 @@ export async function middleware(request: NextRequest) {
     }
   }
   if (request.nextUrl.pathname.startsWith("/admin")) {
-    const hasAuth = await hasAnyAuthFunction(cookies.get("token")?.value, [
-      "ROLE_ADMIN",
-    ]);
+    let accessTokenCookie = request.cookies.get("accessToken");
+    if (!accessTokenCookie) {
+      return null;
+    }
+    let accessToken = accessTokenCookie.value;
+    const hasAuth = await hasAnyAuthFunction(accessToken, ["ROLE_ADMIN"]);
     if (!hasAuth) {
       return new NextResponse(
         JSON.stringify({

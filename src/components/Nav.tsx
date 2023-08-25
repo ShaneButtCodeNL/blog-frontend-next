@@ -13,6 +13,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserDetails } from "@/models/userReturn";
+import { refreshFunctionServer } from "@/functions/serverFunctions";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
@@ -33,6 +34,14 @@ export default function Nav(props: any) {
   const router = useRouter();
   return (
     <nav id="main-nav">
+      <button
+        type="button"
+        onClick={() => {
+          refreshFunctionServer();
+        }}
+      >
+        [TEST]
+      </button>
       <Link href={"/"}>
         <button type="button" title="Home">
           <FontAwesomeIcon icon={faHouse} />

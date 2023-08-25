@@ -7,8 +7,9 @@ export interface UserDetails {
   disabled: boolean;
 }
 export interface TokenReturn {
-  token: string;
-  expires: string;
+  token?: string;
+  expires?: string;
+  error?: string;
 }
 
 export interface LoginReturnDetails {

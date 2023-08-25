@@ -32,6 +32,7 @@ import {
   hasAllAuth,
   logoffServer,
   getAllBlogPosts,
+  refresh,
 } from "./apiController";
 import {
   BlogPostEditDetails,
@@ -44,6 +45,7 @@ import { store } from "@/store";
 import { setSortType } from "@/store/blogPosts";
 import { applySorting, applyTitleFilter } from "./helpers";
 import { setSearch } from "@/store/search";
+import { setAccessToken, setLogin } from "@/store/login";
 
 export async function validateTokenFunction(token: string) {
   "use server";
@@ -108,10 +110,19 @@ export async function likeCommentFunction(
 }
 
 export async function loginFunctionServer(username: string, password: string) {
+  "use server";
   const res = await login(username, password);
   if (!res) {
     return;
   }
+
+  return res;
+}
+
+export async function refreshFunctionServer() {
+  "use server";
+  const res = await refresh();
+
   return res;
 }
 

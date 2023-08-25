@@ -22,7 +22,7 @@ export default function LoginForm(params: any) {
       return;
     }
 
-    setLoginDetails(res.token.token, res.details);
+    setLoginDetails(res.token.token!, res.details);
     router.push("/");
   }
 
