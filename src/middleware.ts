@@ -5,46 +5,56 @@ import {
   refreshFunctionMiddleware,
 } from "./functions/serverFunctions";
 
+async function processRefresh(req: NextRequest, res: NextResponse) {
+  const accessTokenCookie = req.cookies.get("accessToken");
+  const refreshTokenCookie = req.cookies.get("jwt");
+  if (!refreshTokenCookie) {
+    return null;
+  }
+  if (accessTokenCookie) {
+    return {
+      accessToken: accessTokenCookie.value,
+      refreshToken: refreshTokenCookie?.value,
+    };
+  }
+  const refreshedToken = await refreshFunctionMiddleware(
+    refreshTokenCookie.value
+  );
+  const accessToken = refreshedToken.access.token;
+  const refreshToken = refreshedToken.refresh.token;
+  res.cookies.set("jwt", refreshToken!, {
+    httpOnly: true,
+    secure: true,
+    expires: new Date(refreshedToken.refresh.expires),
+    sameSite: "strict",
+    path: "/",
+  });
+  res.cookies.set("accessToken", accessToken, {
+    httpOnly: true,
+    secure: true,
+    expires: new Date(refreshedToken.access.expires),
+    sameSite: "strict",
+    path: "/",
+  });
+  return { accessToken, refreshToken };
+}
+
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
   //return NextResponse.redirect(new URL("/home", request.url));
-  // TODO add same functionality to admin ,extract refresh to function
+  // TODO add same functionality to admin
   if (request.nextUrl.pathname.startsWith("/write-post")) {
     const response = NextResponse.next();
-    let accessTokenCookie = request.cookies.get("accessToken");
-    let accessToken;
-    const refreshTokenCookie = request.cookies.get("jwt");
-    console.log(refreshTokenCookie);
-    if (!accessTokenCookie) {
-      if (!refreshTokenCookie || refreshTokenCookie.value === "")
-        return new NextResponse(
-          JSON.stringify({ success: false, message: "Login again" }),
-          { status: 401, headers: { "content-type": "application/json" } }
-        );
-      const refreshedToken = await refreshFunctionMiddleware(
-        refreshTokenCookie.value
+    const processRefreshedTokens = await processRefresh(request, response);
+    if (!processRefreshedTokens)
+      return new NextResponse(
+        JSON.stringify({
+          success: false,
+          message: "Not Authourized to view page.",
+        }),
+        { status: 401, headers: { "content-type": "application/json" } }
       );
-      accessToken = refreshedToken.access.token;
-      const refreshToken = refreshedToken.refresh.token;
-      response.cookies.set("jwt", refreshToken!, {
-        httpOnly: true,
-        secure: true,
-        expires: new Date(refreshedToken.refresh.expires),
-        sameSite: "strict",
-        path: "/",
-      });
-      response.cookies.set("accessToken", refreshedToken.access.token, {
-        httpOnly: true,
-        secure: true,
-        expires: new Date(refreshedToken.access.expires),
-        sameSite: "strict",
-        path: "/",
-      });
-    } else {
-      accessToken = accessTokenCookie.value;
-    }
-    console.log("ACCESS:", accessToken);
-
+    const { accessToken } = processRefreshedTokens;
     const hasAuth = await hasAnyAuthFunction(accessToken, [
       "ROLE_ADMIN",
       "ROLE_WRITER",
@@ -61,11 +71,17 @@ export async function middleware(request: NextRequest) {
     return response;
   }
   if (request.nextUrl.pathname.startsWith("/admin")) {
-    let accessTokenCookie = request.cookies.get("accessToken");
-    if (!accessTokenCookie) {
-      return null;
-    }
-    let accessToken = accessTokenCookie.value;
+    const response = NextResponse.next();
+    const processRefreshedTokens = await processRefresh(request, response);
+    if (!processRefreshedTokens)
+      return new NextResponse(
+        JSON.stringify({
+          success: false,
+          message: "Not Authourized to view page.",
+        }),
+        { status: 401, headers: { "content-type": "application/json" } }
+      );
+    const { accessToken } = processRefreshedTokens;
     const hasAuth = await hasAnyAuthFunction(accessToken, ["ROLE_ADMIN"]);
     if (!hasAuth) {
       return new NextResponse(
@@ -76,5 +92,6 @@ export async function middleware(request: NextRequest) {
         { status: 401, headers: { "content-type": "application/json" } }
       );
     }
+    return response;
   }
 }
