@@ -34,6 +34,7 @@ import {
   getAllBlogPosts,
   refresh,
   refreshMiddleware,
+  loginInit,
 } from "./apiController";
 import {
   BlogPostEditDetails,
@@ -113,6 +114,15 @@ export async function likeCommentFunction(
 export async function loginFunctionServer(username: string, password: string) {
   "use server";
   const res = await login(username, password);
+  if (!res) {
+    return;
+  }
+
+  return res;
+}
+export async function loginInitFunctionServer(jwt: string) {
+  "use server";
+  const res = await loginInit(jwt);
   if (!res) {
     return;
   }

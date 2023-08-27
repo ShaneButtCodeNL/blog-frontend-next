@@ -3,21 +3,51 @@ import Nav from "../components/Nav";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import Providers from "@/components/Provider";
-import PreloadLogin from "@/components/preloaders/PreloadLogin";
 import LoginModal from "@/components/modals/LoginModal";
-import MakeCommentReplyModal from "@/components/modals/MakeCommentReplyModal";
 import Footer from "@/components/Footer";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config } from "@fortawesome/fontawesome-svg-core";
-import MakeCommentModal from "@/components/modals/MakeCommentModal";
-import DeletePostModal from "@/components/modals/DeletePostModal";
-import RestorePostModal from "@/components/modals/RestorePostModal";
-import KillPostModal from "@/components/modals/KillPostModal";
-import EditPostModal from "@/components/modals/EditPostModal";
-import DeleteCommentModal from "@/components/modals/DeleteCommentModal";
-import RestoreCommentModal from "@/components/modals/RestoreCommentModal";
-import EditCommentModal from "@/components/modals/EditCommentModal";
-import KillCommentModal from "@/components/modals/KillCommentModal";
+
+import { cookies } from "next/headers";
+import { store } from "@/store";
+import { loginInit } from "@/functions/apiController";
+import { setLogin } from "@/store/login";
+import dynamic from "next/dynamic";
+const MakeCommentModal = dynamic(
+  () => import("@/components/modals/MakeCommentModal")
+);
+const MakeCommentReplyModal = dynamic(
+  () => import("@/components/modals/MakeCommentReplyModal")
+);
+const DeletePostModal = dynamic(
+  () => import("@/components/modals/DeletePostModal")
+);
+const RestorePostModal = dynamic(
+  () => import("@/components/modals/RestorePostModal")
+);
+const KillPostModal = dynamic(
+  () => import("@/components/modals/KillPostModal")
+);
+const EditPostModal = dynamic(
+  () => import("@/components/modals/EditPostModal")
+);
+const DeleteCommentModal = dynamic(
+  () => import("@/components/modals/DeleteCommentModal")
+);
+const RestoreCommentModal = dynamic(
+  () => import("@/components/modals/RestoreCommentModal")
+);
+const EditCommentModal = dynamic(
+  () => import("@/components/modals/EditCommentModal")
+);
+const KillCommentModal = dynamic(
+  () => import("@/components/modals/KillCommentModal")
+);
+const PreloadLogin = dynamic(
+  () => import("@/components/preloaders/PreloadLogin"),
+  { ssr: false }
+);
+
 config.autoAddCss = false; /* eslint-disable import/first */
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +60,15 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const jwt = cookies().get("jwt");
+  let accessToken, refreshToken, userDetails;
+  if (jwt) {
+    const res = await loginInit(jwt.value);
+    accessToken = res.access.token;
+    userDetails = res.details;
+    refreshToken = res.refresh.token;
+    store.dispatch(setLogin({ accessToken, userDetails }));
+  }
   return (
     <html lang="en">
       <body className={inter.className}>
@@ -57,7 +96,10 @@ export default async function RootLayout({
             <div id="header-content">
               <div className="title">Shane's Blog</div>
               <Providers>
-                <PreloadLogin>
+                <PreloadLogin
+                  accessToken={accessToken}
+                  userDetails={userDetails}
+                >
                   <Search title="Hello" />
                   <Nav />
                 </PreloadLogin>

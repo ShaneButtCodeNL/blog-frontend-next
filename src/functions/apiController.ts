@@ -6,6 +6,8 @@ import {
   CommentDetails,
 } from "@/models/blogPostReturn";
 import { LoginReturnDetails, UserDetails } from "@/models/userReturn";
+import { store } from "@/store";
+import { setLogin } from "@/store/login";
 import { cookies } from "next/headers";
 
 const userPath = `${process.env.API_HOST}${process.env.API_USER_BASE}`;
@@ -87,6 +89,33 @@ export async function refresh() {
     path: "/",
   });
   return data;
+}
+export async function loginInit(jwt: string) {
+  "use server";
+  const res = await fetch("http://localhost:3000/api/login/init", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ jwt }),
+  });
+  const refreshTokenFromRes = res.headers
+    .get("set-cookie")
+    ?.split("; ")[0]
+    .substring(4);
+  const dateString = res.headers.get("set-cookie")?.split("; ")[2].substring(8);
+  const expires = Date.parse(dateString!);
+
+  const data = await res.json();
+  if (!data) throw new Error("User not found");
+  const dateStringAccess = parseInt(data.token.expires);
+  const expiresAccess = new Date(dateStringAccess!);
+  store.dispatch(
+    setLogin({ accessToken: data.token.token, userDetails: data.details })
+  );
+  return {
+    access: { token: data.token.token, expires: expiresAccess.getTime() },
+    refresh: { token: refreshTokenFromRes, expires },
+    details: data.details,
+  };
 }
 export async function refreshMiddleware(refreshToken: string) {
   "use server";

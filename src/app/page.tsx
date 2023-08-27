@@ -1,4 +1,6 @@
-import LatestBlogPost from "@/components/LatestBlogPost";
+import dynamic from "next/dynamic";
+
+const LatestBlogPost = dynamic(() => import("@/components/LatestBlogPost"));
 
 export default function Home() {
   return (
