@@ -325,6 +325,7 @@ export async function setTokenInCookie(token: string) {
   cookies().set({ name: "token", value: token, httpOnly: true });
 }
 
+//TODO UPDATE
 export async function registerFunction(username: string, password: string) {
   "use server";
   const res = await register(username, password);

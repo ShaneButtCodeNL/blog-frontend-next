@@ -37,7 +37,7 @@ const debounceAsync = (fn: Function, username: string) => {
     }, 1500);
   };
 };
-
+//TODO update
 export default function RegisterForm(props: any) {
   const [hidden, setHidden] = useState(true);
   const [username, setUsername] = useState("");

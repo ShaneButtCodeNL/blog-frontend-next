@@ -199,7 +199,7 @@ export async function getAllUsernames(token: string) {
 
 export async function isUsernameAvailable(username: string): Promise<boolean> {
   const fetchStr = `${userPath}/exists/${username}`;
-  const res = await fetch(fetchStr);
+  const res = await fetch(fetchStr, { cache: "no-store" });
   if (res.ok) {
     return true;
   }
@@ -240,7 +240,7 @@ export async function revalidateToken(token: string): Promise<string> {
   const data: string = await res.text();
   return data;
 }
-
+//TODO UPDATE
 export async function register(
   username: String,
   password: String
@@ -502,7 +502,7 @@ export async function getLatestPost(): Promise<BlogWithAuthorDetails | null> {
   const res = await fetch(getLatestBlogPostPath, {
     method: GET,
     headers: getJSONHeader(),
-    next: { revalidate: thirtySeconds, tags: ["get-latest-post"] },
+    next: { revalidate: 30, tags: ["get-latest-post"] },
   });
   if (!res.ok) return null;
   const data = await res.json();

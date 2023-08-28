@@ -1,4 +1,3 @@
-import BlogListDisplayItem from "./BlogListDisplayItem";
 import { getLatestPostFunction } from "@/functions/serverFunctions";
 import LatestBlogListDisplayItem from "./LatestBlogDisplayItem";
 

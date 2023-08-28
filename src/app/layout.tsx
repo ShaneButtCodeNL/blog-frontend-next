@@ -13,6 +13,7 @@ import { store } from "@/store";
 import { loginInit } from "@/functions/apiController";
 import { setLogin } from "@/store/login";
 import dynamic from "next/dynamic";
+import SplashPage from "@/components/SplashPage";
 const MakeCommentModal = dynamic(
   () => import("@/components/modals/MakeCommentModal")
 );
@@ -45,7 +46,7 @@ const KillCommentModal = dynamic(
 );
 const PreloadLogin = dynamic(
   () => import("@/components/preloaders/PreloadLogin"),
-  { ssr: false }
+  { ssr: false, loading: () => <SplashPage /> }
 );
 
 config.autoAddCss = false; /* eslint-disable import/first */

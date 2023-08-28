@@ -276,6 +276,11 @@ main {
   border-radius: 1em;
   overflow: hidden;
 }
+.blog-display-item-wrapper-loading {
+  animation: pulse;
+  animation-duration: 500ms;
+  animation-iteration-count: infinite;
+}
 
 .blog-display-item {
   margin: 1em 5em;
