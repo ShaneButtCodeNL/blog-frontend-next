@@ -47,7 +47,7 @@ import { store } from "@/store";
 import { setSortType } from "@/store/blogPosts";
 import { applySorting, applyTitleFilter } from "./helpers";
 import { setSearch } from "@/store/search";
-import { setAccessToken, setLogin } from "@/store/login";
+import { setAccessToken, setLogin, setLogout } from "@/store/login";
 
 export async function validateTokenFunction(token: string) {
   "use server";
@@ -74,6 +74,7 @@ export async function getUserDetailsFromUsernameFunction(username: string) {
 export async function logoutServerFunction() {
   "use server";
   await logoffServer();
+  store.dispatch(setLogout());
 }
 
 export async function revalidateTokenFunction(token: string) {

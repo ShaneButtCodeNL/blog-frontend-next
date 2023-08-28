@@ -13,7 +13,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserDetails } from "@/models/userReturn";
-import { refreshFunctionServer } from "@/functions/serverFunctions";
+import {
+  logoutServerFunction,
+  refreshFunctionServer,
+} from "@/functions/serverFunctions";
+import { setLogout } from "@/store/login";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
@@ -27,6 +31,12 @@ const hasRole = (userDetails: UserDetails, ...args: string[]) => {
 
 export default function Nav(props: any) {
   const dispatch = useAppDispatch();
+  function logutClick() {
+    logoutServerFunction().then((_) => {
+      dispatch(setLogout());
+      router.push("/");
+    });
+  }
   const loggedIn = useAppSelector((state) => state.login.loggedIn);
   const userDetails: UserDetails | null = useAppSelector(
     (state) => state.login.userDetails
@@ -53,12 +63,7 @@ export default function Nav(props: any) {
         </button>
       </Link>
       {loggedIn ? (
-        <button
-          type="button"
-          onClick={() => {
-            router.push("/logout");
-          }}
-        >
+        <button type="button" onClick={logutClick}>
           Logout
         </button>
       ) : (

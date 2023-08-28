@@ -92,6 +92,7 @@ export async function refresh() {
 }
 export async function loginInit(jwt: string) {
   "use server";
+  if (jwt === "") return null;
   const res = await fetch("http://localhost:3000/api/login/init", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -257,7 +258,8 @@ export async function register(
 }
 
 export async function logoffServer() {
-  cookies().delete("token");
+  cookies().delete("jwt");
+  cookies().delete("accessToken");
 }
 
 export async function getAllBlogPosts(): Promise<BlogPostReturn[]> {
