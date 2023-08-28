@@ -103,7 +103,7 @@ export async function loginInit(jwt: string) {
     .substring(4);
   const dateString = res.headers.get("set-cookie")?.split("; ")[2].substring(8);
   const expires = Date.parse(dateString!);
-
+  if (!res || !res.ok) return null;
   const data = await res.json();
   if (!data) throw new Error("User not found");
   const dateStringAccess = parseInt(data.token.expires);

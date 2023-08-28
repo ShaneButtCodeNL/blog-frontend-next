@@ -11,17 +11,20 @@ async function processRefresh(req: NextRequest, res: NextResponse) {
   if (!refreshTokenCookie) {
     return null;
   }
+
   if (accessTokenCookie) {
     return {
       accessToken: accessTokenCookie.value,
       refreshToken: refreshTokenCookie?.value,
     };
   }
+
   const refreshedToken = await refreshFunctionMiddleware(
     refreshTokenCookie.value
   );
   const accessToken = refreshedToken.access.token;
   const refreshToken = refreshedToken.refresh.token;
+
   res.cookies.set("jwt", refreshToken!, {
     httpOnly: true,
     secure: true,
@@ -36,13 +39,14 @@ async function processRefresh(req: NextRequest, res: NextResponse) {
     sameSite: "strict",
     path: "/",
   });
+
   return { accessToken, refreshToken };
 }
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
   //return NextResponse.redirect(new URL("/home", request.url));
-  // TODO add same functionality to admin
+  //Checks auth for write a new post page
   if (request.nextUrl.pathname.startsWith("/write-post")) {
     const response = NextResponse.next();
     const processRefreshedTokens = await processRefresh(request, response);
@@ -70,6 +74,7 @@ export async function middleware(request: NextRequest) {
     }
     return response;
   }
+  // Checks auth for admin actions page
   if (request.nextUrl.pathname.startsWith("/admin")) {
     const response = NextResponse.next();
     const processRefreshedTokens = await processRefresh(request, response);

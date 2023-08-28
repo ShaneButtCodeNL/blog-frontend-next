@@ -21,7 +21,6 @@ export default function PreloadLogin({
   userDetails,
   children,
 }: PreloadType) {
-  console.log("HERE", accessToken, performance.now());
   const loggedIn = useRef(false);
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {

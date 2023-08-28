@@ -2,7 +2,6 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(request: Request) {
-  console.log("HERE");
   const apiPath = `${process.env.API_HOST}${process.env.API_USER_BASE}/login-with-token`;
   const refreshToken = await request.json();
   if (!refreshToken) return NextResponse.json({ error: "token invalid" });
@@ -26,7 +25,6 @@ export async function POST(request: Request) {
   expireDateString = expireDateStringSplit.join(" ");
   const expireDate = new Date(expireDateString);
   if (!header) return NextResponse.json({ error: "Token has Expired." });
-  console.log(header);
   const cookieStore = cookies();
   cookieStore.set("jwt", header, {
     httpOnly: true,

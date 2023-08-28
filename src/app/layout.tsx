@@ -64,10 +64,12 @@ export default async function RootLayout({
   let accessToken, refreshToken, userDetails;
   if (jwt) {
     const res = await loginInit(jwt.value);
-    accessToken = res.access.token;
-    userDetails = res.details;
-    refreshToken = res.refresh.token;
-    store.dispatch(setLogin({ accessToken, userDetails }));
+    if (res) {
+      accessToken = res.access.token;
+      userDetails = res.details;
+      refreshToken = res.refresh.token;
+      store.dispatch(setLogin({ accessToken, userDetails }));
+    }
   }
   return (
     <html lang="en">

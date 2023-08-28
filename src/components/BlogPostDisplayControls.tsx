@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faHeart as heartOutline } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { likePost } from "@/functions/serverFunctions";
 import { store } from "@/store";
 import { formatNumber, openLoginModal } from "@/functions/helpers";
@@ -31,13 +31,19 @@ export default function BlogPostDisplayControls({
   const userDetails = useSelector(
     (state: RootState) => state.login.userDetails
   );
-  const [liked, setLiked] = useState(
-    store.getState().login.loggedIn
-      ? listOfLikes.includes(
-          store.getState().login.userDetails?.userId as string
-        )
-      : false
-  );
+  const loggedIn = useSelector((state: RootState) => state.login.loggedIn);
+  const [liked, setLiked] = useState(false);
+  const [hasWriterAuth, setHasWriterAuth] = useState(false);
+  const [hasAdminAuth, setHasAdminAuth] = useState(false);
+
+  useEffect(() => {
+    const likeFlag = listOfLikes.includes(userDetails?.userId as string);
+    if (loggedIn) {
+      setLiked(likeFlag);
+      setHasAdminAuth(hasAccess(adminCredentials));
+      setHasWriterAuth(hasAccess(writerCredentials));
+    }
+  }, [userDetails, loggedIn]);
   const [likeCount, setLikeCount] = useState(listOfLikes.length);
 
   function hasValidRole(roles: string[]) {
@@ -55,16 +61,11 @@ export default function BlogPostDisplayControls({
     matchAuthor?: boolean;
   }
 
-  const editCredentials: Credentials[] = [
+  const writerCredentials: Credentials[] = [
     { roles: ["ROLE_ADMIN"] },
     { roles: ["ROLE_WRITER"], matchAuthor: true },
   ];
-  const deleteCredentials: Credentials[] = [
-    { roles: ["ROLE_ADMIN"] },
-    { roles: ["ROLE_WRITER"], matchAuthor: true },
-  ];
-  const restoreCredentials: Credentials[] = [{ roles: ["ROLE_ADMIN"] }];
-  const killCredentials: Credentials[] = [{ roles: ["ROLE_ADMIN"] }];
+  const adminCredentials: Credentials[] = [{ roles: ["ROLE_ADMIN"] }];
 
   function isAuthor() {
     //const userDetails = store.getState().login.userDetails;
@@ -156,11 +157,7 @@ export default function BlogPostDisplayControls({
       setLiked((v) => !v);
     });
   }
-  store.subscribe(() => {
-    setLiked(
-      listOfLikes.includes(store.getState().login.userDetails?.userId as string)
-    );
-  });
+
   return (
     <div className="blog-post-controls">
       <div className="blog-post-controls-item like-controls">
@@ -193,9 +190,7 @@ export default function BlogPostDisplayControls({
 
       <div
         className="blog-post-controls-item make-comment-button"
-        style={
-          deleted && hasAccess(restoreCredentials) ? {} : { display: "none" }
-        }
+        style={deleted && hasAdminAuth ? {} : { display: "none" }}
       >
         <button type="button" onClick={restorePostClick}>
           <FontAwesomeIcon icon={faTrashRestore} />
@@ -205,9 +200,7 @@ export default function BlogPostDisplayControls({
 
       <div
         className="blog-post-controls-item make-comment-button"
-        style={
-          !deleted && hasAccess(deleteCredentials) ? {} : { display: "none" }
-        }
+        style={!deleted && hasWriterAuth ? {} : { display: "none" }}
       >
         <button type="button" onClick={deletePostClick}>
           <FontAwesomeIcon icon={faTrash} />
@@ -217,7 +210,7 @@ export default function BlogPostDisplayControls({
 
       <div
         className="blog-post-controls-item make-comment-button"
-        style={deleted && hasAccess(killCredentials) ? {} : { display: "none" }}
+        style={deleted && hasAdminAuth ? {} : { display: "none" }}
       >
         <button type="button" onClick={killPostClick}>
           <FontAwesomeIcon icon={faSkullCrossbones} />
@@ -227,9 +220,7 @@ export default function BlogPostDisplayControls({
 
       <div
         className="blog-post-controls-item make-comment-button"
-        style={
-          !deleted && hasAccess(editCredentials) ? {} : { display: "none" }
-        }
+        style={!deleted && hasWriterAuth ? {} : { display: "none" }}
       >
         <button type="button" onClick={editPostClick}>
           <FontAwesomeIcon icon={faPenToSquare} />
