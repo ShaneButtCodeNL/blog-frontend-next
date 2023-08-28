@@ -36,30 +36,31 @@ export default function BlogPostCommentDisplayControls({
   const loggedIn = useSelector((state: RootState) => state.login.loggedIn);
   const token = useSelector((state: RootState) => state.login.accessToken);
   const [likeCount, setLikeCount] = useState(mainComment.likes.length);
-  const [liked, setLiked] = useState(
-    loggedIn ? mainComment.likes.includes(userDetails?.userId as string) : false
-  );
+  const [liked, setLiked] = useState(false);
+  const [hasUserAuth, setUserAuth] = useState(false);
+  const [hasWriterAuth, setHasWriterAuth] = useState(false);
+  const [hasAdminAuth, setHasAdminAuth] = useState(false);
   useEffect(() => {
     getUserDetailsFromUsernameFunction(userDetails?.username as string).then(
       (res) => setLiked(mainComment.likes.includes(res?.userId as string))
     );
-  }, [loggedIn]);
+    setHasAdminAuth(hasAccess(adminCredentials));
+    setHasWriterAuth(hasAccess(writerCredentials));
+    setUserAuth(hasAccess(userCredentials));
+  }, [loggedIn, userDetails, token]);
 
   interface Credentials {
     roles: string[];
     matchAuthor?: boolean;
   }
-
-  const editCredentials: Credentials[] = [
-    { roles: ["ROLE_ADMIN"] },
-    { roles: ["ROLE_WRITER", "ROLE_USER"], matchAuthor: true },
+  const userCredentials: Credentials[] = [
+    { roles: ["ROLE_USER"], matchAuthor: true },
   ];
-  const deleteCredentials: Credentials[] = [
+  const writerCredentials: Credentials[] = [
     { roles: ["ROLE_ADMIN"] },
-    { roles: ["ROLE_WRITER", "ROLE_USER"], matchAuthor: true },
+    { roles: ["ROLE_WRITER"], matchAuthor: true },
   ];
-  const restoreCredentials: Credentials[] = [{ roles: ["ROLE_ADMIN"] }];
-  const killCredentials: Credentials[] = [{ roles: ["ROLE_ADMIN"] }];
+  const adminCredentials: Credentials[] = [{ roles: ["ROLE_ADMIN"] }];
 
   function hasValidRole(roles: string[]) {
     //const userDetails = store.getState().login.userDetails;
@@ -208,7 +209,7 @@ export default function BlogPostCommentDisplayControls({
       <div
         className="blog-post-controls-item make-comment-button like-controls"
         style={
-          !mainComment.deleted && hasAccess(deleteCredentials)
+          !mainComment.deleted && (hasWriterAuth || hasUserAuth)
             ? {}
             : { display: "none" }
         }
@@ -223,11 +224,7 @@ export default function BlogPostCommentDisplayControls({
       </div>
       <div
         className="blog-post-controls-item make-comment-button like-controls"
-        style={
-          mainComment.deleted && hasAccess(restoreCredentials)
-            ? {}
-            : { display: "none" }
-        }
+        style={mainComment.deleted && hasAdminAuth ? {} : { display: "none" }}
       >
         <button
           type="button"
@@ -240,11 +237,7 @@ export default function BlogPostCommentDisplayControls({
       </div>
       <div
         className="blog-post-controls-item make-comment-button like-controls"
-        style={
-          mainComment.deleted && hasAccess(killCredentials)
-            ? {}
-            : { display: "none" }
-        }
+        style={mainComment.deleted && hasAdminAuth ? {} : { display: "none" }}
       >
         <button type="button" onClick={killButtonClick} title="Remove Comment">
           <FontAwesomeIcon icon={faSkullCrossbones} />
@@ -253,11 +246,7 @@ export default function BlogPostCommentDisplayControls({
       </div>
       <div
         className="blog-post-controls-item make-comment-button like-controls"
-        style={
-          !mainComment.deleted && hasAccess(editCredentials)
-            ? {}
-            : { display: "none" }
-        }
+        style={!mainComment.deleted && hasWriterAuth ? {} : { display: "none" }}
       >
         <button type="button" onClick={editButtonClick} title="Edit Comment">
           <FontAwesomeIcon icon={faPenToSquare} />
