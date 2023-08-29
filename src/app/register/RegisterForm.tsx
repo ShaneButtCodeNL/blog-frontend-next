@@ -13,9 +13,11 @@ import { setLoggedIn, setLogin, setUserDetails } from "@/store/login";
 import React, { FormEvent, useRef, useState } from "react";
 import {
   checkUsernameIsAvailableFunction,
+  loginFunctionServer,
   registerFunction,
   setTokenInCookie,
 } from "@/functions/serverFunctions";
+import { setLoginDetails } from "@/functions/helpers";
 
 export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
@@ -138,11 +140,12 @@ export default function RegisterForm(props: any) {
       return;
     }
     //TODO update
-    sessionStorage.setItem("userDetails", JSON.stringify(res.details));
-    store.dispatch(
-      setLogin({ accessToken: res.token.token, userDetails: res.details })
-    );
-
+    const loginRes = await loginFunctionServer(username, passwordMain);
+    if (!loginRes || loginRes.token.error) {
+      router.push("/register/fail");
+      return;
+    }
+    setLoginDetails(loginRes.token.token!, loginRes.details);
     router.push("/register/success");
   };
 
