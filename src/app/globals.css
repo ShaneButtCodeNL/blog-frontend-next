@@ -138,6 +138,7 @@ header {
   margin: 0;
   padding: 0 2em;
   display: grid;
+  gap: 1rem;
   grid-template-columns: 1fr auto 1fr;
 }
 .title {
@@ -177,8 +178,13 @@ header {
 #main-nav {
   display: flex;
   gap: 1em;
-  justify-self: right;
+  justify-self: flex-end;
   align-self: center;
+  margin-left: auto;
+}
+
+.small-screen-nav {
+  display: none;
 }
 #main-nav svg {
   font-size: var(--header-font-size);
@@ -798,6 +804,12 @@ main {
   padding-bottom: 1em;
 }
 
+#search-form-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 #search-form-input {
   padding-right: 3em;
 }
@@ -1004,4 +1016,54 @@ blockquote::after {
 
 #username-label {
   grid-area: username-label;
+}
+@media only screen and (max-width: 1330px) {
+  #main-nav {
+    flex-wrap: wrap;
+    width: 250px;
+  }
+  #header-content {
+    padding: 0.2rem 1rem;
+  }
+}
+@media only screen and (max-width: 970px) {
+  #search-form-input {
+    padding: 0;
+    padding-left: 1rem;
+  }
+}
+
+@media only screen and (max-width: 870px) {
+  html {
+    font-size: small;
+  }
+  #search-form-input {
+    width: 100%;
+  }
+  #main-nav {
+    width: 220px;
+  }
+  #header-content {
+    grid-template-columns: auto 1fr auto;
+  }
+}
+@media only screen and (max-width: 660px) {
+  html {
+    font-size: x-small;
+  }
+  #main-nav {
+    width: 170px;
+  }
+}
+@media only screen and (max-width: 500px) {
+  #header-content {
+    grid-template-columns: auto 1fr auto;
+    gap: 1rem;
+  }
+  #main-nav {
+    display: none;
+  }
+  .small-screen-nav {
+    display: block;
+  }
 }
