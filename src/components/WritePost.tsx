@@ -28,7 +28,11 @@ export default function WritePost(params: any) {
 
   return (
     <div id="write-new-post-form-container">
-      <form id="write-new-post-form" onSubmit={onSubmit}>
+      <form
+        id="write-new-post-form"
+        onSubmit={onSubmit}
+        className="write-new-post-form"
+      >
         <label htmlFor="title" id="new-post-label-title" className="form-label">
           Title
         </label>

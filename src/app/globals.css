@@ -594,12 +594,11 @@ main {
 #write-new-post-preview {
   width: 100%;
   transition: max-width 1s ease-out, margin 1s ease-out,
-    border-width 1s ease-out, opacity 1s ease-out;
+    border-width 1s ease-out, opacity 1s ease-out, max-height 1s ease-out;
   margin: 0;
   border-style: solid;
   border-radius: 1em;
   box-sizing: border-box;
-  max-height: 100%;
   overflow: hidden;
 }
 .collapse-preview {
@@ -607,14 +606,16 @@ main {
   padding: 0;
   border-width: 0px;
   opacity: 0;
+  max-height: 100%;
 }
 .expand-preview {
   max-width: 50%;
   padding: 1em;
   border-width: 1px;
   opacity: 1;
+  max-height: 100%;
 }
-#write-new-post-form {
+.write-new-post-form {
   display: grid;
   grid-template-areas:
     "title-label title-input title-input title-input"
@@ -623,8 +624,6 @@ main {
   grid-template-rows: 3em auto auto;
   gap: 1em;
   padding: 1em;
-  width: 75%;
-  margin: 0 auto;
 }
 #show-preview-checkbox-container {
   grid-area: show-preview-button;
@@ -1043,6 +1042,27 @@ blockquote::after {
     padding: 0.2rem 1rem;
   }
 }
+@media only screen and (max-width: 1080px) {
+  .write-new-post-form {
+    width: 100%;
+  }
+  #write-new-post-form-container {
+    flex-direction: column;
+    align-items: center;
+    justify-content: stretch;
+  }
+  #write-new-post-preview {
+    height: 500px;
+    flex-shrink: 1;
+  }
+  .collapse-preview {
+    max-height: 0;
+  }
+  .expand-preview {
+    max-height: 500px;
+    max-width: 100%;
+  }
+}
 @media only screen and (max-width: 970px) {
   #search-form-input {
     padding: 0;
@@ -1062,6 +1082,30 @@ blockquote::after {
   }
   #header-content {
     grid-template-columns: auto 1fr auto;
+  }
+  #new-post-label-title {
+    width: fit-content;
+    height: fit-content;
+  }
+  #show-preview-checkbox-container {
+    margin: auto;
+  }
+  #new-post-submit-button {
+    width: 100%;
+  }
+  #new-post-cancel-button {
+    width: 100%;
+  }
+  .write-new-post-form {
+    grid-template-areas:
+      "title-label title-input title-input"
+      "body-textarea body-textarea body-textarea"
+      ". submit-button ."
+      ". cancel-button ."
+      ". show-preview-button .";
+    grid-template-columns: 3em 1fr 3em;
+    flex-grow: 1;
+    grid-template-rows: auto auto 1fr auto auto auto;
   }
 }
 @media only screen and (max-width: 660px) {
