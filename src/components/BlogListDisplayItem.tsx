@@ -3,6 +3,8 @@ import { BlogPostReturn } from "@/models/blogPostReturn";
 import Link from "next/link";
 import markdownParserToHTMLString from "@/functions/markdownParser";
 import { getUserDetailsFromUsernameFunction } from "@/functions/serverFunctions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCommentDots, faHeart } from "@fortawesome/free-solid-svg-icons";
 
 export default async function BlogListDisplayItem({
   blog,
@@ -42,11 +44,13 @@ export default async function BlogListDisplayItem({
                 )}
               </div>
               <div className="blog-to-display-social-interactions">
-                <div className="blog-display-like-count">
-                  {blog.likes.length}HRT
+                <div className="blog-display-like-count like-controls">
+                  <div className="like-count">{blog.likes.length}</div>
+                  <FontAwesomeIcon icon={faHeart} className="heart" />
                 </div>
-                <div className="blog-to-display-comment-count">
-                  {blog.topLevelCommentCount} comments
+                <div className="blog-to-display-comment-count like-controls">
+                  <div className="like-count">{blog.topLevelCommentCount}</div>
+                  <FontAwesomeIcon icon={faCommentDots} />
                 </div>
               </div>
             </>
