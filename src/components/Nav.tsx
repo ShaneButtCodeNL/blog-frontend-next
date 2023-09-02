@@ -47,74 +47,81 @@ export default function Nav(props: any) {
   const router = useRouter();
   return (
     <>
-      <button
-        id="nav-button"
-        type="button"
-        className="small-screen-nav"
-        onClick={() => setShowNav((value) => !value)}
-      >
-        <FontAwesomeIcon icon={faBars} />
-      </button>
-      <nav id="collapsable-nav" className="small-screen-nav"></nav>
-      <nav id="main-nav" className="main-nav">
-        <Link href={"/"}>
-          <button type="button" title="Home">
-            <FontAwesomeIcon icon={faHouse} />
-          </button>
-        </Link>
-        <Link href={"/blogs/1"}>
-          <button type="button" title="Blogs">
-            <FontAwesomeIcon icon={faBook} />
-          </button>
-        </Link>
-        {loggedIn ? (
-          <button type="button" onClick={logutClick}>
-            Logout
-          </button>
-        ) : (
-          <>
-            <Link href={"/login"}>
-              <button type="button">Login</button>
+      <div className="nav-container">
+        <button
+          id="nav-button"
+          type="button"
+          className="small-screen-nav"
+          onClick={() => setShowNav((value) => !value)}
+        >
+          <FontAwesomeIcon icon={faBars} />
+        </button>
+        <div className={`nav-wrapper ${showNav ? "show-nav" : "hide-nav"}`}>
+          <nav
+            id="main-nav"
+            className={`main-nav`}
+            onClick={() => setShowNav(false)}
+          >
+            <Link href={"/"}>
+              <button type="button" title="Home">
+                <FontAwesomeIcon icon={faHouse} />
+              </button>
             </Link>
-            <Link href={"/register"}>
-              <button type="button">Register</button>
+            <Link href={"/blogs/1"}>
+              <button type="button" title="Blogs">
+                <FontAwesomeIcon icon={faBook} />
+              </button>
             </Link>
-          </>
-        )}
-        {userDetails &&
-        hasRole(userDetails, "ROLE_WRITER", "ROLE_ADMIN", "ROLE_OWNER") ? (
-          <Link href="/write-post">
-            <button type="button" title="Write A Post">
-              <FontAwesomeIcon icon={faPenNib} />
-            </button>
-          </Link>
-        ) : (
-          <></>
-        )}
+            {loggedIn ? (
+              <button type="button" onClick={logutClick}>
+                Logout
+              </button>
+            ) : (
+              <>
+                <Link href={"/login"}>
+                  <button type="button">Login</button>
+                </Link>
+                <Link href={"/register"}>
+                  <button type="button">Register</button>
+                </Link>
+              </>
+            )}
+            {userDetails &&
+            hasRole(userDetails, "ROLE_WRITER", "ROLE_ADMIN", "ROLE_OWNER") ? (
+              <Link href="/write-post">
+                <button type="button" title="Write A Post">
+                  <FontAwesomeIcon icon={faPenNib} />
+                </button>
+              </Link>
+            ) : (
+              <></>
+            )}
 
-        {loggedIn &&
-        userDetails &&
-        hasRole(userDetails, "ROLE_ADMIN", "ROLE_OWNER") ? (
-          <Link href="/admin/controls">
-            <button type="button" title="Admin Controls">
-              <FontAwesomeIcon icon={faToolbox} />
-              {" Admin"}
-            </button>
-          </Link>
-        ) : (
-          <></>
-        )}
-        {userDetails && loggedIn ? (
-          <Link href={`/user/${userDetails?.username}`}>
-            <button type="button" title="User Details">
-              <FontAwesomeIcon icon={faUser} />{" "}
-              {store.getState().login.userDetails?.username}
-            </button>
-          </Link>
-        ) : (
-          <></>
-        )}
-      </nav>
+            {loggedIn &&
+            userDetails &&
+            hasRole(userDetails, "ROLE_ADMIN", "ROLE_OWNER") ? (
+              <Link href="/admin/controls">
+                <button type="button" title="Admin Controls">
+                  <FontAwesomeIcon icon={faToolbox} />
+                  {" Admin"}
+                </button>
+              </Link>
+            ) : (
+              <></>
+            )}
+            {userDetails && loggedIn ? (
+              <Link href={`/user/${userDetails?.username}`}>
+                <button type="button" title="User Details">
+                  <FontAwesomeIcon icon={faUser} />{" "}
+                  {store.getState().login.userDetails?.username}
+                </button>
+              </Link>
+            ) : (
+              <></>
+            )}
+          </nav>
+        </div>
+      </div>
     </>
   );
 }

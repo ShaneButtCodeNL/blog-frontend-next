@@ -97,7 +97,11 @@ export default async function RootLayout({
         <div id="page">
           <header style={{ paddingTop: "1em", paddingBottom: "1em" }}>
             <div id="header-content">
-              <div className="title">Shane's Blog</div>
+              <div className="title title-not-break">Shane's Blog</div>
+              <div className="title title-break">
+                Shane's
+                <br className="title-brake" /> Blog
+              </div>
               <Providers>
                 <PreloadLogin
                   accessToken={accessToken}
