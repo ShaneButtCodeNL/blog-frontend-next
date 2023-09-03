@@ -443,52 +443,6 @@ main {
   display: grid;
   place-items: center;
 }
-
-#login-form {
-  display: grid;
-  grid-template-areas:
-    "username-label username-input username-input username-input"
-    "password-label password-input password-input password-input"
-    ". login-confirm login-cancel .";
-  gap: 1em;
-  grid-template-rows: auto auto auto;
-  grid-template-columns: 1fr auto auto 1fr;
-  margin: 2em auto;
-  width: 50%;
-}
-
-#username-label {
-  grid-area: username-label;
-}
-#username-input {
-  grid-area: username-input;
-}
-#password-label {
-  grid-area: password-label;
-}
-#form-input-container {
-  position: relative;
-  grid-area: password-input;
-}
-#form-input-container-eye {
-  position: absolute;
-  right: 1em;
-  line-height: 3em;
-  top: 0.25em;
-  cursor: pointer;
-}
-#password-input {
-  width: 100%;
-  padding-right: 3em;
-}
-#login-confirm {
-  grid-area: login-confirm;
-  margin: 0 1em;
-}
-#login-cancel {
-  grid-area: login-cancel;
-  margin: 0 1em;
-}
 .form-button {
   width: 10em;
   padding: 1em;
@@ -517,20 +471,108 @@ main {
   padding-right: 3em;
   color: var(--font-color);
 }
-#register-form {
+#login-form {
+  --ends: 4rem;
+  display: grid;
+  grid-template-areas:
+    "username-label username-input username-input username-input"
+    "password-label password-input password-input password-input"
+    ". login-confirm login-cancel . ";
+  gap: 1em;
+  grid-template-rows: auto auto auto;
+  grid-template-columns: var(--ends) 1fr 1fr var(--ends);
+  width: 50%;
+}
+.login-button {
+  width: auto;
+  margin: 0;
+  height: fit-content;
+}
+
+#username-label {
+  grid-area: username-label;
+}
+#username-input {
+  grid-area: username-input;
+}
+#password-label {
+  grid-area: password-label;
+}
+#form-input-container {
+  position: relative;
+  grid-area: password-input;
+}
+#form-input-container-eye {
+  position: absolute;
+  right: 1em;
   line-height: 3em;
+  top: 0.25em;
+  cursor: pointer;
+}
+#password-input {
+  width: 100%;
+  padding-right: 3em;
+}
+#login-confirm {
+  grid-area: login-confirm;
+}
+#login-cancel {
+  grid-area: login-cancel;
+}
+
+#register-form {
+  --ends: 4rem;
+  line-height: 2em;
   padding-top: 5em;
   display: grid;
   grid-template-areas:
-    "username-label username-container"
-    "username-available-box username-available-box"
-    "password-label-main password-input-main-container"
-    "password-label-second password-input-second-container"
-    "register-confirm register-cancel";
-  gap: 1.5em;
-  grid-template-rows: auto auto auto auto 3em;
-  margin: 2em auto;
+    "username-label username-container username-container username-container"
+    ". username-available-box username-available-box ."
+    "password-label-main password-input-main-container password-input-main-container password-input-main-container"
+    "password-label-second password-input-second-container password-input-second-container password-input-second-container"
+    ". register-confirm register-cancel .";
+  gap: 1.5rem;
+  grid-template-rows: auto auto auto auto auto;
+  grid-template-columns: var(--ends) 1fr 1fr var(--ends);
+  margin: auto;
   width: 50%;
+  min-height: 35rem;
+}
+#register-form-username-label {
+  grid-area: username-label;
+  height: fit-content;
+  margin: 0.75rem auto auto auto;
+}
+#form-username-container {
+  grid-area: username-container;
+  height: fit-content;
+  margin: auto;
+}
+#register-form-password-main-label {
+  grid-area: password-label-main;
+  height: fit-content;
+  margin: 0.75rem auto auto auto;
+}
+#register-form-password-main-container {
+  grid-area: password-input-main-container;
+  height: fit-content;
+  margin: auto;
+}
+#register-form-password-second-label {
+  grid-area: password-label-second;
+  height: fit-content;
+  margin: 0rem auto auto auto;
+}
+#register-form-password-second-container {
+  grid-area: password-input-second-container;
+  height: fit-content;
+  margin: auto;
+}
+#register-form-confirm {
+  grid-area: register-confirm;
+}
+#register-form-cancel {
+  grid-area: register-cancel;
 }
 #register-form label {
   text-align: right;
@@ -557,6 +599,7 @@ main {
 }
 .form-password-container {
   position: relative;
+  width: 100%;
 }
 .boxshadow-alert {
   box-shadow: 0em 0em 0em 0.5em var(--error-text-color);
@@ -565,6 +608,11 @@ main {
   transition: max-height 1s ease-out;
   overflow: hidden;
   max-height: 0px;
+  margin: 1rem 0 0 0;
+}
+.password-help-container {
+  display: flex;
+  align-items: center;
 }
 .password-error-box svg {
   margin: 0 1em;
@@ -1054,6 +1102,25 @@ blockquote::after {
   }
 }
 @media only screen and (max-width: 1080px) {
+  #login-form {
+    --ends: 2rem;
+    grid-template-areas:
+      "username-input username-input username-input username-input"
+      "password-input password-input password-input password-input"
+      ". login-confirm login-cancel  .";
+  }
+  #register-form {
+    --ends: 2rem;
+    grid-template-areas:
+      "username-container username-container username-container username-container"
+      ". username-available-box username-available-box ."
+      "password-input-main-container password-input-main-container password-input-main-container password-input-main-container"
+      "password-input-second-container password-input-second-container password-input-second-container password-input-second-container"
+      ". register-confirm register-cancel .";
+  }
+  .login-label {
+    display: none;
+  }
   .blog-display-item-wrapper {
     width: 100%;
   }
@@ -1092,6 +1159,20 @@ blockquote::after {
   }
   .blog-display-item-wrapper {
     min-height: 130px;
+  }
+  #login-form {
+    grid-template-areas:
+      "username-input"
+      "password-input"
+      "login-confirm"
+      "login-cancel";
+    grid-template-rows: auto auto auto auto;
+    grid-template-columns: 1fr;
+  }
+  .login-button {
+    width: fit-content;
+    margin: auto;
+    min-width: 70%;
   }
   #search-form-input {
     width: 100%;

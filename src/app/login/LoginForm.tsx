@@ -29,8 +29,12 @@ export default function LoginForm(params: any) {
   return (
     <div id="form-wrapper">
       <form onSubmit={(e) => loginSubmit(e)} id="login-form">
-        <label htmlFor="username" id="username-label" className="form-label">
-          Username :{" "}
+        <label
+          htmlFor="username"
+          id="username-label"
+          className="form-label login-label"
+        >
+          Username
         </label>
         <input
           type="text"
@@ -39,9 +43,14 @@ export default function LoginForm(params: any) {
           onChange={(e) => setUsername(e.target.value)}
           id="username-input"
           className="form-input"
+          placeholder="Username"
         />
-        <label htmlFor="password" id="password-label" className="form-label">
-          Password :{" "}
+        <label
+          htmlFor="password"
+          id="password-label"
+          className="form-label login-label"
+        >
+          Password
         </label>
         <div id="form-input-container">
           <input
@@ -52,6 +61,7 @@ export default function LoginForm(params: any) {
             id="password-input"
             className="form-input"
             style={!hidden ? { display: "none" } : {}}
+            placeholder="Password"
             required
           />
           <input
@@ -62,6 +72,7 @@ export default function LoginForm(params: any) {
             className="form-input"
             style={hidden ? { display: "none" } : {}}
             onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password"
             required
           />
           <div
@@ -75,13 +86,17 @@ export default function LoginForm(params: any) {
             )}
           </div>
         </div>
-        <button type="submit" id="login-confirm" className="form-button">
+        <button
+          type="submit"
+          id="login-confirm"
+          className="form-button login-button"
+        >
           Submit
         </button>
         <button
           type="button"
           id="login-cancel"
-          className="form-button"
+          className="form-button login-button"
           onClick={() => router.back()}
         >
           Cancel

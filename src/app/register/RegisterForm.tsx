@@ -155,9 +155,17 @@ export default function RegisterForm(props: any) {
 
   return (
     <form id="register-form" onSubmit={onSubmit} autoComplete="off">
-      <label htmlFor="username">Username : </label>
-      <div className={`form-password-container `}>
+      <label
+        htmlFor="username"
+        id="register-form-username-label"
+        className="login-label"
+      >
+        Username
+      </label>
+      <div id="form-username-container" className={`form-password-container `}>
         <input
+          required
+          placeholder="Username"
           type="text"
           name="username"
           id="register-form-username-input"
@@ -220,10 +228,20 @@ export default function RegisterForm(props: any) {
         )}
       </div>
 
-      <label htmlFor="password-main">Password : </label>
-      <div className={`form-password-container `}>
+      <label
+        id="register-form-password-main-label"
+        htmlFor="password-main"
+        className="login-label"
+      >
+        Password
+      </label>
+      <div
+        id="register-form-password-main-container"
+        className={`form-password-container `}
+      >
         <input
           required
+          placeholder="Password"
           autoComplete="off"
           id="register-form-password-main-hidden-input"
           className={`form-input form-input-password ${
@@ -244,6 +262,7 @@ export default function RegisterForm(props: any) {
         />
         <input
           required
+          placeholder="Password"
           autoComplete="off"
           id="register-form-password-main-not-hidden-input"
           className={`form-input form-input-password ${
@@ -279,7 +298,7 @@ export default function RegisterForm(props: any) {
             ) : (
               <FontAwesomeIcon icon={faXmark} />
             )}
-            Password Must Have No White Spaces
+            <span>Password Must Have No White Spaces</span>
           </div>
           <div
             id="password-help-uppercase-letters"
@@ -294,7 +313,7 @@ export default function RegisterForm(props: any) {
             ) : (
               <FontAwesomeIcon icon={faXmark} />
             )}
-            Password Must Have Uppercase Letters
+            <span>Password Must Have Uppercase Letters</span>
           </div>
           <div
             id="password-help-eight-char-length"
@@ -309,7 +328,7 @@ export default function RegisterForm(props: any) {
             ) : (
               <FontAwesomeIcon icon={faXmark} />
             )}
-            Password Must Have At least 8 Characters
+            <span>Password Must Have At least 8 Characters</span>
           </div>
           <div
             id="password-help-lowercase-letters"
@@ -324,7 +343,7 @@ export default function RegisterForm(props: any) {
             ) : (
               <FontAwesomeIcon icon={faXmark} />
             )}
-            Password Must Have Lowercase Letters
+            <span>Password Must Have Lowercase Letters</span>
           </div>
           <div
             id="password-help-number-char"
@@ -337,7 +356,7 @@ export default function RegisterForm(props: any) {
             ) : (
               <FontAwesomeIcon icon={faXmark} />
             )}
-            Password Must Have At Least One Number
+            <span>Password Must Have At Least One Number</span>
           </div>
           <div
             id="password-help-number-and-letters"
@@ -352,7 +371,7 @@ export default function RegisterForm(props: any) {
             ) : (
               <FontAwesomeIcon icon={faXmark} />
             )}
-            Password Must Have Letters And Numbers
+            <span>Password Must Have Letters And Numbers</span>
           </div>
         </div>
         <div id="form-input-container-eye" onClick={() => setHidden((v) => !v)}>
@@ -364,15 +383,21 @@ export default function RegisterForm(props: any) {
         </div>
       </div>
       <label
+        id="register-form-password-second-label"
+        className="login-label"
         htmlFor={`password-second ${
           matchingPasswords ? "" : "boxshadow-alert"
         } `}
       >
-        Confirm Password :{" "}
+        Confirm Password
       </label>
-      <div className={`form-password-container `}>
+      <div
+        id="register-form-password-second-container"
+        className={`form-password-container `}
+      >
         <input
           required
+          placeholder="Password"
           autoComplete="off"
           id="register-form-password-second-hidden-input"
           className={`form-input form-input-password ${
@@ -389,6 +414,7 @@ export default function RegisterForm(props: any) {
         />
         <input
           required
+          placeholder="Password"
           autoComplete="off"
           id="register-form-password-second-not-hidden-input"
           className={`form-input form-input-password ${
@@ -419,7 +445,7 @@ export default function RegisterForm(props: any) {
             ) : (
               <FontAwesomeIcon icon={faXmark} />
             )}
-            Confirm Password Must be the same as Password
+            <span>Confirm Password Must be the same as Password</span>
           </div>
         </div>
         <div id="form-input-container-eye" onClick={() => setHidden((v) => !v)}>
@@ -434,10 +460,16 @@ export default function RegisterForm(props: any) {
         type="submit"
         id="register-form-confirm"
         disabled={!getPasswordMatchesPatternHook() || passwordMain === ""}
+        className="form-button login-button"
       >
         Confirm
       </button>
-      <button type="button" id="register-form-cancel" onClick={router.back}>
+      <button
+        type="button"
+        id="register-form-cancel"
+        onClick={router.back}
+        className="form-button login-button"
+      >
         Cancel
       </button>
     </form>
