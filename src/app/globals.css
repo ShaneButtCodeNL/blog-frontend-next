@@ -1253,6 +1253,17 @@ blockquote::after {
     width: 80%;
     min-height: 110px;
   }
+  #blog-list-controls {
+    flex-direction: column;
+    align-items: center;
+  }
+  #blog-list-controls div {
+    width: 20rem;
+    height: 5rem;
+  }
+  .search-box-list-input {
+    width: 100%;
+  }
   #main-nav {
     width: 170px;
   }
