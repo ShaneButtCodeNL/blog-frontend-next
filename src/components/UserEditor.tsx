@@ -116,7 +116,7 @@ export default function UserRoleEditor() {
         className="admin-control-form"
       >
         <label id="username-label" htmlFor="user-select">
-          Username:
+          Username
         </label>
         <select
           name="user-select"
@@ -143,14 +143,14 @@ export default function UserRoleEditor() {
             ? user.roles.map((v) => <p>{v.substring(5)}</p>)
             : "Select a User"}
         </div>
-        <label id="ban-label">Ban Status :</label>
+        <label id="ban-label">Ban Status</label>
         <div
           id="ban-status"
           className={user ? (user.banned ? "text-reject" : "text-accept") : ""}
         >
           {user ? (user.banned ? "Banned" : "Not Banned") : "Select A User"}
         </div>
-        <label id="disabled-label">Disabled Status:</label>
+        <label id="disabled-label">Disabled Status</label>
         <div
           id="disabled-status"
           className={
@@ -160,7 +160,7 @@ export default function UserRoleEditor() {
           {user ? (user.disabled ? "Disabled" : "Enabled") : "Select A User"}
         </div>
         <label id="action-label" htmlFor="user-role-action-select">
-          Action :
+          Action
         </label>
         <select
           name="user-role-action-select"
@@ -185,7 +185,7 @@ export default function UserRoleEditor() {
           htmlFor="role-select"
           style={isRoleAction() ? {} : { display: "none" }}
         >
-          Role:
+          Role
         </label>
         <select
           name="role-select"

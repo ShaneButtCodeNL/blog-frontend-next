@@ -1007,6 +1007,8 @@ blockquote::after {
 }
 
 #user-role-editor-form {
+  --ends: 4rem;
+  --input-size: 4.5rem;
   display: grid;
   gap: 1em;
   row-gap: 1.5em;
@@ -1019,8 +1021,8 @@ blockquote::after {
     ". role-label role-select ."
     ". button button ."
     ". message message .";
-  grid-template-columns: 1fr auto 2fr 1fr;
-  grid-template-rows: repeat(8, 4.5em);
+  grid-template-columns: var(--ends) auto 1fr var(--ends);
+  grid-template-rows: repeat(8, var(--input-size));
 }
 
 #user-editor-message {
@@ -1156,6 +1158,33 @@ blockquote::after {
     padding: 0;
     padding-left: 1rem;
   }
+  #user-current-roles-list {
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+  }
+  #user-role-editor-form {
+    grid-template-areas:
+      ". username-label username-label ."
+      ". username-select username-select ."
+      ". current-role-label current-role-label ."
+      ".  current-role-list  current-role-list  ."
+      ". ban-label  ban-status ."
+      ". disabled-label disabled-status ."
+      ". action-label action-label ."
+      ". action-select action-select ."
+      ". role-label role-label ."
+      ". role-select role-select ."
+      ". button button ."
+      "message message message message";
+    grid-template-rows:
+      auto var(--input-size) auto auto auto auto auto var(--input-size)
+      auto var(--input-size) auto auto;
+  }
+  #user-role-editor-form label {
+    text-align: left;
+    text-decoration: underline;
+  }
 }
 
 @media only screen and (max-width: 870px) {
@@ -1236,6 +1265,13 @@ blockquote::after {
   }
 }
 @media only screen and (max-width: 500px) {
+  #user-role-editor-form {
+    --ends: 0rem;
+  }
+  #user-current-roles-list {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
   #header-content {
     grid-template-columns: auto 1fr auto;
     gap: 1rem;
