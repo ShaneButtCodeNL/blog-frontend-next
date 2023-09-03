@@ -396,9 +396,11 @@ main {
 }
 
 #blog-comments {
-  border: var(--foreground-2) 3px solid;
+  border: var(--form-border);
   display: flex;
   flex-direction: column;
+  padding-right: 1.5rem;
+  overflow: auto;
 }
 
 .blog-post-comment-display-details {
