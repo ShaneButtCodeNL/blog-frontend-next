@@ -593,30 +593,37 @@ main {
   width: 100%;
   display: flex;
   justify-content: space-between;
+  max-height: 640px;
 }
-#write-new-post-preview {
-  width: 100%;
+.write-new-post-preview-container {
+  position: relative;
   transition: max-width 1s ease-out, margin 1s ease-out,
     border-width 1s ease-out, opacity 1s ease-out, max-height 1s ease-out;
   margin: 0;
-  border-style: solid;
+  padding: 0;
+  border: var(--form-border);
   border-radius: 1em;
   box-sizing: border-box;
   overflow: hidden;
 }
+#write-new-post-preview {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  padding: 1rem;
+  font-size: x-small;
+}
 .collapse-preview {
   max-width: 0%;
-  padding: 0;
   border-width: 0px;
   opacity: 0;
-  max-height: 100%;
+  max-height: 0;
 }
 .expand-preview {
   max-width: 50%;
-  padding: 1em;
   border-width: 1px;
   opacity: 1;
-  max-height: 100%;
+  max-height: 800px;
 }
 .write-new-post-form {
   display: grid;
@@ -626,7 +633,8 @@ main {
     ". submit-button cancel-button show-preview-button";
   grid-template-rows: 3em auto auto;
   gap: 1em;
-  padding: 1em;
+  padding: 0 1em;
+  flex-grow: 1;
 }
 #show-preview-checkbox-container {
   grid-area: show-preview-button;
@@ -634,8 +642,6 @@ main {
   grid-template-columns: auto 1fr;
   align-items: center;
   gap: 1em;
-  margin-bottom: auto;
-  margin-top: 1em;
 }
 #new-post-label-title {
   grid-area: title-label;
@@ -897,6 +903,7 @@ main {
   font-weight: 650;
   font-size: 2.2em;
   margin-bottom: 1em;
+  line-height: 1.2em;
 }
 blockquote {
   background-color: var(--background-fade);
@@ -1036,6 +1043,7 @@ blockquote::after {
 #username-label {
   grid-area: username-label;
 }
+
 @media only screen and (max-width: 1330px) {
   #main-nav {
     flex-wrap: wrap;
@@ -1056,10 +1064,12 @@ blockquote::after {
     flex-direction: column;
     align-items: center;
     justify-content: stretch;
+    max-height: unset;
   }
   #write-new-post-preview {
     height: 500px;
     flex-shrink: 1;
+    font-size: medium;
   }
   .collapse-preview {
     max-height: 0;
@@ -1102,6 +1112,9 @@ blockquote::after {
   #new-post-submit-button {
     width: 100%;
   }
+  #write-new-post-preview {
+    font-size: small;
+  }
   #new-post-cancel-button {
     width: 100%;
   }
@@ -1130,6 +1143,10 @@ blockquote::after {
   }
   #main-body-content {
     width: 90%;
+  }
+  #write-new-post-preview {
+    font-size: medium;
+    padding: 1rem 2rem;
   }
 }
 @media only screen and (max-width: 500px) {
@@ -1201,5 +1218,8 @@ blockquote::after {
 
   .small-screen-nav {
     display: block;
+  }
+  #write-new-post-preview {
+    font-size: x-small;
   }
 }

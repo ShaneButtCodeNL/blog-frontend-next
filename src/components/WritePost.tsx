@@ -90,10 +90,15 @@ export default function WritePost(params: any) {
         </div>
       </form>
       <div
-        id="write-new-post-preview"
-        className={`${showPreview ? "expand-preview" : "collapse-preview"}`}
-        dangerouslySetInnerHTML={{ __html: markdownParserToHTMLString(body) }}
-      ></div>
+        className={`write-new-post-preview-container ${
+          showPreview ? "expand-preview" : "collapse-preview"
+        }`}
+      >
+        <div
+          id="write-new-post-preview"
+          dangerouslySetInnerHTML={{ __html: markdownParserToHTMLString(body) }}
+        ></div>
+      </div>
     </div>
   );
 }
