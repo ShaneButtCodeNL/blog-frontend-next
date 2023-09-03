@@ -542,6 +542,7 @@ main {
   grid-area: username-label;
   height: fit-content;
   margin: 0.75rem auto auto auto;
+  padding: 0.75rem 0 0 0;
 }
 #form-username-container {
   grid-area: username-container;
@@ -552,6 +553,7 @@ main {
   grid-area: password-label-main;
   height: fit-content;
   margin: 0.75rem auto auto auto;
+  padding: 0.75rem 0 0 0;
 }
 #register-form-password-main-container {
   grid-area: password-input-main-container;
@@ -562,6 +564,7 @@ main {
   grid-area: password-label-second;
   height: fit-content;
   margin: 0rem auto auto auto;
+  padding: 0.75rem 0 0 0;
 }
 #register-form-password-second-container {
   grid-area: password-input-second-container;
