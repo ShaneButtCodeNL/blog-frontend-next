@@ -14,10 +14,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { UserDetails } from "@/models/userReturn";
-import {
-  logoutServerFunction,
-  refreshFunctionServer,
-} from "@/functions/serverFunctions";
+import { logoutServerFunction } from "@/functions/serverFunctions";
 import { setLogout } from "@/store/login";
 import { useState } from "react";
 

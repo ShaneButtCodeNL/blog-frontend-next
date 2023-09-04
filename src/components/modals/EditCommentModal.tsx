@@ -34,7 +34,6 @@ export default function EditCommentModal() {
       { body, title }
     ).then((res) => {
       if (!res) {
-        console.log("RES", res);
         setShowError(true);
         return;
       }

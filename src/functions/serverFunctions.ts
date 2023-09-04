@@ -155,7 +155,6 @@ export async function createCommentFunction(
     title,
     parentCommentId,
   });
-  console.table({ body, title, parentCommentId });
   if (!res) {
     return;
   }

@@ -29,7 +29,6 @@ export async function POST(request: Request) {
     expireDateStringAccess.replace("NDT", "GMT")
   );
   data.token.expires = expireDateAccess;
-  console.log("DATA", data);
   const response = NextResponse.json(data);
   response.cookies.set({
     name: "jwt",

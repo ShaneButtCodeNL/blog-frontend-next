@@ -55,7 +55,6 @@ const getBearerTokenHeader = (token: string) => ({
 
 export async function refresh() {
   "use server";
-  console.log("HERE", typeof window);
   const cookieStore = cookies();
 
   const res = await fetch("http://localhost:3000/api/refresh", {
@@ -120,7 +119,6 @@ export async function loginInit(jwt: string) {
 }
 export async function refreshMiddleware(refreshToken: string) {
   "use server";
-  console.log("HERE", typeof window);
 
   const res = await fetch("http://localhost:3000/api/refresh", {
     method: POST,
@@ -173,9 +171,7 @@ export async function login(
   const data = await res.json();
   if (!data) throw new Error("User not found");
   const dateStringAccess = parseInt(data.token.expires);
-  console.log("dateSTR", dateStringAccess);
   const expiresAccess = new Date(dateStringAccess!);
-  console.log(expiresAccess);
   cookies().set("accessToken", data.token.token, {
     httpOnly: true,
     secure: true,

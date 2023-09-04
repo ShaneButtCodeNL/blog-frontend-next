@@ -30,7 +30,6 @@ export default function DeleteCommentModal() {
       token
     ).then((res) => {
       if (!res) {
-        console.log("RES", res);
         setShowError(true);
         return;
       }

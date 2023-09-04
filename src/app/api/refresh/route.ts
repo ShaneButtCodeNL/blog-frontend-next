@@ -2,7 +2,6 @@ import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  console.log("here");
   const apiPath = `${process.env.API_HOST}${process.env.API_USER_BASE}/refresh`;
   const cookieStore = cookies();
 
@@ -39,7 +38,6 @@ export async function POST(req: Request) {
     expireDateStringAccess.replace("NDT", "GMT")
   );
   data.token.expires = expireDateAccess;
-  console.log(data);
   const response = NextResponse.json(data);
   return response;
 }

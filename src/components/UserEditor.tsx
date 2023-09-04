@@ -62,7 +62,6 @@ export default function UserRoleEditor() {
     const token = store.getState().login.accessToken;
     if (!token) return;
     if (!user) return;
-    console.log("action:", action, "\nrole:", role, "\nuser:", user);
     if (action === removeRoleAction) {
       if (role === "") return;
       removeRoleToUserFunction(token, role, user.username as string).then(
