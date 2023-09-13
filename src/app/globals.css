@@ -104,6 +104,10 @@ ol li {
   padding-left: 1em;
   margin: 0.5em 0;
 }
+.title-container {
+  display: flex;
+  gap: 1rem;
+}
 .title-not-break {
   display: block;
 }
@@ -1355,5 +1359,10 @@ blockquote::after {
   }
   #write-new-post-preview {
     font-size: x-small;
+  }
+}
+@media only screen and (max-width: 330px) {
+  .title {
+    display: none;
   }
 }

@@ -14,6 +14,8 @@ import { loginInit } from "@/functions/apiController";
 import { setLogin } from "@/store/login";
 import dynamic from "next/dynamic";
 import SplashPage from "@/components/SplashPage";
+import Image from "next/image";
+import titleImage from "../../public/SB-icon-16x16-dark.svg";
 const MakeCommentModal = dynamic(
   () => import("@/components/modals/MakeCommentModal")
 );
@@ -97,10 +99,19 @@ export default async function RootLayout({
         <div id="page">
           <header style={{ paddingTop: "1em", paddingBottom: "1em" }}>
             <div id="header-content">
-              <div className="title title-not-break">Shane's Blog</div>
-              <div className="title title-break">
-                Shane's
-                <br className="title-brake" /> Blog
+              <div className="title-container">
+                <Image
+                  src={titleImage}
+                  alt="My Icon"
+                  objectFit="contain"
+                  height={30}
+                  title="Shane's Blog"
+                />
+                <div className="title title-not-break">Shane's Blog</div>
+                <div className="title title-break">
+                  Shane's
+                  <br className="title-brake" /> Blog
+                </div>
               </div>
               <Providers>
                 <PreloadLogin
